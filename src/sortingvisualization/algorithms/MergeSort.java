@@ -5,8 +5,10 @@
  */
 package sortingvisualization.algorithms;
 
+import java.util.Arrays;
 import sortingvisualization.Core.IAlgorithm;
 import sortingvisualization.Sorting.SortArray;
+import sortingvisualization.Sorting.SubArray;
 
 /**
  *
@@ -24,7 +26,7 @@ public class MergeSort implements IAlgorithm {
         if (l < r)
         {
             // Find the middle point
-            int m = (l+r)/2;
+            int m = l + (r-l)/2;
  
             // Sort first and second halves
             sort(arr, l, m);
@@ -42,14 +44,16 @@ public class MergeSort implements IAlgorithm {
         int n2 = r - m;
  
         /* Create temp arrays */
-        SortArray L[] = new int [n1]; //would it change values than
-        SortArray R[] = new int [n2];
+        SubArray L = new SubArray(n1);//[n1]; //would it change values than
+        SubArray R = new SubArray(n2); //[n2];
  
         /*Copy data to temp arrays*/
         for (int i=0; i<n1; ++i)
-            L[i] = arr[l + i];
+            L.setValue(i, arr.getValue(l + i));//[l + i];
         for (int j=0; j<n2; ++j)
-            R[j] = arr[m + 1+ j];
+            R.setValue(j, arr.getValue(m + 1+ j));
+        //L.set(Arrays.copyOfRange(arr.get(), l, n1));
+        //R.set(Arrays.copyOfRange(arr.get(), m + l, n2));
  
  
         /* Merge the temp arrays */
@@ -61,14 +65,16 @@ public class MergeSort implements IAlgorithm {
         int k = l;
         while (i < n1 && j < n2)
         {
-            if (L[i] <= R[j])
+            if (L.getValue(i) <= R.getValue(j)/*L[i] <= R[j]*/)
             {
-                arr[k] = L[i];
+                //arr[k] = L[i];
+                arr.setValue(k, L.getValue(i));
                 i++;
             }
             else
             {
-                arr[k] = R[j];
+                //arr[k] = R[j];
+                arr.setValue(k, R.getValue(j));
                 j++;
             }
             k++;
@@ -77,7 +83,8 @@ public class MergeSort implements IAlgorithm {
         /* Copy remaining elements of L[] if any */
         while (i < n1)
         {
-            arr[k] = L[i];
+            //arr[k] = L[i];
+            arr.setValue(k, L.getValue(i));
             i++;
             k++;
         }
@@ -85,7 +92,8 @@ public class MergeSort implements IAlgorithm {
         /* Copy remaining elements of R[] if any */
         while (j < n2)
         {
-            arr[k] = R[j];
+            //arr[k] = R[j];
+            arr.setValue(k, R.getValue(j));
             j++;
             k++;
         }
