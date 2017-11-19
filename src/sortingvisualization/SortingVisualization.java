@@ -12,6 +12,7 @@ import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.CocktailShakerSort;
 import sortingvisualization.algorithms.HeapSort;
 import sortingvisualization.algorithms.InsertionSort;
+import sortingvisualization.algorithms.MergeSort;
 import sortingvisualization.algorithms.QuickSort;
 import sortingvisualization.algorithms.SelectionSort;
 
@@ -46,7 +47,7 @@ public class SortingVisualization {
         SortArray array = new SortArray();
         array.generate(10, 80);
         System.out.println(array);
-        SelectionSort sortAlgorithm = new SelectionSort();
+        MergeSort sortAlgorithm = new MergeSort();
         sortAlgorithm.sort(array);
         System.out.println(array);
         long stopTime = System.currentTimeMillis();
