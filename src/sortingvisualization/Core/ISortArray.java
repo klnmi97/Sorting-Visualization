@@ -13,14 +13,7 @@ public interface ISortArray {
     
     public int[] get();
     public int getValue(int index);
+    public void setValue(int index, int value);
     public void set(int[] array);
-    public void generate(int size, int max);
     public int length();
-    public void swap(int i, int j);
-    /**
-     * Compare if array[i]>array[j]
-     * @return - true if array[i]>array[j]
-     */
-    public boolean compare(int i, int j);
-    public void shuffle();
 }
