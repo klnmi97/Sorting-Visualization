@@ -32,23 +32,25 @@ public abstract class AbstractSortArray implements ISortArray {
     }
 
     @Override
+    public void setValue(int index, int value) {
+        array[index] = value;
+    }
+
+    @Override
     public int length() {
         return array.length;
     }
 
-    @Override
     public void swap(int i, int j) {
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
 
-    @Override
     public boolean compare(int i, int j) {
         return array[i] > array[j];
     }
 
-    @Override
     public void shuffle() {
         Random rnd = ThreadLocalRandom.current();
         for (int i = array.length - 1; i > 0; i--)
@@ -60,7 +62,6 @@ public abstract class AbstractSortArray implements ISortArray {
         }
     }
 
-    @Override
     public void generate(int size, int max) {
         array = new int[size];
         Random randomNum = new Random();
