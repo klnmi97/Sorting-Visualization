@@ -6,6 +6,7 @@
 package sortingvisualization.algorithms;
 
 import sortingvisualization.Core.IAlgorithm;
+import sortingvisualization.Sorting.SortArray;
 
 /**
  *
@@ -14,11 +15,11 @@ import sortingvisualization.Core.IAlgorithm;
 public class MergeSort implements IAlgorithm {
 
     @Override
-    public void sort(int[] array) {
-        sort(array, 0, array.length - 1);
+    public void sort(SortArray array) {
+        sort(array, 0, array.length() - 1);
     }
     
-    private void sort(int arr[], int l, int r)
+    private void sort(SortArray arr, int l, int r)
     {
         if (l < r)
         {
@@ -34,15 +35,15 @@ public class MergeSort implements IAlgorithm {
         }
     }
     
-    private void merge(int arr[], int l, int m, int r)
+    private void merge(SortArray arr, int l, int m, int r)
     {
         // Find sizes of two subarrays to be merged
         int n1 = m - l + 1;
         int n2 = r - m;
  
         /* Create temp arrays */
-        int L[] = new int [n1];
-        int R[] = new int [n2];
+        SortArray L[] = new int [n1]; //would it change values than
+        SortArray R[] = new int [n2];
  
         /*Copy data to temp arrays*/
         for (int i=0; i<n1; ++i)

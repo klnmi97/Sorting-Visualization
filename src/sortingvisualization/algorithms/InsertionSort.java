@@ -6,6 +6,7 @@
 package sortingvisualization.algorithms;
 
 import sortingvisualization.Core.IAlgorithm;
+import sortingvisualization.Sorting.SortArray;
 
 /**
  *
@@ -14,16 +15,17 @@ import sortingvisualization.Core.IAlgorithm;
 public class InsertionSort implements IAlgorithm {
 
     @Override
-    public void sort(int[] array) {  
-        for (int j = 1; j < array.length; j++) {  
-            int key = array[j];  
-            int i = j-1;  
-            while ( (i > -1) && ( array [i] > key ) ) {  
-                array [i+1] = array [i];  
-                i--;  
-            }  
-            array[i+1] = key;  
-        }  
+    public void sort(SortArray array) {  
+        for (int i = 1; i < array.length(); i++) {
+            for(int j = i ; j > 0 ; j--){
+                if(array.compare(j - 1, j)/*input[j] < input[j-1]*/){
+                    /*temp = input[j];
+                    input[j] = input[j-1];
+                    input[j-1] = temp;*/
+                    array.swap(j, j - 1);
+                }
+            }
+        }
     }
     
 }

@@ -6,6 +6,7 @@
 package sortingvisualization.algorithms;
 
 import sortingvisualization.Core.IAlgorithm;
+import sortingvisualization.Sorting.SortArray;
 
 /**
  *
@@ -14,11 +15,11 @@ import sortingvisualization.Core.IAlgorithm;
 public class QuickSort implements IAlgorithm {
 
     @Override
-    public void sort(int[] array) {
-        quickSort(array, 0, array.length - 1);
+    public void sort(SortArray array) {
+        quickSort(array, 0, array.length() - 1);
     }
     
-    private void quickSort(int arr[], int low, int high)
+    private void quickSort(SortArray arr, int low, int high)
     {
         if (low < high)
         {
@@ -33,29 +34,31 @@ public class QuickSort implements IAlgorithm {
         }
     }
     
-    private int partition(int arr[], int low, int high)
+    private int partition(SortArray arr, int low, int high)
     {
-        int pivot = arr[high]; 
+        //int pivot = arr.getValue(high); 
         int i = (low-1); // index of smaller element
         for (int j=low; j<high; j++)
         {
             // If current element is smaller than or
             // equal to pivot
-            if (arr[j] <= pivot)
+            if (arr.biggerEqual(high, j)/*arr[j] <= pivot*/)
             {
                 i++;
  
                 // swap arr[i] and arr[j]
-                int temp = arr[i];
+                /*int temp = arr[i];
                 arr[i] = arr[j];
-                arr[j] = temp;
+                arr[j] = temp;*/
+                arr.swap(i, j);
             }
         }
  
         // swap arr[i+1] and arr[high] (or pivot)
-        int temp = arr[i+1];
+        /*int temp = arr[i+1];
         arr[i+1] = arr[high];
-        arr[high] = temp;
+        arr[high] = temp;*/
+        arr.swap(i + 1, high);
  
         return i+1;
     }

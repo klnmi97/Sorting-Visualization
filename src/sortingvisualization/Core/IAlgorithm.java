@@ -5,11 +5,13 @@
  */
 package sortingvisualization.Core;
 
+import sortingvisualization.Sorting.SortArray;
+
 /**
  *
  * @author mihae
  */
 public interface IAlgorithm {
     
-    public void sort(int[] array);
+    public void sort(SortArray array);
 }
