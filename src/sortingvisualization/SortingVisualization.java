@@ -5,7 +5,9 @@
  */
 package sortingvisualization;
 
+import java.util.List;
 import javafx.application.Application;
+import sortingvisualization.Sorting.ActionInstance;
 
 import sortingvisualization.Sorting.SortArray;
 import sortingvisualization.algorithms.BubbleSort;
@@ -27,7 +29,7 @@ public class SortingVisualization {
      * @param args the command line arguments
      */
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         /*TestClass t = new TestClass();
         SortingLogic s = new SortingLogic();
         int[] a = s.getNumbers();
@@ -43,16 +45,25 @@ public class SortingVisualization {
         }
         Application.launch(Window.class, args);*/
         
-        long startTime = System.currentTimeMillis();
+        
         SortArray array = new SortArray();
         array.generate(10, 80);
         System.out.println(array);
-        MergeSort sortAlgorithm = new MergeSort();
+        BubbleSort sortAlgorithm = new BubbleSort();
         sortAlgorithm.sort(array);
+        
+        List<ActionInstance> actions = array.actions;
+        for (int i = 0; i < actions.size(); i++) {
+            int[] temp = actions.get(i).get();
+            if(temp[0] == 0){
+                System.out.println("array[" + temp[1] + "] and array[" + temp[2] + "] swapped");
+            } else if(temp[0] == 1){
+                System.out.println("array[" + temp[1] + "] and array[" + temp[2] + "] compared");
+            }
+            Thread.sleep(500);
+        }
+        
         System.out.println(array);
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.out.println(elapsedTime);
     }
     
 }
