@@ -5,6 +5,8 @@
  */
 package sortingvisualization.Sorting;
 
+import java.util.ArrayList;
+import java.util.List;
 import sortingvisualization.Core.AbstractSortArray;
 
 /**
@@ -13,15 +15,24 @@ import sortingvisualization.Core.AbstractSortArray;
  */
 public class SortArray extends AbstractSortArray {
         
+    public List<ActionInstance> actions;
+    
+    public SortArray(){
+        actions = new ArrayList<>();
+    }
+    
     @Override
     public boolean compare(int i, int j){
-        System.out.println("array[" + i + "] and array[" + j + "] compared");
+        //System.out.println("array[" + i + "] and array[" + j + "] compared");
+        
+        actions.add(new ActionInstance(1, i, j));
         return super.compare(i, j);
     }
 
     @Override
     public boolean biggerEqual(int i, int j) {
-        System.out.println("array[" + i + "] and array[" + j + "] compared");
+        //System.out.println("array[" + i + "] and array[" + j + "] compared");
+        actions.add(new ActionInstance(1, i, j));
         return super.biggerEqual(i, j); 
     }
     
@@ -30,6 +41,7 @@ public class SortArray extends AbstractSortArray {
     @Override
     public void swap(int i, int j) {
         super.swap(i, j);
-        System.out.println("array[" + i + "] and array[" + j + "] swapped");
+        //System.out.println("array[" + i + "] and array[" + j + "] swapped");
+        actions.add(new ActionInstance(0, i, j));
     }
 }
