@@ -1,0 +1,31 @@
+.button{
+    -fx-background-color: #000000;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:pressed{
+    -fx-background-color: 
+        #ffffff;
+    -fx-text-fill: black;
+}
+
+.button:hover{
+    -fx-text-fill: red;
+}
+
+.playButton{
+    -fx-background-color: #000000;
+}
+
+
+
+.blcklabel{
+    -fx-text-fill: white; 
+    -fx-font-family: Arial; 
+    -fx-font-size: 25px
+}
