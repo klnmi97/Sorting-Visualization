@@ -37,6 +37,24 @@ import sortingvisualization.algorithms.BubbleSort;
 public class Window extends Application {
     
     private MenuBar menuBar;
+    Menu menuFile;
+    Menu menuEdit;
+    Menu menuView;
+    MenuItem menuItemExit;
+    
+    Label algLbl;
+    Label controlLbl;
+    
+    Button alg1;
+    Button alg2;
+    Button alg3;
+    Button alg4;
+    Button alg5;
+    Button alg6;
+    Button playBtn;
+    Button rewindBackBtn;
+    Button rewindForthBtn;
+    
     SortArray array;
     List<ActionInstance> actions;
     
@@ -55,16 +73,16 @@ public class Window extends Application {
     public void start(Stage primaryStage) {
         //menu
         
-        Menu menuFile = new Menu("_File");
+        menuFile = new Menu("_File");
         menuFile.setMnemonicParsing(true);
         
-        Menu menuEdit = new Menu("_Edit");
+        menuEdit = new Menu("_Edit");
         menuEdit.setMnemonicParsing(true);
         
-        Menu menuView = new Menu("_View");
+        menuView = new Menu("_View");
         menuView.setMnemonicParsing(true);
         
-        MenuItem menuItemExit = new MenuItem("Exit");
+        menuItemExit = new MenuItem("Exit");
         menuItemExit.setOnAction(a -> primaryStage.close());
         menuFile.getItems().add(menuItemExit);
         
@@ -72,35 +90,35 @@ public class Window extends Application {
 	menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
         
         
-        Label algLbl = new Label("Algorithms: ");
+        algLbl = new Label("Algorithms: ");
         algLbl.getStyleClass().add("blcklabel");    
         
-        Label controlLbl = new Label();
+        controlLbl = new Label();
         controlLbl.getStyleClass().add("blcklabel");
         
         HBox algList = new HBox();
         
-        Button alg1 = new Button("BUB");
+        alg1 = new Button("BUB");
         alg1.setTooltip(new Tooltip("Bubble Sort"));
         alg1.getStyleClass().add("button");
         
-        Button alg2 = new Button("INS");
+        alg2 = new Button("INS");
         alg2.setTooltip(new Tooltip("Insertion Sort"));
         alg2.getStyleClass().add("button");
         
-        Button alg3 = new Button("SEL");
+        alg3 = new Button("SEL");
         alg3.setTooltip(new Tooltip("Selection Sort"));
         alg3.getStyleClass().add("button");
         
-        Button alg4 = new Button("QUI");
+        alg4 = new Button("QUI");
         alg4.setTooltip(new Tooltip("Quick Sort"));
         alg4.getStyleClass().add("button");
         
-        Button alg5 = new Button("MRG");
+        alg5 = new Button("MRG");
         alg5.setTooltip(new Tooltip("Merge Sort"));
         alg5.getStyleClass().add("button");
         
-        Button alg6 = new Button("COU");
+        alg6 = new Button("COU");
         alg6.setTooltip(new Tooltip("Counting Sort"));
         alg6.getStyleClass().add("button");
         
@@ -120,7 +138,7 @@ public class Window extends Application {
         pauseImgV.setFitHeight(25);
         pauseImgV.setFitWidth(25);
         
-        Button playBtn = new Button();
+        playBtn = new Button();
         playBtn.setTooltip(new Tooltip("Sort!"));
         playBtn.setGraphic(playImgV);
         playBtn.getStyleClass().add("playButton");
@@ -151,7 +169,7 @@ public class Window extends Application {
             }
         });
         
-        Button rewindBackBtn = new Button();
+        rewindBackBtn = new Button();
         Image rewBackImg = new Image(getClass().getResourceAsStream("/rewind_back.png"));
         ImageView rbImgView = new ImageView(rewBackImg);
         rbImgView.setFitHeight(25);
@@ -161,15 +179,17 @@ public class Window extends Application {
         rewindBackBtn.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-                counter--;
-                printInstance(actions, counter);
+                if(counter >= 0){
+                    printInstance(actions, counter);
+                    counter--;
+                }
                 
             }
             
         });
         
         
-        Button rewindForthBtn = new Button();
+        rewindForthBtn = new Button();
         Image rewForthImg = new Image(getClass().getResourceAsStream("/rewind_forth.png"));
         ImageView rfImgView = new ImageView(rewForthImg);
         rfImgView.setFitHeight(25);
@@ -179,8 +199,10 @@ public class Window extends Application {
         rewindForthBtn.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-                counter++;
-                printInstance(actions, counter);
+                if(counter + 1 < actions.size()){
+                    counter++;
+                    printInstance(actions, counter);
+                }
             }
             
         });
@@ -218,25 +240,26 @@ public class Window extends Application {
         primaryStage.show();
     }
     
-    public void testSort(){
-        //SortArray array = new SortArray();
-        //array.generate(10, 80);
-        //System.out.println(array);
-        //BubbleSort sortAlgorithm = new BubbleSort();
-        //sortAlgorithm.sort(array);
+    private void initializeMenu(){
         
+    }
+    
+    private void initializeButtons(){
+        
+    }
+    
+    
+    public void testSort(){
         
         for (int i = counter; i < actions.size(); i++, counter++) {
             try{
+                if(isSelected == false) break;
                 printInstance(actions, i);
                 Thread.sleep(500);
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
-            if(isSelected == false) break;
         }
-        
-        //System.out.println(array);
     }
     
     public void printInstance(List<ActionInstance> action, int i){
