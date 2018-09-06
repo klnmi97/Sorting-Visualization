@@ -1,0 +1,32 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sortingvisualization;
+
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
+/**
+ *
+ * @author mihae
+ */
+public class ViewController {
+    
+    public static final int N_VALUES = 10;
+    public static final int SPACING = 50;
+    public static int LEFT_INDENT = 300;
+    public static final int SORT_GROUP_MOVE_DELTA = 250;
+
+    public static final Duration SPEED = Duration.millis(1000);
+    
+    private final int max = 100;
+    private final int min = (int)(max * 0.1);
+    //Style
+    //colours of bricks:
+    //COMPARE - selected, DEFAULT - main color
+    public static final Color COMPARE = Color.AQUAMARINE;
+    public static final Color DEFAULT = Color.GOLD;
+    public static final Color SORTED = Color.ORANGE;
+}
