@@ -46,6 +46,7 @@ import sortingvisualization.Sorting.SortArray;
 import sortingvisualization.algorithms.BubbleSort;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
 import sortingvisualization.algorithms.InsertionSort;
+import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import sortingvisualization.algorithms.MergeSort;
 import sortingvisualization.algorithms.QuickSort;
 import sortingvisualization.algorithms.SelectionSort;
@@ -212,7 +213,7 @@ public class Window extends Application {
         
         //graphic
         displayPane = new Pane();
-        initialize();
+        initialize(1);
         
         BorderPane root = new BorderPane();
         root.setTop(top);
@@ -258,7 +259,7 @@ public class Window extends Application {
         alg1 = new Button("BUBL");
         alg1.setTooltip(new Tooltip("Bubble Sort"));
         alg1.getStyleClass().add("button");
-        alg1.setOnAction(event->initialize());
+        alg1.setOnAction(event->initialize(1));
         /*alg1.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -270,6 +271,7 @@ public class Window extends Application {
         alg2 = new Button("INS");
         alg2.setTooltip(new Tooltip("Insertion Sort"));
         alg2.getStyleClass().add("button");
+        alg2.setOnAction(event->initialize(2));
         /*alg2.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
@@ -340,7 +342,7 @@ public class Window extends Application {
         anim.play();
     }
     //03.09: fixed play
-    public void initialize(){
+    public void initialize(int algorithm){
         Random random = new Random();
         stopAllAnimations();
         nextTransitionIndex.set(0);
@@ -356,9 +358,19 @@ public class Window extends Application {
         displayPane.getChildren().addAll(list);
         transitions = new ArrayList<>();
         
+        switch(algorithm){
+            case 1:
+                transitions = bubbleSort(list, transitions);
+                break;
+            case 2:
+                transitions = insertionSort(list, transitions);
+                break;
+            default:
+        }
+                
         //transitions = mergeSort(list, transitions);
-        transitions = bubbleSort(list, transitions);
-        //transitions = insertionSort(list, transitions);
+        
+        //
         //transitions = selectionSort(list, transitions);
         //transitions = quickSort(list, transitions);
         anyPlaying = createAnyPlayingBinding(transitions);
