@@ -16,7 +16,8 @@ public class ViewController {
     
     public static final int N_VALUES = 10;
     public static final int SPACING = 50;
-    public static int LEFT_INDENT = 300;
+    public static int LEFT_INDENT = -250;
+    public static final int TOP_INDENT = 0;
     public static final int SORT_GROUP_MOVE_DELTA = 250;
 
     public static final Duration SPEED = Duration.millis(1000);

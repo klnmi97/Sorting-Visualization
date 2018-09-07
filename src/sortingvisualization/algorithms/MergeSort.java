@@ -5,98 +5,105 @@
  */
 package sortingvisualization.algorithms;
 
-import java.util.Arrays;
-import sortingvisualization.Core.IAlgorithm;
-import sortingvisualization.Sorting.SortArray;
-import sortingvisualization.Sorting.SubArray;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import sortingvisualization.AnimUtils;
+import sortingvisualization.BrickNode;
+import sortingvisualization.ViewController;
 
 /**
  *
  * @author mihae
  */
-public class MergeSort implements IAlgorithm {
+public class MergeSort {
 
-    @Override
-    public void sort(SortArray array) {
-        sort(array, 0, array.length() - 1);
+    public static List<Animation> mergeSort(ArrayList<BrickNode> list, List<Animation> sq) {
+        int number = list.size();
+        BrickNode[] helperNodes = new BrickNode[number];
+        sortRange(0, number - 1, sq, list);
+        return sq;
     }
-    
-    private void sort(SortArray arr, int l, int r)
-    {
-        if (l < r)
-        {
-            // Find the middle point
-            int m = l + (r-l)/2;
- 
-            // Sort first and second halves
-            sort(arr, l, m);
-            sort(arr , m+1, r);
- 
-            // Merge the sorted halves
-            merge(arr, l, m, r);
+
+    private static void sortRange(int low, int high, List<Animation> sq, 
+            ArrayList<BrickNode> list) {
+        // check if low is smaller then high, if not then the array is sorted
+        if (low < high) {
+            // Get the index of the element which is in the middle
+            int middle = low + (high - low) / 2;
+            //test color animation
+            //sq.add(setColor(list.get(middle), Color.LIGHTSKYBLUE, Color.AQUAMARINE));
+            //sq.add(setColor(list.get(middle), Color.AQUAMARINE, Color.LIGHTSKYBLUE));
+            //sq.add(highlightLine(ls, 3));
+            // Sort the left side of the array
+            sortRange(low, middle, sq, list);
+            // Sort the right side of the array
+            sortRange(middle + 1, high, sq, list);
+            // Combine them both
+            merge(low, middle, high, list, sq);
         }
     }
-    
-    private void merge(SortArray arr, int l, int m, int r)
-    {
-        // Find sizes of two subarrays to be merged
-        int n1 = m - l + 1;
-        int n2 = r - m;
- 
-        /* Create temp arrays */
-        SubArray L = new SubArray(n1);//[n1]; //would it change values than
-        SubArray R = new SubArray(n2); //[n2];
- 
-        /*Copy data to temp arrays*/
-        for (int i=0; i<n1; ++i)
-            L.setValue(i, arr.getValue(l + i));//[l + i];
-        for (int j=0; j<n2; ++j)
-            R.setValue(j, arr.getValue(m + 1+ j));
-        //L.set(Arrays.copyOfRange(arr.get(), l, n1));
-        //R.set(Arrays.copyOfRange(arr.get(), m + l, n2));
- 
- 
-        /* Merge the temp arrays */
- 
-        // Initial indexes of first and second subarrays
-        int i = 0, j = 0;
- 
-        // Initial index of merged subarry array
-        int k = l;
-        while (i < n1 && j < n2)
-        {
-            if (L.getValue(i) <= R.getValue(j)/*L[i] <= R[j]*/)
-            {
-                //arr[k] = L[i];
-                arr.setValue(k, L.getValue(i));
+
+
+    private static void merge(int low, int middle, int high, 
+            ArrayList<BrickNode> list, List<Animation> sq) {
+        BrickNode[] helperNodes = new BrickNode[list.size()];
+        // Copy both parts into the helper array
+        for (int i = low; i <= high; i++) {
+            helperNodes[i] = list.get(i);
+        }
+
+        int i = low;
+        int j = middle + 1;
+        int k = low;
+        // Copy the smallest values from either the left or the right side back
+        // to the original array
+
+        while (i <= middle && j <= high) {
+            
+            
+            if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
+                list.set(k, helperNodes[i]);
+                sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
                 i++;
-            }
-            else
-            {
-                //arr[k] = R[j];
-                arr.setValue(k, R.getValue(j));
+            } else {
+                list.set(k, helperNodes[j]);
+                sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
                 j++;
             }
             k++;
         }
- 
-        /* Copy remaining elements of L[] if any */
-        while (i < n1)
-        {
-            //arr[k] = L[i];
-            arr.setValue(k, L.getValue(i));
+        // Copy the rest of the left side of the array into the target array
+        while (i <= middle) {
+            list.set(k, helperNodes[i]);
+            sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
+            k++;
             i++;
-            k++;
         }
- 
-        /* Copy remaining elements of R[] if any */
-        while (j < n2)
-        {
-            //arr[k] = R[j];
-            arr.setValue(k, R.getValue(j));
+
+        // Even if we didn't move in the array because it was already ordered, 
+        // move on screen for any remaining nodes in the target array.
+        while (j <= high) {
+            sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
+            k++;
             j++;
-            k++;
         }
+
+        ParallelTransition moveUp = new ParallelTransition();
+
+        for (int z = low; z <= high; z++) {
+            TranslateTransition moveNodeUp = new TranslateTransition();
+            moveNodeUp.setNode(helperNodes[z]);
+            moveNodeUp.setDuration(ViewController.SPEED);
+            //Set start Y position for reverse 
+            moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
+            moveNodeUp.setToY(ViewController.TOP_INDENT);
+            moveUp.getChildren().add(moveNodeUp);
+        }
+
+        sq.add(moveUp);
     }
     
 }

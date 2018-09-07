@@ -5,62 +5,96 @@
  */
 package sortingvisualization.algorithms;
 
-import sortingvisualization.Core.IAlgorithm;
-import sortingvisualization.Sorting.SortArray;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.scene.paint.Color;
+import sortingvisualization.AnimUtils;
+import sortingvisualization.BrickNode;
+import sortingvisualization.ViewController;
 
 /**
  *
  * @author mihae
  */
-public class QuickSort implements IAlgorithm {
+public class QuickSort {
 
-    @Override
-    public void sort(SortArray array) {
-        quickSort(array, 0, array.length() - 1);
-    }
-    
-    private void quickSort(SortArray arr, int low, int high)
-    {
-        if (low < high)
-        {
-            /* pi is partitioning index, arr[pi] is 
+    public static List<Animation> quickSort(ArrayList<BrickNode> list, List<Animation> sq){
+        sort(list, 0, list.size()-1, sq);
+        return sq;
+    } 
+     
+    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> sq) 
+    { 
+        if (low < high) 
+        { 
+            /* pi is partitioning index, arr[pi] is  
               now at right place */
-            int pi = partition(arr, low, high);
- 
-            // Recursively sort elements before
-            // partition and after partition
-            quickSort(arr, low, pi-1);
-            quickSort(arr, pi+1, high);
+            int partitionIndex = partition(list, low, high, sq);
+            
+            sort(list, low, partitionIndex-1, sq); 
+            sort(list, partitionIndex+1, high, sq); 
         }
-    }
-    
-    private int partition(SortArray arr, int low, int high)
-    {
-        //int pivot = arr.getValue(high); 
+    } 
+     
+    private static int partition(ArrayList<BrickNode> list, int low, int high, 
+            List<Animation> sq) 
+    { 
+        ParallelTransition parallelTransition = new ParallelTransition();
+        for (int k = low; k <= high; k++) {
+            parallelTransition.getChildren().add(AnimUtils.moveDownToX(list.get(k), k, k));            
+        }
+        sq.add(parallelTransition);
+        BrickNode pivot = list.get(high);
+        sq.add(AnimUtils.setColor(list.get(high), 
+                ViewController.DEFAULT, Color.RED));
+        
         int i = (low-1); // index of smaller element
-        for (int j=low; j<high; j++)
-        {
-            // If current element is smaller than or
-            // equal to pivot
-            if (arr.biggerEqual(high, j)/*arr[j] <= pivot*/)
-            {
+        //sq.add(setColor(list.get(i+1), Color.LIGHTSKYBLUE, Color.YELLOW));
+        
+        for (int j=low; j<high; j++) 
+        { 
+            // If current element is smaller than or 
+            // equal to pivot 
+            sq.add(AnimUtils.setColor(list.get(j), 
+                    ViewController.DEFAULT, ViewController.COMPARE));
+            if (list.get(j).getValue() <= pivot.getValue()) 
+            { 
+                
                 i++;
- 
-                // swap arr[i] and arr[j]
-                /*int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;*/
-                arr.swap(i, j);
-            }
-        }
- 
+                //sq.add(setColor(list.get(i), Color.LIGHTSKYBLUE, Color.YELLOW));
+                // swap arr[i] and arr[j] 
+                if(i != j){
+                    sq.add(AnimUtils.swap(list.get(i), list.get(j), i, j));
+                }
+                //sq.add(setColor(list.get(i), Color.YELLOW, Color.LIGHTSKYBLUE));
+                BrickNode temp = list.get(i); 
+                list.set(i, list.get(j)); 
+                list.set(j, temp);
+                sq.add(AnimUtils.setColor(list.get(i), 
+                        ViewController.COMPARE, ViewController.DEFAULT));
+                
+            } else{
+                sq.add(AnimUtils.setColor(list.get(j), 
+                        ViewController.COMPARE, ViewController.DEFAULT));
+            } 
+            
+        } 
+  
         // swap arr[i+1] and arr[high] (or pivot)
-        /*int temp = arr[i+1];
-        arr[i+1] = arr[high];
-        arr[high] = temp;*/
-        arr.swap(i + 1, high);
- 
-        return i+1;
+        sq.add(AnimUtils.swap(list.get(i+1), list.get(high), i+1, high));
+        BrickNode temp = list.get(i+1); 
+        list.set(i+1, list.get(high)); 
+        list.set(high, temp);
+        sq.add(AnimUtils.setColor(pivot, Color.RED, ViewController.SORTED));
+        
+        parallelTransition = new ParallelTransition();
+        for (int k = low; k <= high; k++) {
+            parallelTransition.getChildren().add(AnimUtils.moveNodeUp(list.get(k)));            
+        }
+        sq.add(parallelTransition);
+        return i+1; 
     }
     
 }

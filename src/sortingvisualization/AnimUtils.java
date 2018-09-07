@@ -25,14 +25,14 @@ import javafx.scene.paint.Color;
  */
 public class AnimUtils {
     
-    public static TranslateTransition moveDownToX(BrickNode sp, int X, int i) {
+    public static Animation moveDownToX(BrickNode sp, int X, int i) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
         transition.setDuration(ViewController.SPEED);
         //get start position of node to allow backward animation
         transition.setFromX(i * ViewController.SPACING 
                 + ViewController.LEFT_INDENT);
-        transition.setFromY(0);
+        transition.setFromY(ViewController.TOP_INDENT);
         transition.setToX(X * ViewController.SPACING 
                 + ViewController.LEFT_INDENT);
         transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA);
@@ -55,7 +55,7 @@ public class AnimUtils {
         TranslateTransition moveNodeUp = new TranslateTransition();
         moveNodeUp.setNode(sp);
         moveNodeUp.setDuration(ViewController.SPEED);
-        moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
+        moveNodeUp.setFromY(ViewController.TOP_INDENT);
         moveNodeUp.setByY(-ViewController.SORT_GROUP_MOVE_DELTA);
         return moveNodeUp;
     }

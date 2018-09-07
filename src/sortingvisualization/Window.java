@@ -14,26 +14,20 @@ import javafx.application.Application;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -48,8 +42,11 @@ import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
 import sortingvisualization.algorithms.InsertionSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import sortingvisualization.algorithms.MergeSort;
+import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import sortingvisualization.algorithms.QuickSort;
+import static sortingvisualization.algorithms.QuickSort.quickSort;
 import sortingvisualization.algorithms.SelectionSort;
+import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
  *
@@ -97,13 +94,11 @@ public class Window extends Application {
     int counter = 0;
     boolean isSelected = false;
     
-    public Window(){
-        //sortAlgorithm = new BubbleSort();
-        //initNewSorting();
-    }
+    public Window(){}
     
     @Override
     public void start(Stage primaryStage) {
+        displayPane = new StackPane();
         //menu
         initializeMenu(primaryStage);
         
@@ -128,37 +123,15 @@ public class Window extends Application {
         pauseImgV.setFitWidth(25);
         
         playBtn = new Button();
-        playBtn.setTooltip(new Tooltip("Sort!"));
+        playBtn.setTooltip(new Tooltip("Play!"));
         playBtn.setGraphic(playImgV);
         playBtn.getStyleClass().add("playButton");
         playBtn.setOnAction(event->play());
         
-        
-        /*playBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                if(!isSelected){
-                    playBtn.setGraphic(pauseImgV);
-                    Runnable task = new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        testSort();
-                    }
-                };
-                Thread backgroundThread = new Thread(task);
-                backgroundThread.setDaemon(true);
-                isSelected = true;
-                backgroundThread.start();
-                } else {
-                    playBtn.setGraphic(playImgV);
-                    isSelected = false;
-                }
-                
-            }
-        });*/
-        
-        pauseBtn = new Button("Pause");
+        pauseBtn = new Button();
+        pauseBtn.setTooltip(new Tooltip("Pause"));
+        pauseBtn.setGraphic(pauseImgV);
+        pauseBtn.getStyleClass().add("playButton");
         pauseBtn.setOnAction(event->pause());
         
         stepBackBtn = new Button();
@@ -169,19 +142,6 @@ public class Window extends Application {
         stepBackBtn.setGraphic(rbImgView);
         stepBackBtn.getStyleClass().add("playButton");
         stepBackBtn.setOnAction(event->goStepBack());
-        /*stepBackBtn.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                if(counter == actions.size()){
-                    counter--;
-                }
-                if(counter >= 0){
-                    printInstance(actions, counter);
-                    counter--;
-                }
-            }
-        });*/
-        
         
         stepForthBtn = new Button();
         Image rewForthImg = new Image(getClass().getResourceAsStream("/rewind_forth.png"));
@@ -191,17 +151,11 @@ public class Window extends Application {
         stepForthBtn.setGraphic(rfImgView);
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
-        /*stepForthBtn.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                if(counter + 1 < actions.size()){
-                    counter++;
-                    printInstance(actions, counter);
-                }
-            }
-        });*/
+        
+        initialize(1);
         
         controlBox.getChildren().addAll(stepBackBtn, playBtn, pauseBtn, stepForthBtn);
+        controlBox.setAlignment(Pos.CENTER);
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
         
@@ -211,22 +165,16 @@ public class Window extends Application {
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, algorithmButtonBox);
         
-        //graphic
-        displayPane = new Pane();
-        initialize(1);
-        
         BorderPane root = new BorderPane();
+        root.setCenter(displayPane);
         root.setTop(top);
         root.setBottom(controlBox);
-        root.setCenter(displayPane);
-        
         
         
         Scene scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
         primaryStage.setTitle("Sorting Alg Visualisation");
         primaryStage.setScene(scene);
-        
         
         //displayPane.setMaxSize(root.getWidth()/2, root.getHeight()/2);
         
@@ -260,65 +208,33 @@ public class Window extends Application {
         alg1.setTooltip(new Tooltip("Bubble Sort"));
         alg1.getStyleClass().add("button");
         alg1.setOnAction(event->initialize(1));
-        /*alg1.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                sortAlgorithm = new BubbleSort();
-                initNewSorting();
-            }
-        });*/
         
         alg2 = new Button("INS");
         alg2.setTooltip(new Tooltip("Insertion Sort"));
         alg2.getStyleClass().add("button");
         alg2.setOnAction(event->initialize(2));
-        /*alg2.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                sortAlgorithm = new InsertionSort();
-                initNewSorting();
-            }
-        });*/
         
         alg3 = new Button("SEL");
         alg3.setTooltip(new Tooltip("Selection Sort"));
         alg3.getStyleClass().add("button");
-        /*alg3.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                sortAlgorithm = new SelectionSort();
-                initNewSorting();
-            }
-        });*/
+        alg3.setOnAction(event->initialize(3));
         
         alg4 = new Button("QUI");
         alg4.setTooltip(new Tooltip("Quick Sort"));
         alg4.getStyleClass().add("button");
-        /*alg4.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                sortAlgorithm = new QuickSort();
-                initNewSorting();
-            }
-        });*/
+        alg4.setOnAction(event->initialize(4));
         
         alg5 = new Button("MRG");
         alg5.setTooltip(new Tooltip("Merge Sort"));
         alg5.getStyleClass().add("button");
-        /*alg5.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                sortAlgorithm = new MergeSort();
-                initNewSorting();
-            }
-        });*/
+        alg5.setOnAction(event->initialize(5));
         
-        alg6 = new Button("COU");
+        /*alg6 = new Button("COU");
         alg6.setTooltip(new Tooltip("Counting Sort"));
-        alg6.getStyleClass().add("button");
+        alg6.getStyleClass().add("button");*/
         
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg2, alg3, alg4, alg5, alg6);
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg2, alg3, alg4, alg5);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -365,14 +281,18 @@ public class Window extends Application {
             case 2:
                 transitions = insertionSort(list, transitions);
                 break;
+            case 3:
+                transitions = selectionSort(list, transitions);
+                break;
+            case 4:
+                transitions = quickSort(list, transitions);
+                break;
+            case 5:
+                transitions = mergeSort(list, transitions);
+                break;
             default:
         }
-                
-        //transitions = mergeSort(list, transitions);
-        
-        //
-        //transitions = selectionSort(list, transitions);
-        //transitions = quickSort(list, transitions);
+           
         anyPlaying = createAnyPlayingBinding(transitions);
         
         stepForthBtn.disableProperty().bind(
@@ -451,6 +371,7 @@ public class Window extends Application {
         BrickNode.setAlignment(text, Pos.TOP_CENTER);
         stackPane.setAlignment(Pos.TOP_CENTER);
         stackPane.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
+        stackPane.setTranslateY(ViewController.TOP_INDENT);
         stackPane.setShape(rectangle);
         return stackPane;
     }
@@ -475,39 +396,6 @@ public class Window extends Application {
 
     }
     
-    /*private void initNewSorting(){
-        counter = 0;
-        array = new SortArray();
-        array.generate(ARRAY_SIZE, MAX_ARRAY_VAL);
-        System.out.println(array);
-        sortAlgorithm.sort(array);
-        actions = array.actions;
-    }
-    
-    public void testSort(){
-        if(counter < 0 || counter == actions.size()){
-            System.out.println();
-            counter = 0;
-        } 
-        for (int i = counter; i < actions.size(); i++, counter++) {
-            try{
-                if(isSelected == false) break;
-                printInstance(actions, i);
-                Thread.sleep(500);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
-    }
-    
-    public void printInstance(List<ActionInstance> action, int i){
-        int[] temp = action.get(i).get();
-                if(temp[0] == 0){
-                    System.out.println("array[" + temp[1] + "] and array[" + temp[2] + "] swapped");
-                } else if(temp[0] == 1){
-                    System.out.println("array[" + temp[1] + "] and array[" + temp[2] + "] compared");
-                }
-    }*/
 
     /**
      * @param args the command line arguments
