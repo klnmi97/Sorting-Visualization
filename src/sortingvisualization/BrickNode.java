@@ -14,7 +14,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class BrickNode extends StackPane implements Comparable<BrickNode>{
     

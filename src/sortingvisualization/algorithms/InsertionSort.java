@@ -13,13 +13,11 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
-import sortingvisualization.Core.IAlgorithm;
-import sortingvisualization.Sorting.SortArray;
 import sortingvisualization.ViewController;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class InsertionSort {
 
@@ -62,8 +60,6 @@ public class InsertionSort {
                 sq.add(new SequentialTransition(AnimUtils.moveNodeUp(key),
                     AnimUtils.setColor(key, Color.RED, ViewController.DEFAULT)));
             }
-            
-            
             
             list.set(j+1, key);
             

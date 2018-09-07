@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class AnimUtils {
     

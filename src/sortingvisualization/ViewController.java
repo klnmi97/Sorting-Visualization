@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class ViewController {
     

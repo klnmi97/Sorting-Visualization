@@ -37,18 +37,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sortingvisualization.Core.IAlgorithm;
-import sortingvisualization.Sorting.ActionInstance;
-import sortingvisualization.Sorting.SortArray;
-import sortingvisualization.algorithms.BubbleSort;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
-import sortingvisualization.algorithms.InsertionSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
-import sortingvisualization.algorithms.MergeSort;
 import static sortingvisualization.algorithms.MergeSort.mergeSort;
-import sortingvisualization.algorithms.QuickSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
-import sortingvisualization.algorithms.SelectionSort;
 import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
@@ -57,8 +49,6 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
  */
 public class Window extends Application {
     
-    private final int ARRAY_SIZE = 10;
-    private final int MAX_ARRAY_VAL = 80;
     private final int max = 100;
     private final int min = (int)(max * 0.1);
     
@@ -89,14 +79,6 @@ public class Window extends Application {
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
     BooleanBinding anyPlaying;
-    
-    IAlgorithm sortAlgorithm;
-    SortArray array;
-    List<ActionInstance> actions;
-    
-    
-    int counter = 0;
-    boolean isSelected = false;
     
     public Window(){}
     
@@ -247,7 +229,6 @@ public class Window extends Application {
         /*alg6 = new Button("COU");
         alg6.setTooltip(new Tooltip("Counting Sort"));
         alg6.getStyleClass().add("button");*/
-        
         
         algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg2, alg3, alg4, alg5);
         algorithmButtonBox.setStyle("-fx-background-color: black");

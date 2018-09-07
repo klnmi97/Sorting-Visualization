@@ -6,9 +6,7 @@
 package sortingvisualization;
 
 import javafx.application.Application;
-import sortingvisualization.Sorting.ActionInstance;
 
-import sortingvisualization.Sorting.SortArray;
 import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.CocktailShakerSort;
 import sortingvisualization.algorithms.HeapSort;

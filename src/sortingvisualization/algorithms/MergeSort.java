@@ -16,7 +16,7 @@ import sortingvisualization.ViewController;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class MergeSort {
 
