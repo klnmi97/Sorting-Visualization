@@ -15,8 +15,9 @@ import javafx.util.Duration;
 public class ViewController {
     
     public static final int N_VALUES = 10;
-    public static final int SPACING = 50;
-    public static int LEFT_INDENT = -250;
+    public static final int SPACING = 60;
+    //counting from center as 0; half of (spacing * number of elements)
+    public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);//-250;
     public static final int TOP_INDENT = 0;
     public static final int SORT_GROUP_MOVE_DELTA = 250;
 
@@ -28,6 +29,6 @@ public class ViewController {
     //colours of bricks:
     //COMPARE - selected, DEFAULT - main color
     public static final Color COMPARE = Color.AQUAMARINE;
-    public static final Color DEFAULT = Color.GOLD;
+    public static final Color DEFAULT = Color.DARKCYAN;
     public static final Color SORTED = Color.ORANGE;
 }
