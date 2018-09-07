@@ -365,14 +365,13 @@ public class Window extends Application {
     
     private BrickNode createValueNode(int i, int value, int currentMax) {
         
-        //int max = 51;
         int num;
         if(value < min)
             num = min;
         else 
             num = value;
         double percent = (double)num / currentMax;
-        Rectangle rectangle = new Rectangle(40, (percent * 10 * 20) + 5);
+        Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
         rectangle.setFill(ViewController.DEFAULT);
         
         Text text = new Text(String.valueOf(num));
