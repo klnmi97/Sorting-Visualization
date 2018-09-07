@@ -14,6 +14,8 @@ import javafx.application.Application;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -79,6 +82,7 @@ public class Window extends Application {
     Button pauseBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Slider speedSlider;
     
     Pane displayPane;
     ArrayList<BrickNode> list;
@@ -107,6 +111,16 @@ public class Window extends Application {
         
         controlLbl = new Label();
         controlLbl.getStyleClass().add("blcklabel");
+        
+        speedSlider = new Slider();
+        speedSlider.setMin(1);
+        speedSlider.setMax(7);
+        speedSlider.setValue(3);
+        //speedSlider.setShowTickLabels(true);
+        //speedSlider.setShowTickMarks(true);
+        speedSlider.setMajorTickUnit(3);
+        speedSlider.setMinorTickCount(1);
+        speedSlider.setBlockIncrement(1);
         
         initializeUpperPanel();
         
@@ -154,8 +168,9 @@ public class Window extends Application {
         
         initialize(1);
         
-        controlBox.getChildren().addAll(stepBackBtn, playBtn, pauseBtn, stepForthBtn);
+        controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
+        
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
         
@@ -245,7 +260,7 @@ public class Window extends Application {
         Animation anim = transitions.get(index);
         anim.setOnFinished(evt -> nextTransitionIndex.set(index));
         //Todo speedslider
-        anim.setRate(/*-speedSlider.getValue()*/ -3);
+        anim.setRate(-speedSlider.getValue());
         anim.play();
     }
     //play next animation
@@ -254,7 +269,7 @@ public class Window extends Application {
         Animation anim = transitions.get(index);
         anim.setOnFinished(evt -> nextTransitionIndex.set(index+1));
         //TODO speedslider
-        anim.setRate(/*speedSlider.getValue()*/3);
+        anim.setRate(speedSlider.getValue());
         anim.play();
     }
     //03.09: fixed play
@@ -309,7 +324,7 @@ public class Window extends Application {
                 .or(anyPlaying)
         );
         
-        /*speedSlider.valueProperty().addListener(new ChangeListener<Number>(){
+        speedSlider.valueProperty().addListener(new ChangeListener<Number>(){
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 for(int i = 0; i < transitions.size(); i++){
@@ -317,7 +332,7 @@ public class Window extends Application {
                 }
             }
             
-        });*/
+        });
         
     }
     
@@ -335,8 +350,7 @@ public class Window extends Application {
                 nextTransitionIndex.set(index+1);
                 play();
             });
-            //TODO:speedslider
-            anim.setRate(/*speedSlider.getValue()*/3);
+            anim.setRate(speedSlider.getValue());
             anim.play();}
     }
     //22.06 new pause() method with stream

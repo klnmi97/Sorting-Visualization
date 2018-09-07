@@ -55,8 +55,8 @@ public class AnimUtils {
         TranslateTransition moveNodeUp = new TranslateTransition();
         moveNodeUp.setNode(sp);
         moveNodeUp.setDuration(ViewController.SPEED);
-        moveNodeUp.setFromY(ViewController.TOP_INDENT);
-        moveNodeUp.setByY(-ViewController.SORT_GROUP_MOVE_DELTA);
+        moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
+        moveNodeUp.setToY(ViewController.TOP_INDENT);
         return moveNodeUp;
     }
     
