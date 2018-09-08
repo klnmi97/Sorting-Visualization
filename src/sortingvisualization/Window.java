@@ -35,6 +35,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -91,6 +92,7 @@ public class Window extends Application {
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
     BooleanBinding anyPlaying;
     
+    Scene scene;
     public Window(){}
     
     @Override
@@ -177,7 +179,7 @@ public class Window extends Application {
         root.setBottom(controlBox);
         
         
-        Scene scene = new Scene(root, 1280, 720);
+        scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
         primaryStage.setTitle("Sorting Alg Visualisation");
         primaryStage.setScene(scene);
@@ -276,12 +278,16 @@ public class Window extends Application {
         
         if(input!=null){
             ViewController.N_VALUES = input.length;
+            ViewController.LEFT_INDENT = (int)(((double)input.length / 2) 
+                    * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 BrickNode stackPane = createValueNode(i, input[i], max);
                 list.add(stackPane);
             }
         }else{
             ViewController.N_VALUES = 10;
+            ViewController.LEFT_INDENT = (int)(((double)ViewController.N_VALUES / 2) 
+                    * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 int value = random.nextInt(max - min + 1) + min;
                 BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
@@ -418,15 +424,23 @@ public class Window extends Application {
         Dialog<Results> dialog = new Dialog<>();
         
         dialog.setTitle("New sorting");
-        dialog.setContentText("Enter data:");
+        dialog.setHeaderText("Please, specify new sorting!");
+        dialog.initOwner(scene.getWindow()); //TODO: restyle
+        
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Label inputLbl = new Label("Enter the sequence: ");
+        Label choiseLbl = new Label("Choose an Algorithm: ");
         TextField textField = new TextField("35, 7, 18, 54, 31, 76, 5");
         ObservableList<Algorithm> options =
             FXCollections.observableArrayList(Algorithm.values());
         ComboBox<Algorithm> comboBox = new ComboBox<>(options);
         comboBox.getSelectionModel().selectFirst();
-        dialogPane.setContent(new VBox(8, textField, comboBox));
+        dialogPane.setContent(new VBox(8, new HBox(inputLbl, textField), 
+                new HBox(choiseLbl, comboBox)));
+        
+        scene.getRoot().setEffect(new GaussianBlur(5));
+        dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
         Platform.runLater(textField::requestFocus);
         dialog.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
