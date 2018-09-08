@@ -8,22 +8,32 @@ package sortingvisualization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import javafx.animation.Animation;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,6 +67,7 @@ public class Window extends Application {
     Menu menuEdit;
     Menu menuView;
     MenuItem menuItemExit;
+    MenuItem menuItemNew;
     
     HBox algorithmButtonBox;
     Label algLbl;
@@ -98,8 +109,6 @@ public class Window extends Application {
         speedSlider.setMin(1);
         speedSlider.setMax(7);
         speedSlider.setValue(3);
-        //speedSlider.setShowTickLabels(true);
-        //speedSlider.setShowTickMarks(true);
         speedSlider.setMajorTickUnit(3);
         speedSlider.setMinorTickCount(1);
         speedSlider.setBlockIncrement(1);
@@ -148,7 +157,7 @@ public class Window extends Application {
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
         
-        initialize(1);
+        initialize(1, null);
         
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
@@ -194,6 +203,10 @@ public class Window extends Application {
         menuItemExit.setOnAction(a -> primaryStage.close());
         menuFile.getItems().add(menuItemExit);
         
+        menuItemNew = new MenuItem("Create sorting");
+        menuItemNew.setOnAction(event->createNewSorting());
+        menuFile.getItems().add(menuItemNew);
+        
         menuBar = new MenuBar();
 	menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
     }
@@ -204,27 +217,27 @@ public class Window extends Application {
         alg1 = new Button("BUBL");
         alg1.setTooltip(new Tooltip("Bubble Sort"));
         alg1.getStyleClass().add("button");
-        alg1.setOnAction(event->initialize(1));
+        alg1.setOnAction(event->initialize(1, null));
         
         alg2 = new Button("INS");
         alg2.setTooltip(new Tooltip("Insertion Sort"));
         alg2.getStyleClass().add("button");
-        alg2.setOnAction(event->initialize(2));
+        alg2.setOnAction(event->initialize(2, null));
         
         alg3 = new Button("SEL");
         alg3.setTooltip(new Tooltip("Selection Sort"));
         alg3.getStyleClass().add("button");
-        alg3.setOnAction(event->initialize(3));
+        alg3.setOnAction(event->initialize(3, null));
         
         alg4 = new Button("QUI");
         alg4.setTooltip(new Tooltip("Quick Sort"));
         alg4.getStyleClass().add("button");
-        alg4.setOnAction(event->initialize(4));
+        alg4.setOnAction(event->initialize(4, null));
         
         alg5 = new Button("MRG");
         alg5.setTooltip(new Tooltip("Merge Sort"));
         alg5.getStyleClass().add("button");
-        alg5.setOnAction(event->initialize(5));
+        alg5.setOnAction(event->initialize(5, null));
         
         /*alg6 = new Button("COU");
         alg6.setTooltip(new Tooltip("Counting Sort"));
@@ -254,18 +267,28 @@ public class Window extends Application {
         anim.play();
     }
     //03.09: fixed play
-    public void initialize(int algorithm){
+    public void initialize(int algorithm, int[] input){
         Random random = new Random();
         stopAllAnimations();
         nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
         list = new ArrayList<>();
         
-        for (int i = 0; i < ViewController.N_VALUES; i++) {
-            int value = random.nextInt(max - min + 1) + min;
-            BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
-            list.add(stackPane);
+        if(input!=null){
+            ViewController.N_VALUES = input.length;
+            for (int i = 0; i < ViewController.N_VALUES; i++) {
+                BrickNode stackPane = createValueNode(i, input[i], max);
+                list.add(stackPane);
+            }
+        }else{
+            ViewController.N_VALUES = 10;
+            for (int i = 0; i < ViewController.N_VALUES; i++) {
+                int value = random.nextInt(max - min + 1) + min;
+                BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
+                list.add(stackPane);
+            }
         }
+        
 
         displayPane.getChildren().addAll(list);
         transitions = new ArrayList<>();
@@ -389,8 +412,72 @@ public class Window extends Application {
         };
 
     }
-    
 
+    private void createNewSorting() {
+        int[] customInput;
+        Dialog<Results> dialog = new Dialog<>();
+        
+        dialog.setTitle("New sorting");
+        dialog.setContentText("Enter data:");
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        TextField textField = new TextField("35, 7, 18, 54, 31, 76, 5");
+        ObservableList<Algorithm> options =
+            FXCollections.observableArrayList(Algorithm.values());
+        ComboBox<Algorithm> comboBox = new ComboBox<>(options);
+        comboBox.getSelectionModel().selectFirst();
+        dialogPane.setContent(new VBox(8, textField, comboBox));
+        Platform.runLater(textField::requestFocus);
+        dialog.setResultConverter((ButtonType button) -> {
+            if (button == ButtonType.OK) {
+                return new Results(textField.getText(),
+                    comboBox.getValue());
+            }
+            return null;
+        });
+        
+        Optional<Results> result = dialog.showAndWait();
+        if (result.isPresent()){
+            String[] intStr = result.get().input.split("(\\D+)");
+            customInput = new int[intStr.length];
+            for (int i = 0; i < intStr.length; i++) {
+                customInput[i] = Integer.parseInt(intStr[i]);
+            }
+            switch(result.get().algoritm){
+                case Bubble:
+                    initialize(1, customInput);
+                    break;
+                case Insertion:
+                    initialize(2, customInput);
+                    break;
+                case Selection:
+                    initialize(3, customInput);
+                    break;
+                case Quick:
+                    initialize(4, customInput);
+                    break;
+                case Merge:
+                    initialize(5, customInput);
+                    break;
+                default:
+                    initialize(1, customInput);
+            } 
+        }
+    }
+    
+    private static enum Algorithm {Bubble, Insertion, Selection, Merge, Quick}
+
+    private static class Results {
+
+        String input;
+        Algorithm algoritm;
+
+        public Results(String input, Algorithm algorithm) {
+            this.input = input;
+            this.algoritm = algorithm;
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */

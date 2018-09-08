@@ -14,7 +14,7 @@ import javafx.util.Duration;
  */
 public class ViewController {
     
-    public static final int N_VALUES = 10;
+    public static int N_VALUES = 10;
     public static final int SPACING = 60;
     //counting from center as 0; half of (spacing * number of elements)
     public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
