@@ -425,7 +425,7 @@ public class Window extends Application {
         
         dialog.setTitle("New sorting");
         dialog.setHeaderText("Please, specify new sorting!");
-        dialog.initOwner(scene.getWindow()); //TODO: restyle
+        //dialog.initOwner(scene.getWindow()); //TODO: restyle
         
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
