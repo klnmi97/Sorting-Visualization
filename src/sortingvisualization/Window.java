@@ -78,7 +78,7 @@ public class Window extends Application {
     ArrayList<BrickNode> list;
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
-    BooleanBinding anyPlaying;
+    BooleanBinding anyPlayingAnim;
     
     public Window(){}
     
@@ -289,20 +289,17 @@ public class Window extends Application {
             default:
         }
            
-        anyPlaying = createAnyPlayingBinding(transitions);
+        anyPlayingAnim = createAnyPlayingBinding(transitions);
         
-        stepForthBtn.disableProperty().bind(
-                nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
-                .or(anyPlaying)
+        stepForthBtn.disableProperty().bind(nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
+                .or(anyPlayingAnim)
         );
         
-        stepBackBtn.disableProperty().bind(
-                nextTransitionIndex.lessThanOrEqualTo(0)
-                .or(anyPlaying));
+        stepBackBtn.disableProperty().bind(nextTransitionIndex.lessThanOrEqualTo(0)
+                .or(anyPlayingAnim));
         
-        playBtn.disableProperty().bind(
-                nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
-                .or(anyPlaying)
+        playBtn.disableProperty().bind(nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
+                .or(anyPlayingAnim)
         );
         
         speedSlider.valueProperty().addListener(new ChangeListener<Number>(){
