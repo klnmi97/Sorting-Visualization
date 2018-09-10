@@ -20,6 +20,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -43,6 +44,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -421,36 +423,11 @@ public class Window extends Application {
 
     private void createNewSorting() {
         int[] customInput;
-        Dialog<Results> dialog = new Dialog<>();
-        
-        dialog.setTitle("New sorting");
-        dialog.setHeaderText("Please, specify new sorting!");
-        //dialog.initOwner(scene.getWindow()); //TODO: restyle
-        
-        DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        Label inputLbl = new Label("Enter the sequence: ");
-        Label choiseLbl = new Label("Choose an Algorithm: ");
-        TextField textField = new TextField("35, 7, 18, 54, 31, 76, 5");
-        ObservableList<Algorithm> options =
-            FXCollections.observableArrayList(Algorithm.values());
-        ComboBox<Algorithm> comboBox = new ComboBox<>(options);
-        comboBox.getSelectionModel().selectFirst();
-        dialogPane.setContent(new VBox(8, new HBox(inputLbl, textField), 
-                new HBox(choiseLbl, comboBox)));
-        
+        InputDialog dialog = new InputDialog(max);
         scene.getRoot().setEffect(new GaussianBlur(5));
         dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
-        Platform.runLater(textField::requestFocus);
-        dialog.setResultConverter((ButtonType button) -> {
-            if (button == ButtonType.OK) {
-                return new Results(textField.getText(),
-                    comboBox.getValue());
-            }
-            return null;
-        });
-        
         Optional<Results> result = dialog.showAndWait();
+        
         if (result.isPresent()){
             String[] intStr = result.get().input.split("(\\D+)");
             customInput = new int[intStr.length];
@@ -479,18 +456,7 @@ public class Window extends Application {
         }
     }
     
-    private static enum Algorithm {Bubble, Insertion, Selection, Merge, Quick}
-
-    private static class Results {
-
-        String input;
-        Algorithm algoritm;
-
-        public Results(String input, Algorithm algorithm) {
-            this.input = input;
-            this.algoritm = algorithm;
-        }
-    }
+    
     
     /**
      * @param args the command line arguments
