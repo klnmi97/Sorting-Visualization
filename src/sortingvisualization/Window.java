@@ -12,29 +12,19 @@ import java.util.Optional;
 import java.util.Random;
 import javafx.animation.Animation;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -44,7 +34,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -58,7 +47,7 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
  *
- * @author Misha
+ * @author Mykhailo Klunko
  */
 public class Window extends Application {
     
@@ -168,7 +157,6 @@ public class Window extends Application {
         
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
-        
         
         //algList.setSpacing(10);
         
