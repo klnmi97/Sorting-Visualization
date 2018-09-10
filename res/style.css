@@ -33,5 +33,6 @@
 .blcklabel{
     -fx-text-fill: white; 
     -fx-font-family: Arial; 
-    -fx-font-size: 25px
+    -fx-font-size: 25px;
+    -fx-padding: 5px;
 }
