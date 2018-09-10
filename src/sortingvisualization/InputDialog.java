@@ -11,8 +11,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -23,6 +23,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  *
@@ -49,14 +51,17 @@ public class InputDialog extends Dialog<Results> {
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         final Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
         
+        Font dialogFont = Font.font("Helvetica", FontWeight.BOLD, 12);
         inputLbl = new Label("Enter the sequence: ");
+        inputLbl.setFont(dialogFont);
         choiseLbl = new Label("Choose an Algorithm: ");
+        choiseLbl.setFont(dialogFont);
         errorLbl = new Label("");
         errorLbl.textFillProperty().setValue(Color.RED);
-        
+        errorLbl.setFont(dialogFont);
         
         inputTextField = new TextField(Arrays.toString(
-                generateRandomArray(ViewController.N_VALUES))
+                generateRandomArray(10))
                 .replaceAll("\\s+", " ").replaceAll("\\[|\\]", ""));
         inputTextField.setPrefWidth(200);
         
@@ -71,8 +76,16 @@ public class InputDialog extends Dialog<Results> {
             FXCollections.observableArrayList(Algorithm.values());
         comboBox = new ComboBox<>(options);
         comboBox.getSelectionModel().selectFirst();
-        dialogPane.setContent(new VBox(8, new HBox(inputLbl, inputTextField), 
-                new HBox(choiseLbl, comboBox), errorLbl));
+        
+        VBox leftColumn = new VBox(inputLbl,choiseLbl);
+        leftColumn.setSpacing(12);
+        leftColumn.setPadding(new Insets(4,4,4,4));
+        VBox rightColumn = new VBox(inputTextField, comboBox);
+        rightColumn.setSpacing(5);
+        dialogPane.setContent(new VBox(8, new HBox(
+                leftColumn, 
+                rightColumn), 
+                errorLbl));
         
         setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
