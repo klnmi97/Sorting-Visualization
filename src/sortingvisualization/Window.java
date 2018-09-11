@@ -38,6 +38,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
+import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
@@ -226,11 +227,12 @@ public class Window extends Application {
         alg5.getStyleClass().add("button");
         alg5.setOnAction(event->initialize(5));
         
-        /*alg6 = new Button("COU");
-        alg6.setTooltip(new Tooltip("Counting Sort"));
-        alg6.getStyleClass().add("button");*/
+        alg6 = new Button("C-SH");
+        alg6.setTooltip(new Tooltip("CocktailShaker Sort"));
+        alg6.getStyleClass().add("button");
+        alg6.setOnAction(event->initialize(6));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg2, alg3, alg4, alg5);
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -285,6 +287,9 @@ public class Window extends Application {
                 break;
             case 5:
                 transitions = mergeSort(list, transitions);
+                break;
+            case 6:
+                transitions = cocktailShakerSort(list, transitions);
                 break;
             default:
         }
