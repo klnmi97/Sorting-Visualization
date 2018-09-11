@@ -67,7 +67,7 @@ public class InputDialog extends Dialog<Results> {
         
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
             if (!isInputValid(inputTextField.getText())) {
-                errorLbl.setText("Input values must be less than 100!");
+                errorLbl.setText("Invalid input! Enter numbers from range 6-100");
                 event.consume(); //not valid
             }
         });
@@ -99,16 +99,26 @@ public class InputDialog extends Dialog<Results> {
     }
     
     private boolean isInputValid(String inputText){
+        //TODO: make better input correction
+        try{
         String[] intStr = inputText.split("(\\D+)");
-            int [] input = new int[intStr.length];
-            int maxValue = 0;
-            for (int i = 0; i < intStr.length; i++) {
-                input[i] = Integer.parseInt(intStr[i]);
-                if(input[i] > maxValue){
-                    maxValue = input[i];
-                }
+        int [] input = new int[intStr.length];
+        int maxValue = 0;
+        int minValue = 6;
+        for (int i = 0; i < intStr.length; i++) {
+            input[i] = Integer.parseInt(intStr[i]);
+            if(input[i] > maxValue){
+                maxValue = input[i];
             }
-            return maxValue <= maxInputValue;
+            if(input[i] < minValue){
+                minValue = input[i];
+            }
+        }
+
+        return maxValue <= maxInputValue && minValue > 5;
+        } catch(Exception e){
+            return false;
+        }
     }
     
     private int[] generateRandomArray(int size){
