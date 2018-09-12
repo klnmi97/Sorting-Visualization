@@ -38,10 +38,12 @@ public class InputDialog extends Dialog<Results> {
     private TextField inputTextField;
     private ComboBox<Algorithm> comboBox;
     
-    private int maxInputValue; 
+    private int maxInputValue;
+    private int minInputValue;
     
-    public InputDialog(int maxInputValue){
+    public InputDialog(int maxInputValue, int minInputValue){
         this.maxInputValue = maxInputValue;
+        this.minInputValue = minInputValue;
         setTitle("New sorting");
         setHeaderText("Please, specify new sorting!");
         
@@ -66,10 +68,15 @@ public class InputDialog extends Dialog<Results> {
         inputTextField.setPrefWidth(200);
         
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!isInputValid(inputTextField.getText())) {
-                errorLbl.setText("Invalid input! Enter numbers from range 6-100");
+            try{
+                isInputValid(inputTextField.getText());
+            } catch(Exception e){
+                errorLbl.setText("Invalid input! " + e.getMessage());
                 event.consume(); //not valid
             }
+            /*if (!isInputValid(inputTextField.getText())) {
+                
+            }*/
         });
         
         ObservableList<Algorithm> options =
@@ -82,10 +89,12 @@ public class InputDialog extends Dialog<Results> {
         leftColumn.setPadding(new Insets(4,4,4,4));
         VBox rightColumn = new VBox(inputTextField, comboBox);
         rightColumn.setSpacing(5);
+        VBox leftBottomBox = new VBox(errorLbl);
+        leftBottomBox.setPadding(new Insets(4,4,4,4));
         dialogPane.setContent(new VBox(8, new HBox(
                 leftColumn, 
                 rightColumn), 
-                errorLbl));
+                leftBottomBox));
         
         setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
@@ -98,15 +107,18 @@ public class InputDialog extends Dialog<Results> {
         Platform.runLater(inputTextField::requestFocus);
     }
     
-    private boolean isInputValid(String inputText){
-        //TODO: make better input correction
-        try{
+    private boolean isInputValid(String inputText) throws Exception{
+        
         String[] intStr = inputText.split("(\\D+)");
         int [] input = new int[intStr.length];
         int maxValue = 0;
         int minValue = 6;
         for (int i = 0; i < intStr.length; i++) {
-            input[i] = Integer.parseInt(intStr[i]);
+            try{
+                input[i] = Integer.parseInt(intStr[i]);
+            } catch(Exception e){
+                throw new Exception("");
+            }
             if(input[i] > maxValue){
                 maxValue = input[i];
             }
@@ -114,11 +126,20 @@ public class InputDialog extends Dialog<Results> {
                 minValue = input[i];
             }
         }
-
-        return maxValue <= maxInputValue && minValue > 5;
-        } catch(Exception e){
-            return false;
+        //return maxValue <= maxInputValue && minValue > 5 && intStr.length > 1;
+        if(maxValue > maxInputValue){
+            throw new Exception("Input value must be less than " + maxInputValue);
         }
+        if(minValue < minInputValue){
+            throw new Exception("Input value must be bigger than " + minInputValue);
+        }
+        if(intStr.length <= 1){
+            throw new Exception("Enter at least two numbers");
+        } 
+        else if(intStr.length > 20){
+            throw new Exception("Too much data");
+        }
+        return true;
     }
     
     private int[] generateRandomArray(int size){

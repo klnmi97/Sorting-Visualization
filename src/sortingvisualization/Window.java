@@ -52,7 +52,7 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 public class Window extends Application {
     
     private final int max = 100;
-    private final int min = (int)(max * 0.1);
+    private final int min = (int)(max * 0.05);
     
     private MenuBar menuBar;
     Menu menuFile;
@@ -411,7 +411,7 @@ public class Window extends Application {
 
     private void createNewSorting() {
         int[] customInput;
-        InputDialog dialog = new InputDialog(max);
+        InputDialog dialog = new InputDialog(max, min);
         scene.getRoot().setEffect(new GaussianBlur(5));
         dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
         Optional<Results> result = dialog.showAndWait();
