@@ -8,6 +8,7 @@ package sortingvisualization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import javafx.animation.Animation;
 import javafx.application.Application;
@@ -25,6 +26,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -46,18 +48,19 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
  *
- * @author Misha
+ * @author Mykhailo Klunko
  */
 public class Window extends Application {
     
     private final int max = 100;
-    private final int min = (int)(max * 0.1);
+    private final int min = (int)(max * 0.05);
     
     private MenuBar menuBar;
     Menu menuFile;
     Menu menuEdit;
     Menu menuView;
     MenuItem menuItemExit;
+    MenuItem menuItemNew;
     
     HBox algorithmButtonBox;
     Label algLbl;
@@ -81,6 +84,7 @@ public class Window extends Application {
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
     BooleanBinding anyPlayingAnim;
     
+    Scene scene;
     public Window(){}
     
     @Override
@@ -99,8 +103,6 @@ public class Window extends Application {
         speedSlider.setMin(1);
         speedSlider.setMax(7);
         speedSlider.setValue(3);
-        //speedSlider.setShowTickLabels(true);
-        //speedSlider.setShowTickMarks(true);
         speedSlider.setMajorTickUnit(3);
         speedSlider.setMinorTickCount(1);
         speedSlider.setBlockIncrement(1);
@@ -149,14 +151,13 @@ public class Window extends Application {
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
         
-        initialize(1);
+        initialize(1, null);
         
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
-        
         
         //algList.setSpacing(10);
         
@@ -169,7 +170,7 @@ public class Window extends Application {
         root.setBottom(controlBox);
         
         
-        Scene scene = new Scene(root, 1280, 720);
+        scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
         primaryStage.setTitle("Sorting Alg Visualisation");
         primaryStage.setScene(scene);
@@ -195,6 +196,10 @@ public class Window extends Application {
         menuItemExit.setOnAction(a -> primaryStage.close());
         menuFile.getItems().add(menuItemExit);
         
+        menuItemNew = new MenuItem("Create sorting");
+        menuItemNew.setOnAction(event->createNewSorting());
+        menuFile.getItems().add(menuItemNew);
+        
         menuBar = new MenuBar();
 	menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
     }
@@ -205,27 +210,27 @@ public class Window extends Application {
         alg1 = new Button("BUBL");
         alg1.setTooltip(new Tooltip("Bubble Sort"));
         alg1.getStyleClass().add("button");
-        alg1.setOnAction(event->initialize(1));
+        alg1.setOnAction(event->initialize(1, null));
         
         alg2 = new Button("INS");
         alg2.setTooltip(new Tooltip("Insertion Sort"));
         alg2.getStyleClass().add("button");
-        alg2.setOnAction(event->initialize(2));
+        alg2.setOnAction(event->initialize(2, null));
         
         alg3 = new Button("SEL");
         alg3.setTooltip(new Tooltip("Selection Sort"));
         alg3.getStyleClass().add("button");
-        alg3.setOnAction(event->initialize(3));
+        alg3.setOnAction(event->initialize(3, null));
         
         alg4 = new Button("QUI");
         alg4.setTooltip(new Tooltip("Quick Sort"));
         alg4.getStyleClass().add("button");
-        alg4.setOnAction(event->initialize(4));
+        alg4.setOnAction(event->initialize(4, null));
         
         alg5 = new Button("MRG");
         alg5.setTooltip(new Tooltip("Merge Sort"));
         alg5.getStyleClass().add("button");
-        alg5.setOnAction(event->initialize(5));
+        alg5.setOnAction(event->initialize(5, null));
         
         alg6 = new Button("C-SH");
         alg6.setTooltip(new Tooltip("CocktailShaker Sort"));
@@ -256,18 +261,32 @@ public class Window extends Application {
         anim.play();
     }
     //03.09: fixed play
-    public void initialize(int algorithm){
+    public void initialize(int algorithm, int[] input){
         Random random = new Random();
         stopAllAnimations();
         nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
         list = new ArrayList<>();
         
-        for (int i = 0; i < ViewController.N_VALUES; i++) {
-            int value = random.nextInt(max - min + 1) + min;
-            BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
-            list.add(stackPane);
+        if(input!=null){
+            ViewController.N_VALUES = input.length;
+            ViewController.LEFT_INDENT = (int)(((double)input.length / 2) 
+                    * -ViewController.SPACING);
+            for (int i = 0; i < ViewController.N_VALUES; i++) {
+                BrickNode stackPane = createValueNode(i, input[i], max);
+                list.add(stackPane);
+            }
+        }else{
+            ViewController.N_VALUES = 10;
+            ViewController.LEFT_INDENT = (int)(((double)ViewController.N_VALUES / 2) 
+                    * -ViewController.SPACING);
+            for (int i = 0; i < ViewController.N_VALUES; i++) {
+                int value = random.nextInt(max - min + 1) + min;
+                BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
+                list.add(stackPane);
+            }
         }
+        
 
         displayPane.getChildren().addAll(list);
         transitions = new ArrayList<>();
@@ -391,8 +410,44 @@ public class Window extends Application {
         };
 
     }
-    
 
+    private void createNewSorting() {
+        int[] customInput;
+        InputDialog dialog = new InputDialog(max, min);
+        scene.getRoot().setEffect(new GaussianBlur(5));
+        dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
+        Optional<Results> result = dialog.showAndWait();
+        
+        if (result.isPresent()){
+            String[] intStr = result.get().input.split("(\\D+)");
+            customInput = new int[intStr.length];
+            for (int i = 0; i < intStr.length; i++) {
+                customInput[i] = Integer.parseInt(intStr[i]);
+            }
+            switch(result.get().algoritm){
+                case Bubble:
+                    initialize(1, customInput);
+                    break;
+                case Insertion:
+                    initialize(2, customInput);
+                    break;
+                case Selection:
+                    initialize(3, customInput);
+                    break;
+                case Quick:
+                    initialize(4, customInput);
+                    break;
+                case Merge:
+                    initialize(5, customInput);
+                    break;
+                default:
+                    initialize(1, customInput);
+            } 
+        }
+    }
+    
+    
+    
     /**
      * @param args the command line arguments
      */
