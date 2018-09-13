@@ -23,48 +23,42 @@ public class InsertionSort {
 
     public static List<Animation> insertionSort(ArrayList<BrickNode> list, List<Animation> sq)
     {
-        SequentialTransition extractKey;
         int n = list.size();
         for (int i=1; i<n; ++i)
         {
             BrickNode key = list.get(i);
-            
+            if(i == 1){
+                sq.add(AnimUtils.setColor(list.get(i-1), ViewController.DEFAULT, ViewController.SORTED));
+            }
             sq.add(new SequentialTransition(
                     AnimUtils.setColor(key, ViewController.DEFAULT, Color.RED),
                     AnimUtils.moveDownToX(key, i, i)));
-            
             int j = i-1;
-            
             while (j>=0 && list.get(j).compareTo(key) == 1) 
             {
-                sq.add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
+                sq.add(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
                         ViewController.COMPARE));
-                
                 sq.add(new SequentialTransition(
                         AnimUtils.swap(key, list.get(j), j+1, j),
                         AnimUtils.setColor(list.get(j), 
-                                ViewController.COMPARE, ViewController.DEFAULT)));
-                
+                                ViewController.COMPARE, ViewController.SORTED)));
                 list.set(j+1, list.get(j));
                 j = j-1;
             }
             if(j >= 0){
-                sq.add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
+                sq.add(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
                         ViewController.COMPARE));
                 sq.add(new ParallelTransition(
                         AnimUtils.setColor(list.get(j), ViewController.COMPARE, 
-                                    ViewController.DEFAULT),
+                                    ViewController.SORTED),
                         new SequentialTransition(AnimUtils.moveNodeUp(key),
-                        AnimUtils.setColor(key, Color.RED, ViewController.DEFAULT))));
+                        AnimUtils.setColor(key, Color.RED, ViewController.SORTED))));
             } else{
                 sq.add(new SequentialTransition(AnimUtils.moveNodeUp(key),
-                    AnimUtils.setColor(key, Color.RED, ViewController.DEFAULT)));
+                    AnimUtils.setColor(key, Color.RED, ViewController.SORTED)));
             }
-            
             list.set(j+1, key);
-            
         }
         return sq;
     }
-    
 }
