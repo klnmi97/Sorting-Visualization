@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -45,7 +47,11 @@ public class BubbleSort {
                 }  
                 //unselect (anim)
                 if(j == n - i - 1){
-                    sq.add(AnimUtils.unselectNodes(list.get(j-1), list.get(j)));
+                    sq.add(new ParallelTransition(
+                            AnimUtils.setColor(list.get(j-1), 
+                                ViewController.COMPARE, ViewController.DEFAULT),
+                            AnimUtils.setColor(list.get(n-i-1), 
+                                ViewController.COMPARE, ViewController.SORTED)));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
@@ -53,9 +59,9 @@ public class BubbleSort {
                             ViewController.DEFAULT));
                 }
             }
-            sq.add(AnimUtils.setColor(list.get(n-i-1), 
-                    ViewController.DEFAULT, ViewController.SORTED));
         }
+        sq.add(AnimUtils.setColor(list.get(0), 
+                ViewController.DEFAULT, ViewController.SORTED));
         return sq;
     } 
     
