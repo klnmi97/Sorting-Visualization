@@ -235,7 +235,7 @@ public class Window extends Application {
         alg6 = new Button("C-SH");
         alg6.setTooltip(new Tooltip("CocktailShaker Sort"));
         alg6.getStyleClass().add("button");
-        alg6.setOnAction(event->initialize(6));
+        alg6.setOnAction(event->initialize(6, null));
         
         algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5);
         algorithmButtonBox.setStyle("-fx-background-color: black");
@@ -427,6 +427,9 @@ public class Window extends Application {
             switch(result.get().algoritm){
                 case Bubble:
                     initialize(1, customInput);
+                    break;
+                case CocktailShaker:
+                    initialize(6, customInput);
                     break;
                 case Insertion:
                     initialize(2, customInput);

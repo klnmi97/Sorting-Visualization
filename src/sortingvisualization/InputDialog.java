@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -153,9 +152,7 @@ public class InputDialog extends Dialog<Results> {
         
 }
 
-
-
-enum Algorithm {Bubble, Insertion, Selection, Merge, Quick}
+enum Algorithm {Bubble, CocktailShaker, Insertion, Selection, Merge, Quick}
 
 class Results {
 
