@@ -21,44 +21,48 @@ import sortingvisualization.ViewController;
  */
 public class SelectionSort{
 
-    public static List<Animation> selectionSort(ArrayList<BrickNode> list, List<Animation> sq){
+    public static List<Animation> selectionSort(ArrayList<BrickNode> list, List<Animation> anim){
         
         int arrayLength = list.size();
         ParallelTransition parallelTransition;
-        for (int i = 0; i < arrayLength - 1; i++)  
-        {  
+        ParallelTransition compareTransition;
+        for (int i = 0; i < arrayLength - 1; i++){  
             int index = i;
-            sq.add(AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED));
+            anim.add(AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED));
+            compareTransition = new ParallelTransition();
             
-            for (int j = i + 1; j < arrayLength; j++){
-                
-                sq.add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
+            for (int j = i + 1; j < arrayLength; j++) {
+                compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
                         ViewController.COMPARE));
+                anim.add(compareTransition);
                 if (list.get(j).getValue() < list.get(index).getValue()){ 
                     
-                    sq.add(new SequentialTransition(
+                    anim.add(new ParallelTransition(
                             AnimUtils.setColor(list.get(index), Color.RED, 
                                     ViewController.DEFAULT),
                             AnimUtils.setColor(list.get(j), 
                                     ViewController.COMPARE, Color.RED)));
-                    index = j;  //searching for lowest index  
+                    index = j;  //searching for lowest index 
+                    compareTransition = new ParallelTransition();
                 } else {
-                    sq.add(AnimUtils.setColor(list.get(j), 
+                    compareTransition = new ParallelTransition();
+                    compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), 
                             ViewController.COMPARE, ViewController.DEFAULT));
                 }
             }
+            
+            anim.add(compareTransition);
             parallelTransition = new ParallelTransition();
             if(index != i){
-                sq.add(new SequentialTransition(
+                anim.add(new SequentialTransition(
                         AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED), 
                         AnimUtils.swap(list.get(index), list.get(i), index, i)));
                 parallelTransition.getChildren().add(AnimUtils.setColor(list.get(i), Color.RED, 
                         ViewController.DEFAULT));
             }
-            
             parallelTransition.getChildren().add(AnimUtils.setColor(list.get(index), Color.RED, 
                     ViewController.SORTED));
-            sq.add(parallelTransition);
+            anim.add(parallelTransition);
             
             BrickNode smallerNumber = list.get(index);   
             list.set(index, list.get(i));
@@ -66,9 +70,9 @@ public class SelectionSort{
             
             
         }
-        sq.add(AnimUtils.setColor(list.get(arrayLength - 1), ViewController.DEFAULT, 
+        anim.add(AnimUtils.setColor(list.get(arrayLength - 1), ViewController.DEFAULT, 
                         ViewController.SORTED));
-        return sq;
+        return anim;
     }
     
 }
