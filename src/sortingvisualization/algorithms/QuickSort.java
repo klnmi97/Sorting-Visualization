@@ -36,6 +36,9 @@ public class QuickSort {
             sort(list, low, partitionIndex-1, sq); 
             sort(list, partitionIndex+1, high, sq); 
         }
+        else if(low == high){
+            sq.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
+        }
     } 
      
     private static int partition(ArrayList<BrickNode> list, int low, int high, 
