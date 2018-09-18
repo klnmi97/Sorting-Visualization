@@ -28,7 +28,10 @@
     -fx-background-color: #000000;
 }
 
-
+.sideButton{
+    -fx-padding: 0;
+    -fx-min-width: 20px;
+}
 
 .blcklabel{
     -fx-text-fill: white; 
