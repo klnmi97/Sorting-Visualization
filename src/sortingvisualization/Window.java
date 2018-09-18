@@ -174,7 +174,8 @@ public class Window extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setTitle("Sorting Alg Visualisation");
         primaryStage.setScene(scene);
-        
+        primaryStage.setMinHeight(720);
+        primaryStage.setMinWidth(1100);
         //displayPane.setMaxSize(root.getWidth()/2, root.getHeight()/2);
         
         //primaryStage.setFullScreen(true); //left for menu
@@ -287,8 +288,13 @@ public class Window extends Application {
             }
         }
         
-
+        /*Polygon pol = QuickSort.createPointingTriangle();
+        pol.setOpacity(0.4);
+        pol.setTranslateX(ViewController.LEFT_INDENT);
+        StackPane.setAlignment(pol, Pos.TOP_CENTER);*/
         displayPane.getChildren().addAll(list);
+        //displayPane.getChildren().add(pol);
+        
         transitions = new ArrayList<>();
         
         switch(algorithm){
@@ -378,17 +384,17 @@ public class Window extends Application {
         
         Text text = new Text(String.valueOf(num));
         text.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-        BrickNode stackPane = new BrickNode(num);
-        stackPane.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        stackPane.setId(String.valueOf(num));
+        BrickNode node = new BrickNode(num);
+        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+        //node.setId(String.valueOf(num));
         //stackPane.setValue(num);
-        stackPane.getChildren().addAll(rectangle, text);
-        BrickNode.setAlignment(text, Pos.TOP_CENTER);
-        stackPane.setAlignment(Pos.TOP_CENTER);
-        stackPane.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
-        stackPane.setTranslateY(ViewController.TOP_INDENT);
-        stackPane.setShape(rectangle);
-        return stackPane;
+        node.getChildren().addAll(rectangle, text);
+        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        node.setAlignment(Pos.BOTTOM_CENTER);
+        node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
+        node.setTranslateY(ViewController.TOP_INDENT);
+        node.setShape(rectangle);
+        return node;
     }
     
      /*bidings*/

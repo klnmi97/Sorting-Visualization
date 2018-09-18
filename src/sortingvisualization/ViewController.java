@@ -18,8 +18,8 @@ public class ViewController {
     public static final int SPACING = 60;
     //counting from center as 0; half of (spacing * number of elements)
     public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
-    public static final int TOP_INDENT = 0;
-    public static final int SORT_GROUP_MOVE_DELTA = 250;
+    public static final int TOP_INDENT = -350;
+    public static final int SORT_GROUP_MOVE_DELTA = 250 + TOP_INDENT;
 
     public static final Duration SPEED = Duration.millis(1000);
     
