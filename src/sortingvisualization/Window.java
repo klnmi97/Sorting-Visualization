@@ -17,6 +17,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,11 +30,16 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -76,9 +82,11 @@ public class Window extends Application {
     Button pauseBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Button showSidePanelBtn;
     Slider speedSlider;
     
     Pane displayPane;
+    FlowPane sidePanel;
     ArrayList<BrickNode> list;
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
@@ -151,6 +159,11 @@ public class Window extends Application {
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
         
+        showSidePanelBtn = new Button("<");
+        showSidePanelBtn.setMaxWidth(10);
+        showSidePanelBtn.setMinHeight(70);
+        showSidePanelBtn.getStyleClass().add("sideButton");
+        
         initialize(1, null);
         
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
@@ -163,12 +176,23 @@ public class Window extends Application {
         
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, algorithmButtonBox);
-        
         BorderPane root = new BorderPane();
+        
+        sidePanel = new FlowPane();
+        sidePanel.setBackground(new Background(new BackgroundFill(Color.DARKTURQUOISE, CornerRadii.EMPTY, Insets.EMPTY)));
+        sidePanel.setOnMouseClicked(event->
+            {/*sidePanel.setVisible(false);
+            sidePanel.setManaged(false);*/
+            root.setRight(showSidePanelBtn);});
+        showSidePanelBtn.setOnAction(event->{
+            root.setRight(sidePanel);
+            Toast.makeText(primaryStage, "Click on side panel to hide it", 3500, 500, 500);});
+        
         root.setCenter(displayPane);
         root.setTop(top);
         root.setBottom(controlBox);
-        
+        root.setRight(sidePanel);
+        BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");

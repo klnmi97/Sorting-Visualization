@@ -44,7 +44,7 @@ public class InputDialog extends Dialog<Results> {
         this.maxInputValue = maxInputValue;
         this.minInputValue = minInputValue;
         setTitle("New sorting");
-        setHeaderText("Please, specify new sorting!");
+        setHeaderText("Please, specify data!");
         
         //dialog.initOwner(scene.getWindow()); //TODO: restyle
         
@@ -52,7 +52,7 @@ public class InputDialog extends Dialog<Results> {
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         final Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
         
-        Font dialogFont = Font.font("Helvetica", FontWeight.BOLD, 12);
+        Font dialogFont = Font.font("Times", FontWeight.BOLD, 12);
         inputLbl = new Label("Enter the sequence: ");
         inputLbl.setFont(dialogFont);
         choiseLbl = new Label("Choose an Algorithm: ");
@@ -135,7 +135,7 @@ public class InputDialog extends Dialog<Results> {
         if(intStr.length <= 1){
             throw new Exception("Enter at least two numbers");
         } 
-        else if(intStr.length > 20){
+        else if(intStr.length > 14){ //14 due to sidepanel & min size
             throw new Exception("Too much data");
         }
         return true;
