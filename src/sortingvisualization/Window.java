@@ -65,6 +65,7 @@ public class Window extends Application {
     HBox algorithmButtonBox;
     Label algLbl;
     Label controlLbl;
+    Label headerLbl;
     
     Button alg1;
     Button alg2;
@@ -94,8 +95,8 @@ public class Window extends Application {
         initializeMenu(primaryStage);
         
         algLbl = new Label("Algorithms: ");
-        algLbl.getStyleClass().add("blcklabel");    
-        
+        algLbl.getStyleClass().add("blcklabel");
+        headerLbl = new Label();
         controlLbl = new Label();
         controlLbl.getStyleClass().add("blcklabel");
         
