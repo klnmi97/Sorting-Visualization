@@ -174,6 +174,7 @@ public class Window extends Application {
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
         primaryStage.setTitle("Sorting Alg Visualisation");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(1100);
