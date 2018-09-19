@@ -71,6 +71,7 @@ public class Window extends Application {
     HBox algorithmButtonBox;
     Label algLbl;
     Label controlLbl;
+    Label headerLbl;
     
     Button alg1;
     Button alg2;
@@ -86,7 +87,7 @@ public class Window extends Application {
     Slider speedSlider;
     
     Pane displayPane;
-    FlowPane sidePanel;
+    VBox sidePanel;
     ArrayList<BrickNode> list;
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
@@ -103,7 +104,8 @@ public class Window extends Application {
         
         algLbl = new Label("Algorithms: ");
         algLbl.getStyleClass().add("blcklabel");    
-        
+        headerLbl = new Label();
+        headerLbl.getStyleClass().add("headerlabel");
         controlLbl = new Label();
         controlLbl.getStyleClass().add("blcklabel");
         
@@ -178,12 +180,16 @@ public class Window extends Application {
         top.getChildren().addAll(menuBar, algorithmButtonBox);
         BorderPane root = new BorderPane();
         
-        sidePanel = new FlowPane();
+        sidePanel = new VBox();
+        sidePanel.setPrefWidth(300);
         sidePanel.setBackground(new Background(new BackgroundFill(Color.DARKTURQUOISE, CornerRadii.EMPTY, Insets.EMPTY)));
+        sidePanel.getChildren().add(headerLbl);
+        sidePanel.setAlignment(Pos.TOP_CENTER);
         sidePanel.setOnMouseClicked(event->
             {/*sidePanel.setVisible(false);
             sidePanel.setManaged(false);*/
             root.setRight(showSidePanelBtn);});
+        
         showSidePanelBtn.setOnAction(event->{
             root.setRight(sidePanel);
             Toast.makeText(primaryStage, "Click on side panel to hide it", 3500, 500, 500);});
@@ -204,6 +210,7 @@ public class Window extends Application {
         //primaryStage.setFullScreen(true); //left for menu
         //primaryStage.setMaximized(true);
         primaryStage.show();
+        Toast.makeText(primaryStage, "Click on side panel to hide it", 3500, 500, 500);
     }
     
     private void initializeMenu(Stage primaryStage){
@@ -318,21 +325,27 @@ public class Window extends Application {
         switch(algorithm){
             case 1:
                 transitions = bubbleSort(list, transitions);
+                headerLbl.setText("Bubble Sort");
                 break;
             case 2:
                 transitions = insertionSort(list, transitions);
+                headerLbl.setText("Insertion Sort");
                 break;
             case 3:
                 transitions = selectionSort(list, transitions);
+                headerLbl.setText("Selection Sort");
                 break;
             case 4:
                 transitions = quickSort(list, transitions);
+                headerLbl.setText("Quick Sort");
                 break;
             case 5:
                 transitions = mergeSort(list, transitions);
+                headerLbl.setText("Merge Sort");
                 break;
             case 6:
                 transitions = cocktailShakerSort(list, transitions);
+                headerLbl.setText("Cocktail Shaker Sort");
                 break;
             default:
         }

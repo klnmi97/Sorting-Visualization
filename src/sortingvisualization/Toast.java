@@ -8,6 +8,7 @@ package sortingvisualization;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -29,7 +30,23 @@ public final class Toast {
         toastStage.setResizable(false);
         toastStage.initStyle(StageStyle.TRANSPARENT);
         
+        ChangeListener<Number> widthListener = (observable, oldValue, newValue) -> {
+            double stageWidth = newValue.doubleValue();
+            toastStage.setX(ownerStage.getX() + ownerStage.getWidth() / 2 - stageWidth / 2);
+        };
+        ChangeListener<Number> heightListener = (observable, oldValue, newValue) -> {
+            double stageHeight = newValue.doubleValue();
+            toastStage.setY(ownerStage.getY() + ownerStage.getHeight() / 7 * 6);   
+        };
 
+        toastStage.widthProperty().addListener(widthListener);
+        toastStage.heightProperty().addListener(heightListener);
+
+        toastStage.setOnShown(e -> {
+            toastStage.widthProperty().removeListener(widthListener);
+            toastStage.heightProperty().removeListener(heightListener);
+        });
+        
         Text text = new Text(toastMsg);
         text.setFont(Font.font("Verdana", 20));
         text.setFill(Color.WHITE);
