@@ -10,6 +10,8 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -21,9 +23,13 @@ import sortingvisualization.ViewController;
  */
 public class InsertionSort {
 
-    public static List<Animation> insertionSort(ArrayList<BrickNode> list, List<Animation> sq)
+    public static List<Animation> insertionSort(ArrayList<BrickNode> list, Pane codePane)
     {
+        List<Animation> sq = new ArrayList<>();
         int n = list.size();
+        List<StackPane> codeLines = new ArrayList<>();
+        
+        addPseudocode(codePane, codeLines);
         for (int i=1; i<n; ++i)
         {
             BrickNode key = list.get(i);
@@ -60,5 +66,18 @@ public class InsertionSort {
             list.set(j+1, key);
         }
         return sq;
+    }
+    
+    private static void addPseudocode(Pane pane, List<StackPane> code){
+        //TODO: improve pseudocode
+        code.add(AnimUtils.createLine("set first element as sorted"));
+        code.add(AnimUtils.createLine("for each unsorted element"));
+        code.add(AnimUtils.createLine("  select the element i"));
+        code.add(AnimUtils.createLine("    for j = sizeOfArray to 0"));
+        code.add(AnimUtils.createLine("      if selectedElement > i-th element"));
+        code.add(AnimUtils.createLine("        move sorted element right by 1"));
+        code.add(AnimUtils.createLine("      else insert element i here"));
+        
+        pane.getChildren().addAll(code);
     }
 }

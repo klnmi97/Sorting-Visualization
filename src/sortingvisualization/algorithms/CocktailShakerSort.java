@@ -10,6 +10,8 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -21,8 +23,8 @@ import sortingvisualization.ViewController;
  */
 public class CocktailShakerSort {
 
-    public static List<Animation> cocktailShakerSort(ArrayList<BrickNode> list, List<Animation> sq) {  
-        
+    public static List<Animation> cocktailShakerSort(ArrayList<BrickNode> list, Pane codePane) {  
+        List<Animation> sq = new ArrayList<>();
         ParallelTransition parallelTransition;
         boolean swapped = true;
         int i = 0;
@@ -33,7 +35,9 @@ public class CocktailShakerSort {
         int lastStart = i;
         int lastFinish = j;
         parallelTransition = new ParallelTransition();
+        List<StackPane> codeLines = new ArrayList<>();
         
+        addPseudocode(codePane, codeLines);
         while(i < j && swapped) 
         {
             swapped = false;
@@ -128,4 +132,17 @@ public class CocktailShakerSort {
         return sq;
     } 
     
+    private static void addPseudocode(Pane pane, List<StackPane> code){
+        //TODO: improve pseudocode
+        code.add(AnimUtils.createLine("swapped := true"));
+        code.add(AnimUtils.createLine("do"));
+        code.add(AnimUtils.createLine("  for i = 0 to lastUnsortedElementRight-1"));
+        code.add(AnimUtils.createLine("      if leftElement > rightElement"));
+        code.add(AnimUtils.createLine("        swap(leftElement, rightElement)"));
+        code.add(AnimUtils.createLine("  for j = lastUnsortedElementRight-1 to lastUnsortedElementLeft-1"));
+        code.add(AnimUtils.createLine("    if leftElement > rightElement"));
+        code.add(AnimUtils.createLine("      swap(leftElement, rightElement)"));
+        code.add(AnimUtils.createLine("while swapped"));
+        pane.getChildren().addAll(code);
+    }
 }

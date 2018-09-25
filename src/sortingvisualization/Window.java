@@ -88,6 +88,7 @@ public class Window extends Application {
     
     Pane displayPane;
     VBox sidePanel;
+    FlowPane codePane;
     ArrayList<BrickNode> list;
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
@@ -99,6 +100,8 @@ public class Window extends Application {
     @Override
     public void start(Stage primaryStage) {
         displayPane = new StackPane();
+        codePane = new FlowPane();
+        codePane.setPadding(new Insets(30, 10, 30, 10));
         //menu
         initializeMenu(primaryStage);
         
@@ -166,7 +169,7 @@ public class Window extends Application {
         showSidePanelBtn.setMinHeight(70);
         showSidePanelBtn.getStyleClass().add("sideButton");
         
-        initialize(1, null);
+        
         
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
@@ -181,9 +184,9 @@ public class Window extends Application {
         BorderPane root = new BorderPane();
         
         sidePanel = new VBox();
-        sidePanel.setPrefWidth(300);
-        sidePanel.setBackground(new Background(new BackgroundFill(Color.DARKTURQUOISE, CornerRadii.EMPTY, Insets.EMPTY)));
-        sidePanel.getChildren().add(headerLbl);
+        sidePanel.setPrefWidth(400);
+        sidePanel.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
+        sidePanel.getChildren().addAll(headerLbl, codePane);
         sidePanel.setAlignment(Pos.TOP_CENTER);
         sidePanel.setOnMouseClicked(event->
             {/*sidePanel.setVisible(false);
@@ -192,13 +195,15 @@ public class Window extends Application {
         
         showSidePanelBtn.setOnAction(event->{
             root.setRight(sidePanel);
-            Toast.makeText(primaryStage, "Click on side panel to hide it", 3500, 500, 500);});
+            Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);});
         
         root.setCenter(displayPane);
         root.setTop(top);
         root.setBottom(controlBox);
         root.setRight(sidePanel);
         BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
+        
+        initialize(1, null);
         
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
@@ -210,7 +215,7 @@ public class Window extends Application {
         //primaryStage.setFullScreen(true); //left for menu
         //primaryStage.setMaximized(true);
         primaryStage.show();
-        Toast.makeText(primaryStage, "Click on side panel to hide it", 3500, 500, 500);
+        Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);
     }
     
     private void initializeMenu(Stage primaryStage){
@@ -297,6 +302,7 @@ public class Window extends Application {
         stopAllAnimations();
         nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
+        codePane.getChildren().clear();
         list = new ArrayList<>();
         
         if(input!=null){
@@ -324,27 +330,27 @@ public class Window extends Application {
         
         switch(algorithm){
             case 1:
-                transitions = bubbleSort(list, transitions);
+                transitions = bubbleSort(list, codePane);
                 headerLbl.setText("Bubble Sort");
                 break;
             case 2:
-                transitions = insertionSort(list, transitions);
+                transitions = insertionSort(list, codePane);
                 headerLbl.setText("Insertion Sort");
                 break;
             case 3:
-                transitions = selectionSort(list, transitions);
+                transitions = selectionSort(list, codePane);
                 headerLbl.setText("Selection Sort");
                 break;
             case 4:
-                transitions = quickSort(list, transitions);
+                transitions = quickSort(list, codePane);
                 headerLbl.setText("Quick Sort");
                 break;
             case 5:
-                transitions = mergeSort(list, transitions);
+                transitions = mergeSort(list, codePane);
                 headerLbl.setText("Merge Sort");
                 break;
             case 6:
-                transitions = cocktailShakerSort(list, transitions);
+                transitions = cocktailShakerSort(list, codePane);
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
             default:
@@ -485,7 +491,6 @@ public class Window extends Application {
             } 
         }
     }
-    
     
     
     /**
