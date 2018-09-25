@@ -13,11 +13,17 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -115,5 +121,24 @@ public class AnimUtils {
                 setColor(node1, ViewController.COMPARE, ViewController.DEFAULT), 
                 setColor(node2, ViewController.COMPARE, ViewController.DEFAULT));
         return parallelTransition;
+    }
+    
+    public static StackPane createLine(String line) {
+        Rectangle rectangle = new Rectangle(300, 25);
+        rectangle.setFill(Color.TRANSPARENT);
+        
+        Text text = new Text(line);
+        text.setFont(Font.font("Courier new", FontWeight.BOLD, 12));
+        StackPane node = new StackPane();
+        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+        //node.setId(String.valueOf(num));
+        //stackPane.setValue(num);
+        node.getChildren().addAll(rectangle, text);
+        StackPane.setAlignment(text, Pos.CENTER_LEFT);
+        //node.setAlignment(Pos.BOTTOM_CENTER);
+        //node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
+        //node.setTranslateY(ViewController.TOP_INDENT);
+        node.setShape(rectangle);
+        return node;
     }
 }

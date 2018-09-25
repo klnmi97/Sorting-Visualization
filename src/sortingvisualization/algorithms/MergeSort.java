@@ -10,6 +10,8 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -20,15 +22,18 @@ import sortingvisualization.ViewController;
  */
 public class MergeSort {
 
-    public static List<Animation> mergeSort(ArrayList<BrickNode> list, List<Animation> sq) {
+    public static List<Animation> mergeSort(ArrayList<BrickNode> list, Pane codePane) {
         int number = list.size();
-        BrickNode[] helperNodes = new BrickNode[number];
-        sortRange(0, number - 1, sq, list);
-        return sq;
+        List<Animation> anim = new ArrayList<>();
+        List<StackPane> codeLines = new ArrayList<>();
+        
+        addPseudocode(codePane, codeLines);
+        sortRange(0, number - 1, anim, list, codeLines);
+        return anim;
     }
 
     private static void sortRange(int low, int high, List<Animation> sq, 
-            ArrayList<BrickNode> list) {
+            ArrayList<BrickNode> list, List<StackPane> codeLines) {
         // check if low is smaller then high, if not then the array is sorted
         if (low < high) {
             // Get the index of the element which is in the middle
@@ -38,17 +43,17 @@ public class MergeSort {
             //sq.add(setColor(list.get(middle), Color.AQUAMARINE, Color.LIGHTSKYBLUE));
             //sq.add(highlightLine(ls, 3));
             // Sort the left side of the array
-            sortRange(low, middle, sq, list);
+            sortRange(low, middle, sq, list, codeLines);
             // Sort the right side of the array
-            sortRange(middle + 1, high, sq, list);
+            sortRange(middle + 1, high, sq, list, codeLines);
             // Combine them both
-            merge(low, middle, high, list, sq);
+            merge(low, middle, high, list, sq, codeLines);
         }
     }
 
 
     private static void merge(int low, int middle, int high, 
-            ArrayList<BrickNode> list, List<Animation> sq) {
+            ArrayList<BrickNode> list, List<Animation> sq, List<StackPane> codeLines) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
         // Copy both parts into the helper array
         for (int i = low; i <= high; i++) {
@@ -106,4 +111,15 @@ public class MergeSort {
         sq.add(moveUp);
     }
     
+    private static void addPseudocode(Pane pane, List<StackPane> code){
+        //TODO: improve pseudocode
+        code.add(AnimUtils.createLine("split each element into partitions of size 1"));
+        code.add(AnimUtils.createLine("recursively merge partitions"));
+        code.add(AnimUtils.createLine("  for i = leftPartIdx to rightPartIdx"));
+        code.add(AnimUtils.createLine("    if leftPartValue <= rightPartValue"));
+        code.add(AnimUtils.createLine("      copy leftPartValue"));
+        code.add(AnimUtils.createLine("    else: copy rightPartValue"));
+        code.add(AnimUtils.createLine("copy elements back to original array"));
+        pane.getChildren().addAll(code);
+    }
 }

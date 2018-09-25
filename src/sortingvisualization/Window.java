@@ -17,6 +17,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,11 +30,16 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -77,9 +83,12 @@ public class Window extends Application {
     Button pauseBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Button showSidePanelBtn;
     Slider speedSlider;
     
     Pane displayPane;
+    VBox sidePanel;
+    FlowPane codePane;
     ArrayList<BrickNode> list;
     List<Animation> transitions = new ArrayList<Animation>();
     IntegerProperty nextTransitionIndex = new SimpleIntegerProperty();
@@ -91,12 +100,15 @@ public class Window extends Application {
     @Override
     public void start(Stage primaryStage) {
         displayPane = new StackPane();
+        codePane = new FlowPane();
+        codePane.setPadding(new Insets(30, 10, 30, 10));
         //menu
         initializeMenu(primaryStage);
         
         algLbl = new Label("Algorithms: ");
-        algLbl.getStyleClass().add("blcklabel");
+        algLbl.getStyleClass().add("blcklabel");    
         headerLbl = new Label();
+        headerLbl.getStyleClass().add("headerlabel");
         controlLbl = new Label();
         controlLbl.getStyleClass().add("blcklabel");
         
@@ -152,7 +164,12 @@ public class Window extends Application {
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
         
-        initialize(1, null);
+        showSidePanelBtn = new Button("<");
+        showSidePanelBtn.setMaxWidth(10);
+        showSidePanelBtn.setMinHeight(70);
+        showSidePanelBtn.getStyleClass().add("sideButton");
+        
+        
         
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
@@ -164,12 +181,29 @@ public class Window extends Application {
         
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, algorithmButtonBox);
-        
         BorderPane root = new BorderPane();
+        
+        sidePanel = new VBox();
+        sidePanel.setPrefWidth(400);
+        sidePanel.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
+        sidePanel.getChildren().addAll(headerLbl, codePane);
+        sidePanel.setAlignment(Pos.TOP_CENTER);
+        sidePanel.setOnMouseClicked(event->
+            {/*sidePanel.setVisible(false);
+            sidePanel.setManaged(false);*/
+            root.setRight(showSidePanelBtn);});
+        
+        showSidePanelBtn.setOnAction(event->{
+            root.setRight(sidePanel);
+            Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);});
+        
         root.setCenter(displayPane);
         root.setTop(top);
         root.setBottom(controlBox);
+        root.setRight(sidePanel);
+        BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
+        initialize(1, null);
         
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
@@ -183,6 +217,7 @@ public class Window extends Application {
         //primaryStage.setFullScreen(true); //left for menu
         //primaryStage.setMaximized(true);
         primaryStage.show();
+        Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);
     }
     
     private void initializeMenu(Stage primaryStage){
@@ -269,6 +304,7 @@ public class Window extends Application {
         stopAllAnimations();
         nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
+        codePane.getChildren().clear();
         list = new ArrayList<>();
         
         if(input!=null){
@@ -301,22 +337,28 @@ public class Window extends Application {
         
         switch(algorithm){
             case 1:
-                transitions = bubbleSort(list, transitions);
+                transitions = bubbleSort(list, codePane);
+                headerLbl.setText("Bubble Sort");
                 break;
             case 2:
-                transitions = insertionSort(list, transitions);
+                transitions = insertionSort(list, codePane);
+                headerLbl.setText("Insertion Sort");
                 break;
             case 3:
-                transitions = selectionSort(list, transitions);
+                transitions = selectionSort(list, codePane);
+                headerLbl.setText("Selection Sort");
                 break;
             case 4:
-                transitions = quickSort(list, transitions);
+                transitions = quickSort(list, codePane);
+                headerLbl.setText("Quick Sort");
                 break;
             case 5:
-                transitions = mergeSort(list, transitions);
+                transitions = mergeSort(list, codePane);
+                headerLbl.setText("Merge Sort");
                 break;
             case 6:
-                transitions = cocktailShakerSort(list, transitions);
+                transitions = cocktailShakerSort(list, codePane);
+                headerLbl.setText("Cocktail Shaker Sort");
                 break;
             default:
         }
@@ -456,7 +498,6 @@ public class Window extends Application {
             } 
         }
     }
-    
     
     
     /**

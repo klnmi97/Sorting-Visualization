@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -20,29 +22,33 @@ import sortingvisualization.ViewController;
  */
 public class QuickSort {
 
-    public static List<Animation> quickSort(ArrayList<BrickNode> list, List<Animation> sq){
-        sort(list, 0, list.size()-1, sq);
-        return sq;
+    public static List<Animation> quickSort(ArrayList<BrickNode> list, Pane codePane){
+        List<Animation> anim = new ArrayList<>();
+        List<StackPane> codeLines = new ArrayList<>();
+        
+        addPseudocode(codePane, codeLines);
+        sort(list, 0, list.size()-1, anim, codeLines);
+        return anim;
     } 
      
-    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> sq) 
+    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> anim, List<StackPane> codeLines) 
     { 
         if (low < high) 
         { 
             /* pi is partitioning index, arr[pi] is  
               now at right place */
-            int partitionIndex = partition(list, low, high, sq);
+            int partitionIndex = partition(list, low, high, anim, codeLines);
             
-            sort(list, low, partitionIndex-1, sq); 
-            sort(list, partitionIndex+1, high, sq); 
+            sort(list, low, partitionIndex-1, anim, codeLines); 
+            sort(list, partitionIndex+1, high, anim, codeLines); 
         }
         else if(low == high){
-            sq.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
+            anim.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
         }
     } 
      
     private static int partition(ArrayList<BrickNode> list, int low, int high, 
-            List<Animation> sq) 
+            List<Animation> sq, List<StackPane> codeLines) 
     { 
         ParallelTransition parallelTransition = new ParallelTransition();
         for (int k = low; k <= high; k++) {
@@ -100,4 +106,16 @@ public class QuickSort {
         return i+1; 
     }
     
+    private static void addPseudocode(Pane pane, List<StackPane> code){
+        //TODO: improve pseudocode
+        code.add(AnimUtils.createLine("for each (unsorted) partition"));
+        code.add(AnimUtils.createLine("set first element as pivot"));
+        code.add(AnimUtils.createLine("  storeIndex = pivotIndex + 1"));
+        code.add(AnimUtils.createLine("    for i = pivotIndex + 1 to rightmostIndex"));
+        code.add(AnimUtils.createLine("      if element[i] < element[pivot]"));
+        code.add(AnimUtils.createLine("        swap(i, storeIndex); storeIndex++"));
+        code.add(AnimUtils.createLine("    swap(pivot, storeIndex - 1)"));
+        
+        pane.getChildren().addAll(code);
+    }
 }
