@@ -47,6 +47,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
 import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
+import sortingvisualization.algorithms.CountingSort;
+import static sortingvisualization.algorithms.CountingSort.countingSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
@@ -79,6 +81,7 @@ public class Window extends Application {
     Button alg4;
     Button alg5;
     Button alg6;
+    Button alg7;
     Button playBtn;
     Button pauseBtn;
     Button stepBackBtn;
@@ -203,7 +206,8 @@ public class Window extends Application {
         root.setRight(sidePanel);
         BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
-        initialize(1, null);
+        
+        initialize(1, generateRandomArray(10, min, max));
         
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add("style.css");
@@ -275,9 +279,23 @@ public class Window extends Application {
         alg6.getStyleClass().add("button");
         alg6.setOnAction(event->initialize(6, null));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5);
+        alg7 = new Button("COU(beta)");
+        alg7.setTooltip(new Tooltip("Counting Sort"));
+        alg7.getStyleClass().add("button");
+        alg7.setOnAction(event->initialize(7, null));
+        
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
+    }
+    
+    private int[] generateRandomArray(int size, int min, int max){
+        Random randomValue = new Random();
+        int[] randomArray = new int[size];
+        for(int i = 0; i < size; i++){
+            randomArray[i] = randomValue.nextInt(max - min) + min + 1;
+        }
+        return randomArray;
     }
     
     //play previous animation
@@ -306,6 +324,7 @@ public class Window extends Application {
         displayPane.getChildren().clear();
         codePane.getChildren().clear();
         list = new ArrayList<>();
+        
         
         if(input!=null){
             ViewController.N_VALUES = input.length;
@@ -360,6 +379,9 @@ public class Window extends Application {
                 transitions = cocktailShakerSort(list, codePane);
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
+            case 7:
+                transitions = countingSort(list, max, displayPane);
+                headerLbl.setText("Counting Sort");
             default:
         }
            

@@ -12,6 +12,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -28,26 +29,53 @@ public class MergeSort {
         List<StackPane> codeLines = new ArrayList<>();
         
         addPseudocode(codePane, codeLines);
-        sortRange(0, number - 1, anim, list, codeLines);
+        sortRange(0, number - 1, anim, list, codeLines, 160, 160);
         return anim;
     }
 
     private static void sortRange(int low, int high, List<Animation> sq, 
-            ArrayList<BrickNode> list, List<StackPane> codeLines) {
+            ArrayList<BrickNode> list, List<StackPane> codeLines, int newHue, int currentHue) {
+        Color original = Color.hsb(currentHue, 1.0, 1.0);
+        Color current = Color.hsb(newHue, 1.0, 1.0);
         // check if low is smaller then high, if not then the array is sorted
         if (low < high) {
             // Get the index of the element which is in the middle
             int middle = low + (high - low) / 2;
-            //test color animation
-            //sq.add(setColor(list.get(middle), Color.LIGHTSKYBLUE, Color.AQUAMARINE));
-            //sq.add(setColor(list.get(middle), Color.AQUAMARINE, Color.LIGHTSKYBLUE));
-            //sq.add(highlightLine(ls, 3));
+            
+            ParallelTransition pt = new ParallelTransition();
+            for(int i = low; i <= high; i++){
+                pt.getChildren().add(AnimUtils.setColor(list.get(i), original, current));
+            }
+            sq.add(pt);
+            
+            List<BrickNode> helperLow = new ArrayList<>();
+            Color nextColorLow = Color.hsb(newHue - (newHue / 2), 1.0, 1.0);
+            for(int i = low; i <=middle; i++){
+                helperLow.add(list.get(i));
+            }
             // Sort the left side of the array
-            sortRange(low, middle, sq, list, codeLines);
+            sortRange(low, middle, sq, list, codeLines, newHue - (newHue / 2), newHue);
+            
+            List<BrickNode> helperHigh = new ArrayList<>();
+            Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
+            for(int i = middle + 1; i <=high; i++){
+                helperHigh.add(list.get(i));
+            }
             // Sort the right side of the array
-            sortRange(middle + 1, high, sq, list, codeLines);
+            sortRange(middle + 1, high, sq, list, codeLines, newHue + (newHue / 2), newHue);
             // Combine them both
             merge(low, middle, high, list, sq, codeLines);
+            
+            pt = new ParallelTransition();
+            for(BrickNode node : helperLow){
+                pt.getChildren().add(AnimUtils.setColor(node, nextColorLow, current));
+            }
+            for(BrickNode node : helperHigh){
+                pt.getChildren().add(AnimUtils.setColor(node, nextColorHi, current));
+            }
+            sq.add(pt);
+        } else {
+            sq.add(AnimUtils.setColor(list.get(low), original, current));
         }
     }
 
@@ -67,7 +95,6 @@ public class MergeSort {
         // to the original array
 
         while (i <= middle && j <= high) {
-            
             
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
@@ -102,7 +129,7 @@ public class MergeSort {
             TranslateTransition moveNodeUp = new TranslateTransition();
             moveNodeUp.setNode(helperNodes[z]);
             moveNodeUp.setDuration(ViewController.SPEED);
-            //Set start Y position for reverse 
+            //Set start Y position for reverse animation
             moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
             moveNodeUp.setToY(ViewController.TOP_INDENT);
             moveUp.getChildren().add(moveNodeUp);
