@@ -141,4 +141,8 @@ public class AnimUtils {
         node.setShape(rectangle);
         return node;
     }
+    
+    public static boolean isLineSelected(List<StackPane> codeLines, int line){
+        return codeLines.get(line).getShape().getFill() == ViewController.LINE_SELECTION;
+    }
 }
