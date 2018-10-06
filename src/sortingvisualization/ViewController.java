@@ -31,4 +31,5 @@ public class ViewController {
     public static final Color COMPARE = Color.AQUAMARINE;
     public static final Color DEFAULT = Color.DARKCYAN;
     public static final Color SORTED = Color.ORANGE;
+    public static final Color LINE_SELECTION = Color.WHITE;
 }
