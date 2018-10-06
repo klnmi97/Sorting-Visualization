@@ -29,13 +29,19 @@ public class MergeSort {
         List<StackPane> codeLines = new ArrayList<>();
         
         addPseudocode(codePane, codeLines);
-        sortRange(0, number - 1, anim, list, codeLines, 160, 160);
+        sortRange(0, number - 1, anim, list, codeLines, 120, -1);
         return anim;
     }
 
     private static void sortRange(int low, int high, List<Animation> sq, 
             ArrayList<BrickNode> list, List<StackPane> codeLines, int newHue, int currentHue) {
-        Color original = Color.hsb(currentHue, 1.0, 1.0);
+        Color original;
+        if(currentHue == -1){
+             original = Color.hsb(180, 1.0, 0.55);
+        } else {
+            original = Color.hsb(currentHue, 1.0, 1.0);
+        }
+        //Color original = Color.hsb(currentHue, 1.0, 1.0);
         Color current = Color.hsb(newHue, 1.0, 1.0);
         // check if low is smaller then high, if not then the array is sorted
         if (low < high) {
