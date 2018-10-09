@@ -142,7 +142,11 @@ public class AnimUtils {
         return node;
     }
     
-    public static boolean isLineSelected(List<StackPane> codeLines, int line){
-        return codeLines.get(line).getShape().getFill() == ViewController.LINE_SELECTION;
+    public static Animation makeParallel(Animation... anims){
+        ParallelTransition pt = new ParallelTransition();
+        for(Animation anim : anims){
+            pt.getChildren().add(anim);
+        }
+        return pt;
     }
 }
