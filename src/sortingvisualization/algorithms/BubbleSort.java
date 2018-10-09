@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -27,13 +28,17 @@ public class BubbleSort {
         ParallelTransition parallelTransition;
         int n = list.size();  
         BrickNode temp;
-        List<StackPane> codeLines = new ArrayList<>();
         
-        addPseudocode(codePane, codeLines);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        
         for(int i=0; i < n; i++){  
             parallelTransition = new ParallelTransition();
             for(int j=1; j < (n-i); j++){ 
                 //select elements to compare (anim)
+                Animation select = pc.selectLine(2);
+                if(select != null)
+                    anim.add(select);
                 if(j == 1){
                     anim.add(AnimUtils.selectNodes(list.get(j-1), list.get(j)));
                 } else {
@@ -44,6 +49,9 @@ public class BubbleSort {
                 }
                 if(list.get(j-1).getValue() > list.get(j).getValue()){  
                     //swap elements  
+                    select = pc.selectLine(3);
+                    if(select != null)
+                        anim.add(select);
                     anim.add(AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1));
                     temp = list.get(j-1);  
                     list.set(j-1, list.get(j));  
@@ -69,13 +77,12 @@ public class BubbleSort {
         return anim;
     } 
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("for i = 0 to sizeOfArray-1"));
-        code.add(AnimUtils.createLine("  for j = 1 to lastUnsortedElement-1"));
-        code.add(AnimUtils.createLine("    if leftElement > rightElement"));
-        code.add(AnimUtils.createLine("      swap(leftElement, rightElement)"));
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, "for i = 0 to sizeOfArray-1",
+                "  for j = 1 to lastUnsortedElement-1",
+                "    if leftElement > rightElement",
+                "      swap(leftElement, rightElement)");
     }
     
 }

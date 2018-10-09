@@ -86,7 +86,7 @@ public class AnimUtils {
         return parallelTransition;
     }
     
-    public static Animation setColor(BrickNode sp, Color fromColor, Color toColor){
+    public static Animation setColor(StackPane sp, Color fromColor, Color toColor){
         return new FillTransition(ViewController.SPEED, sp.getShape(), fromColor, toColor);
     }
     
