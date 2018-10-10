@@ -31,10 +31,12 @@ public class BubbleSort {
         
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
-        
+        anim.add(AnimUtils.makeParallel(pc.selectLine(0)));
         for(int i=0; i < n; i++){  
             parallelTransition = new ParallelTransition();
+            anim.add(AnimUtils.makeParallel(pc.selectLine(1)));
             for(int j=1; j < (n-i); j++){ 
+                
                 //select elements to compare (anim)
                 if(j == 1){
                     anim.add(AnimUtils.makeParallel(pc.selectLine(2),
