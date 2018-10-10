@@ -36,23 +36,20 @@ public class BubbleSort {
             parallelTransition = new ParallelTransition();
             for(int j=1; j < (n-i); j++){ 
                 //select elements to compare (anim)
-                Animation select = pc.selectLine(2);
-                if(select != null)
-                    anim.add(select);
                 if(j == 1){
-                    anim.add(AnimUtils.selectNodes(list.get(j-1), list.get(j)));
+                    anim.add(AnimUtils.makeParallel(pc.selectLine(2),
+                            AnimUtils.selectNodes(list.get(j-1), list.get(j))));
                 } else {
                     parallelTransition.getChildren().add(AnimUtils.setColor(
                             list.get(j), ViewController.DEFAULT, 
                             ViewController.COMPARE));
-                    anim.add(parallelTransition);
+                    anim.add(AnimUtils.makeParallel(parallelTransition, 
+                            pc.selectLine(2)));
                 }
                 if(list.get(j-1).getValue() > list.get(j).getValue()){  
                     //swap elements  
-                    select = pc.selectLine(3);
-                    if(select != null)
-                        anim.add(select);
-                    anim.add(AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1));
+                    anim.add(AnimUtils.makeParallel(AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
+                            pc.selectLine(3)));
                     temp = list.get(j-1);  
                     list.set(j-1, list.get(j));  
                     list.set(j, temp);

@@ -145,7 +145,9 @@ public class AnimUtils {
     public static Animation makeParallel(Animation... anims){
         ParallelTransition pt = new ParallelTransition();
         for(Animation anim : anims){
-            pt.getChildren().add(anim);
+            if(anim != null){
+                pt.getChildren().add(anim);
+            }
         }
         return pt;
     }
