@@ -7,6 +7,7 @@ package sortingvisualization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.geometry.Pos;
@@ -44,22 +45,53 @@ public class Pseudocode {
     }
     
     public Animation selectLine(int line){
-        ParallelTransition pt = new ParallelTransition();
+        return selectLines(line);
+        /*ParallelTransition pt = new ParallelTransition();
         for(int i = 0; i < codeLines.size(); i++){
             if(i != line && isLineSelected(i)){
                 pt.getChildren().add(
                         AnimUtils.setColor(codeLines.get(i), 
-                                ViewController.LINE_SELECTION, Color.TRANSPARENT));
+                                ViewController.LINE_SELECTION, Color.AQUAMARINE));
                 selection.set(i, Boolean.FALSE);
             }
         }
         if(!isLineSelected(line)){
             pt.getChildren().add(
                         AnimUtils.setColor(codeLines.get(line), 
-                                Color.TRANSPARENT, ViewController.LINE_SELECTION));
+                                Color.AQUAMARINE, ViewController.LINE_SELECTION));
             selection.set(line, Boolean.TRUE);
             
         }
+        if(pt.getChildren().size() == 0){
+            return null;
+        }
+        return pt;*/
+    }
+    
+    public Animation unselectAll(){
+        return selectLine(-1);
+    }
+    
+    public Animation selectLines(int... lines){
+        ParallelTransition pt = new ParallelTransition();
+        
+        for(int i = 0; i < codeLines.size(); i++){
+            if(isLineSelected(i) && !isInArray(i, lines)){
+                pt.getChildren().add(
+                        AnimUtils.setColor(codeLines.get(i), 
+                                ViewController.LINE_SELECTION, Color.AQUAMARINE));
+                selection.set(i, Boolean.FALSE);
+            }
+        }
+        for(int line : lines){
+            if(!(line > codeLines.size() || line < 0) && !isLineSelected(line)){
+                pt.getChildren().add(
+                            AnimUtils.setColor(codeLines.get(line), 
+                                    Color.AQUAMARINE, ViewController.LINE_SELECTION));
+                selection.set(line, Boolean.TRUE);
+            }
+        }
+        
         if(pt.getChildren().size() == 0){
             return null;
         }
@@ -67,15 +99,15 @@ public class Pseudocode {
     }
     
     private boolean isLineSelected(int line){
-        if(line >= codeLines.size()){
+        if(line >= codeLines.size() || line < 0){
             return false;
         }
         return selection.get(line);
     }
     
     private StackPane createLine(String line) {
-        Rectangle rectangle = new Rectangle(300, 25);
-        rectangle.setFill(Color.TRANSPARENT);
+        Rectangle rectangle = new Rectangle(390, 25);
+        rectangle.setFill(Color.AQUAMARINE);
         
         Text text = new Text(line);
         text.setFont(Font.font("Courier new", FontWeight.BOLD, 12));
@@ -90,5 +122,9 @@ public class Pseudocode {
         //node.setTranslateY(ViewController.TOP_INDENT);
         node.setShape(rectangle);
         return node;
+    }
+    
+    private boolean isInArray(int number, int[] array){
+        return IntStream.of(array).allMatch(x -> x == number);
     }
 }

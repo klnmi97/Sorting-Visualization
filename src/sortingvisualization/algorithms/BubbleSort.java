@@ -31,10 +31,10 @@ public class BubbleSort {
         
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
-        anim.add(AnimUtils.makeParallel(pc.selectLine(0)));
+        addAnimToList(anim, pc.selectLine(0));
         for(int i=0; i < n; i++){  
             parallelTransition = new ParallelTransition();
-            anim.add(AnimUtils.makeParallel(pc.selectLine(1)));
+            addAnimToList(anim, pc.selectLine(1));
             for(int j=1; j < (n-i); j++){ 
                 
                 //select elements to compare (anim)
@@ -71,8 +71,9 @@ public class BubbleSort {
                 }
             }
         }
-        anim.add(AnimUtils.setColor(list.get(0), 
-                ViewController.DEFAULT, ViewController.SORTED));
+        anim.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(0), 
+                ViewController.DEFAULT, ViewController.SORTED),
+                pc.unselectAll()));
         return anim;
     } 
     
@@ -84,4 +85,11 @@ public class BubbleSort {
                 "      swap(leftElement, rightElement)");
     }
     
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
+    }
 }
