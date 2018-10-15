@@ -11,7 +11,6 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
@@ -140,9 +139,11 @@ public class CocktailShakerSort {
                     .setColor(list.get(k), ViewController.DEFAULT, ViewController.SORTED));
         }
         
-        sq.add(new SequentialTransition(
+        sq.add(AnimUtils.makeParallel(new SequentialTransition(
                 AnimUtils.unselectNodes(list.get(firstSelected), list.get(secondSelected)), 
-                parallelTransition));
+                parallelTransition),
+                pc.unselectAll()));
+        
         
         return sq;
     } 

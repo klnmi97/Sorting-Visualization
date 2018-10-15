@@ -46,26 +46,6 @@ public class Pseudocode {
     
     public Animation selectLine(int line){
         return selectLines(line);
-        /*ParallelTransition pt = new ParallelTransition();
-        for(int i = 0; i < codeLines.size(); i++){
-            if(i != line && isLineSelected(i)){
-                pt.getChildren().add(
-                        AnimUtils.setColor(codeLines.get(i), 
-                                ViewController.LINE_SELECTION, Color.AQUAMARINE));
-                selection.set(i, Boolean.FALSE);
-            }
-        }
-        if(!isLineSelected(line)){
-            pt.getChildren().add(
-                        AnimUtils.setColor(codeLines.get(line), 
-                                Color.AQUAMARINE, ViewController.LINE_SELECTION));
-            selection.set(line, Boolean.TRUE);
-            
-        }
-        if(pt.getChildren().size() == 0){
-            return null;
-        }
-        return pt;*/
     }
     
     public Animation unselectAll(){
