@@ -48,7 +48,7 @@ public class InsertionSort {
             {
                 sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
                         ViewController.COMPARE),
-                        pc.selectLines(3, 4)));
+                        pc.selectLines(4)));
                 sq.add(AnimUtils.makeParallel(new SequentialTransition(
                         AnimUtils.swap(key, list.get(j), j+1, j),
                         AnimUtils.setColor(list.get(j), 
@@ -60,7 +60,7 @@ public class InsertionSort {
             if(j >= 0){
                 sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
                         ViewController.COMPARE),
-                        pc.selectLines(3,4)));
+                        pc.selectLines(4)));
                 sq.add(AnimUtils.makeParallel(new ParallelTransition(
                         AnimUtils.setColor(list.get(j), ViewController.COMPARE, 
                                     ViewController.SORTED),

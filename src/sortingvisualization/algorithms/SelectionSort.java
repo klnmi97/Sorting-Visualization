@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -28,25 +29,30 @@ public class SelectionSort{
         int arrayLength = list.size();
         ParallelTransition parallelTransition;
         ParallelTransition compareTransition;
-        List<StackPane> codeLines = new ArrayList<>();
         
-        addPseudocode(codePane, codeLines);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
         for (int i = 0; i < arrayLength - 1; i++){  
             int index = i;
-            anim.add(AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED));
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED),
+                    pc.selectLine(0)));
             compareTransition = new ParallelTransition();
             
             for (int j = i + 1; j < arrayLength; j++) {
                 compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
                         ViewController.COMPARE));
-                anim.add(compareTransition);
+                anim.add(AnimUtils.makeParallel(
+                        compareTransition,
+                        pc.selectLine(2)));
                 if (list.get(j).getValue() < list.get(index).getValue()){ 
                     
-                    anim.add(new ParallelTransition(
+                    anim.add(AnimUtils.makeParallel(
                             AnimUtils.setColor(list.get(index), Color.RED, 
                                     ViewController.DEFAULT),
                             AnimUtils.setColor(list.get(j), 
-                                    ViewController.COMPARE, Color.RED)));
+                                    ViewController.COMPARE, Color.RED),
+                            pc.selectLine(3)));
                     index = j;  //searching for lowest index 
                     compareTransition = new ParallelTransition();
                 } else {
@@ -59,15 +65,19 @@ public class SelectionSort{
             anim.add(compareTransition);
             parallelTransition = new ParallelTransition();
             if(index != i){
-                anim.add(new SequentialTransition(
+                anim.add(AnimUtils.makeParallel(new SequentialTransition(
                         AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED), 
-                        AnimUtils.swap(list.get(index), list.get(i), index, i)));
+                        AnimUtils.swap(list.get(index), list.get(i), index, i)),
+                        pc.selectLine(4)));
+                
                 parallelTransition.getChildren().add(AnimUtils.setColor(list.get(i), Color.RED, 
                         ViewController.DEFAULT));
             }
             parallelTransition.getChildren().add(AnimUtils.setColor(list.get(index), Color.RED, 
                     ViewController.SORTED));
-            anim.add(parallelTransition);
+            anim.add(AnimUtils.makeParallel(
+                    parallelTransition,
+                    pc.selectLine(4)));
             
             BrickNode smallerNumber = list.get(index);   
             list.set(index, list.get(i));
@@ -80,14 +90,14 @@ public class SelectionSort{
         return anim;
     }
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("set the first unsorted element as the minimum"));
-        code.add(AnimUtils.createLine("  for i = 1 to sizeOfArray-1"));
-        code.add(AnimUtils.createLine("    if currentElement < currentMin"));
-        code.add(AnimUtils.createLine("      set currentElement as currentMin"));
-        code.add(AnimUtils.createLine("    swap currentMin with first unsorted element"));
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, 
+                "set the first unsorted element as the minimum",
+                "  for i = 1 to sizeOfArray-1",
+                "    if currentElement < currentMin",
+                "      set currentElement as currentMin",
+                "    swap currentMin with first unsorted element");
     }
     
 }
