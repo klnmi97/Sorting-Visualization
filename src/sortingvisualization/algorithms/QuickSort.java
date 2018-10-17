@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -24,23 +25,25 @@ public class QuickSort {
 
     public static List<Animation> quickSort(ArrayList<BrickNode> list, Pane codePane){
         List<Animation> anim = new ArrayList<>();
-        List<StackPane> codeLines = new ArrayList<>();
-        
-        addPseudocode(codePane, codeLines);
-        sort(list, 0, list.size()-1, anim, codeLines);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        sort(list, 0, list.size()-1, anim, pc);
         return anim;
     } 
      
-    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> anim, List<StackPane> codeLines) 
+    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
     { 
+        addAnimToList(anim, code.selectLine(1));
         if (low < high) 
         { 
             /* pi is partitioning index, arr[pi] is  
               now at right place */
-            int partitionIndex = partition(list, low, high, anim, codeLines);
+            int partitionIndex = partition(list, low, high, anim, code);
             
-            sort(list, low, partitionIndex-1, anim, codeLines); 
-            sort(list, partitionIndex+1, high, anim, codeLines); 
+            addAnimToList(anim, code.selectLine(3));
+            sort(list, low, partitionIndex-1, anim, code); 
+            addAnimToList(anim, code.selectLine(4));
+            sort(list, partitionIndex+1, high, anim, code); 
         }
         else if(low == high){
             anim.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
@@ -48,13 +51,15 @@ public class QuickSort {
     } 
      
     private static int partition(ArrayList<BrickNode> list, int low, int high, 
-            List<Animation> sq, List<StackPane> codeLines) 
+            List<Animation> sq, Pseudocode code) 
     { 
         ParallelTransition parallelTransition = new ParallelTransition();
         for (int k = low; k <= high; k++) {
             parallelTransition.getChildren().add(AnimUtils.moveDownToX(list.get(k), k, k));            
         }
-        sq.add(parallelTransition);
+        sq.add(AnimUtils.makeParallel(
+                parallelTransition, 
+                code.selectLine(2)));
         BrickNode pivot = list.get(high);
         sq.add(AnimUtils.setColor(list.get(high), 
                 ViewController.DEFAULT, Color.RED));
@@ -106,16 +111,24 @@ public class QuickSort {
         return i+1; 
     }
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("for each (unsorted) partition"));
-        code.add(AnimUtils.createLine("set first element as pivot"));
-        code.add(AnimUtils.createLine("  storeIndex = pivotIndex + 1"));
-        code.add(AnimUtils.createLine("    for i = pivotIndex + 1 to rightmostIndex"));
-        code.add(AnimUtils.createLine("      if element[i] < element[pivot]"));
-        code.add(AnimUtils.createLine("        swap(i, storeIndex); storeIndex++"));
-        code.add(AnimUtils.createLine("    swap(pivot, storeIndex - 1)"));
-        
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, 
+                "QuickSort(arr, low, high):",
+                "  if low < high",
+                "    mid = Partition(arr, low, high)",
+                "    QuickSort(arr, low, mid - 1)",
+                "    QuickSort(arr, mid + 1, high)",
+                "",
+                "Partition(arr, low, high):",
+                "");
+    }
+    
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
     }
 }
