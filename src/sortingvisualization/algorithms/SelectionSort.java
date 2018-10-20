@@ -11,7 +11,6 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -36,7 +35,7 @@ public class SelectionSort{
             int index = i;
             anim.add(AnimUtils.makeParallel(
                     AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED),
-                    pc.selectLine(0)));
+                    pc.selectLines(0,1)));
             compareTransition = new ParallelTransition();
             
             for (int j = i + 1; j < arrayLength; j++) {
@@ -85,8 +84,10 @@ public class SelectionSort{
             
             
         }
-        anim.add(AnimUtils.setColor(list.get(arrayLength - 1), ViewController.DEFAULT, 
-                        ViewController.SORTED));
+        anim.add(AnimUtils.makeParallel(
+                AnimUtils.setColor(list.get(arrayLength - 1), ViewController.DEFAULT, 
+                        ViewController.SORTED),
+                pc.unselectAll()));
         return anim;
     }
     

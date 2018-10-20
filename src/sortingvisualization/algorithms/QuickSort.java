@@ -60,9 +60,12 @@ public class QuickSort {
         sq.add(AnimUtils.makeParallel(
                 parallelTransition, 
                 code.selectLine(2)));
+        
         BrickNode pivot = list.get(high);
-        sq.add(AnimUtils.setColor(list.get(high), 
-                ViewController.DEFAULT, Color.RED));
+        
+        sq.add(AnimUtils.makeParallel(
+                AnimUtils.setColor(list.get(high), ViewController.DEFAULT, Color.RED),
+                code.selectLines(7,8,9)));
         
         int i = (low-1); // index of smaller element
         //sq.add(setColor(list.get(i+1), Color.LIGHTSKYBLUE, Color.YELLOW));
@@ -71,33 +74,39 @@ public class QuickSort {
         { 
             // If current element is smaller than or 
             // equal to pivot 
-            sq.add(AnimUtils.setColor(list.get(j), 
-                    ViewController.DEFAULT, ViewController.COMPARE));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.setColor(list.get(j), ViewController.DEFAULT, ViewController.COMPARE),
+                    code.selectLine(10)));
             if (list.get(j).getValue() <= pivot.getValue()) 
             { 
                 
                 i++;
                 //sq.add(setColor(list.get(i), Color.LIGHTSKYBLUE, Color.YELLOW));
                 // swap arr[i] and arr[j] 
-                if(i != j){
-                    sq.add(AnimUtils.swap(list.get(i), list.get(j), i, j));
-                }
+                //if(i != j){
+                    sq.add(AnimUtils.makeParallel(AnimUtils.swap(list.get(i), list.get(j), i, j),
+                            code.selectLine(11)));
+                //} else{
+                //    addAnimToList(sq, code.selectLine(11));
+                //}
                 //sq.add(setColor(list.get(i), Color.YELLOW, Color.LIGHTSKYBLUE));
                 BrickNode temp = list.get(i); 
                 list.set(i, list.get(j)); 
                 list.set(j, temp);
-                sq.add(AnimUtils.setColor(list.get(i), 
-                        ViewController.COMPARE, ViewController.DEFAULT));
+                sq.add(AnimUtils.makeParallel(
+                        AnimUtils.setColor(list.get(i), ViewController.COMPARE, ViewController.DEFAULT),
+                        code.selectLine(12)));
                 
             } else{
-                sq.add(AnimUtils.setColor(list.get(j), 
-                        ViewController.COMPARE, ViewController.DEFAULT));
+                sq.add(AnimUtils.setColor(list.get(j), ViewController.COMPARE, ViewController.DEFAULT));
             } 
             
         } 
   
         // swap arr[i+1] and arr[high] (or pivot)
-        sq.add(AnimUtils.swap(list.get(i+1), list.get(high), i+1, high));
+        sq.add(AnimUtils.makeParallel(
+                AnimUtils.swap(list.get(i+1), list.get(high), i+1, high),
+                code.selectLine(13)));
         BrickNode temp = list.get(i+1); 
         list.set(i+1, list.get(high)); 
         list.set(high, temp);
@@ -107,7 +116,9 @@ public class QuickSort {
         for (int k = low; k <= high; k++) {
             parallelTransition.getChildren().add(AnimUtils.moveNodeUp(list.get(k)));            
         }
-        sq.add(parallelTransition);
+        sq.add(AnimUtils.makeParallel(
+                parallelTransition,
+                code.selectLine(14)));
         return i+1; 
     }
     
@@ -121,7 +132,14 @@ public class QuickSort {
                 "    QuickSort(arr, mid + 1, high)",
                 "",
                 "Partition(arr, low, high):",
-                "");
+                "  pivot = arr[high]",
+                "  index = (low - 1)",
+                "  for j = low to high - 1",
+                "    if arr[j] <= pivot",
+                "      swap(arr[j], arr[index])",
+                "      index++",
+                "  swap(arr[index + 1], pivot)",
+                "  return index + 1");
     }
     
     private static void addAnimToList(List<Animation> animList, Animation... anims){
