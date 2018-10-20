@@ -206,7 +206,6 @@ public class Window extends Application {
         root.setRight(sidePanel);
         BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
-        
         initialize(1, generateRandomArray(10, min, max));
         
         scene = new Scene(root, 1280, 720);
