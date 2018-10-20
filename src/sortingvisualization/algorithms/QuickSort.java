@@ -28,6 +28,7 @@ public class QuickSort {
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
         sort(list, 0, list.size()-1, anim, pc);
+        addAnimToList(anim, pc.unselectAll());
         return anim;
     } 
      
