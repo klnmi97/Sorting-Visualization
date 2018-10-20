@@ -81,8 +81,6 @@ public class QuickSort {
             { 
                 
                 i++;
-                //sq.add(setColor(list.get(i), Color.LIGHTSKYBLUE, Color.YELLOW));
-                // swap arr[i] and arr[j] 
                 //if(i != j){
                     sq.add(AnimUtils.makeParallel(AnimUtils.swap(list.get(i), list.get(j), i, j),
                             code.selectLine(11)));
