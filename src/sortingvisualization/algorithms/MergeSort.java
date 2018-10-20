@@ -101,7 +101,6 @@ public class MergeSort {
         }
     }
 
-
     private static void merge(int low, int middle, int high, 
             ArrayList<BrickNode> list, List<Animation> sq, Pseudocode code) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
