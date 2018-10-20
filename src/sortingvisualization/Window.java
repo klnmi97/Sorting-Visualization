@@ -302,7 +302,6 @@ public class Window extends Application {
         int index = nextTransitionIndex.get()-1;
         Animation anim = transitions.get(index);
         anim.setOnFinished(evt -> nextTransitionIndex.set(index));
-        //Todo speedslider
         anim.setRate(-speedSlider.getValue());
         anim.play();
     }
