@@ -105,6 +105,6 @@ public class Pseudocode {
     }
     
     private boolean isInArray(int number, int[] array){
-        return IntStream.of(array).allMatch(x -> x == number);
+        return IntStream.of(array).anyMatch(x -> x == number);
     }
 }
