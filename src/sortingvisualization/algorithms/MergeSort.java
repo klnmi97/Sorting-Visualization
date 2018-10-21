@@ -29,7 +29,7 @@ public class MergeSort {
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
-        sortRange(0, number - 1, anim, list, pc, 120, -1);
+        sortRange(0, number - 1, anim, list, pc, 150, -1);
         return anim;
     }
 
@@ -44,7 +44,6 @@ public class MergeSort {
         //Color original = Color.hsb(currentHue, 1.0, 1.0);
         Color current = Color.hsb(newHue, 1.0, 1.0);
         // check if low is smaller then high, if not then the array is sorted
-        addAnimToList(sq, code.selectLine(1));
         if (low < high) {
             // Get the index of the element which is in the middle
             int middle = low + (high - low) / 2;
@@ -55,7 +54,7 @@ public class MergeSort {
             }
             sq.add(AnimUtils.makeParallel(
                     pt,
-                    code.selectLine(2)));
+                    code.selectLines(1,2)));
             
             List<BrickNode> helperLow = new ArrayList<>();
             Color nextColorLow = Color.hsb(newHue - (newHue / 2), 1.0, 1.0);
@@ -119,11 +118,15 @@ public class MergeSort {
             
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
-                sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
+                sq.add(AnimUtils.makeParallel(
+                        AnimUtils.moveDownToX(helperNodes[i], k, i),
+                        code.selectLines(10, 11, 12)));
                 i++;
             } else {
                 list.set(k, helperNodes[j]);
-                sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
+                sq.add(AnimUtils.makeParallel(
+                        AnimUtils.moveDownToX(helperNodes[j], k, j),
+                        code.selectLines(10, 11, 13)));
                 j++;
             }
             k++;
@@ -131,7 +134,9 @@ public class MergeSort {
         // Copy the rest of the left side of the array into the target array
         while (i <= middle) {
             list.set(k, helperNodes[i]);
-            sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.moveDownToX(helperNodes[i], k, i),
+                    code.selectLines(14,15)));
             k++;
             i++;
         }
@@ -139,7 +144,9 @@ public class MergeSort {
         // Even if we didn't move in the array because it was already ordered, 
         // move on screen for any remaining nodes in the target array.
         while (j <= high) {
-            sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.moveDownToX(helperNodes[j], k, j),
+                    code.selectLines(14, 15)));
             k++;
             j++;
         }
@@ -156,7 +163,9 @@ public class MergeSort {
             moveUp.getChildren().add(moveNodeUp);
         }
 
-        sq.add(moveUp);
+        sq.add(AnimUtils.makeParallel(
+                moveUp,
+                code.selectLine(16)));
     }
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
@@ -165,20 +174,20 @@ public class MergeSort {
                 "MergeSort(arr, left, right):",
                 "  if left < right",
                 "    mid = (left + right) / 2",
-                "    left = MergeSort(arr, left, mid - 1)",
-                "    right = MergeSort(arr, mid + 1, right)",
-                "    return Merge(left, right)",
-                "  else return arr",
+                "    MergeSort(arr, left, mid - 1)",
+                "    MergeSort(arr, mid + 1, right)",
+                "    Merge(arr, left, mid, right)",
+                "  else return",
                 "",
-                "Merge(arrayL, arrayR):",
-                "  while arrayL and arrayR not empty",
-                "  index = (low - 1)",
-                "  for j = low to high - 1",
-                "    if arr[j] <= pivot",
-                "      swap(arr[j], arr[index])",
-                "      index++",
-                "  swap(arr[index + 1], pivot)",
-                "  return index + 1");
+                "Merge(array, left, mid, right):", //8
+                "  create array result[right - left]",
+                "  while arrayLIndex <= mid and arrayRIndex <= right",
+                "    if arrayLHeadValue < arrayRHeadValue", //11
+                "      copy arrayLHeadValue to result",
+                "    else: copy arrayRHeadValue",
+                "  while(arrayL or arrayR has elements)", //14
+                "    copy currentValue to result",
+                "  copy elements back to original array");
     }
     
     private static void addAnimToList(List<Animation> animList, Animation... anims){
