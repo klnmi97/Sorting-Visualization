@@ -40,6 +40,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -60,7 +61,7 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
  */
 public class Window extends Application {
     
-    private final int max = 100;
+    private final int max = 10;
     private final int min = (int)(max * 0.05);
     
     private MenuBar menuBar;
@@ -333,11 +334,11 @@ public class Window extends Application {
                 list.add(stackPane);
             }
         }else{
-            ViewController.N_VALUES = 10;
+            ViewController.N_VALUES = 12;
             ViewController.LEFT_INDENT = (int)(((double)ViewController.N_VALUES / 2) 
                     * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
-                int value = random.nextInt(max - min + 1) + min;
+                int value = random.nextInt(max - min) + min;
                 BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
             }
@@ -380,6 +381,7 @@ public class Window extends Application {
             case 7:
                 transitions = countingSort(list, max, displayPane);
                 headerLbl.setText("Counting Sort");
+                displayPane.getChildren().addAll(0, createCountingArrayVis(max));
             default:
         }
            
@@ -406,6 +408,18 @@ public class Window extends Application {
             
         });
         
+    }
+    
+    private List<BrickNode> createCountingArrayVis(int count){
+        //int leftIndent = (int)(((double)count / 2) 
+        //            * -ViewController.SPACING);
+        List<BrickNode> subList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            //int value = i;
+            BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, ViewController.DEFAULT_LEFT_INDENT);
+            subList.add(stackPane);
+        }
+        return subList;
     }
     
     private void stopAllAnimations(){
@@ -457,6 +471,32 @@ public class Window extends Application {
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
         node.setTranslateY(ViewController.TOP_INDENT);
+        node.setShape(rectangle);
+        return node;
+    }
+    
+    private BrickNode createCustomNode(int i, int value, int currentMax, Color color, double leftIndent) {
+        
+        int num;
+        if(value < min)
+            num = min;
+        else 
+            num = value;
+        double percent = (double)num / currentMax;
+        Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
+        rectangle.setFill(color);
+        
+        Text text = new Text(String.valueOf(num));
+        text.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+        BrickNode node = new BrickNode(num);
+        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+        //node.setId(String.valueOf(num));
+        //stackPane.setValue(num);
+        node.getChildren().addAll(rectangle, text);
+        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        node.setAlignment(Pos.BOTTOM_CENTER);
+        node.setTranslateX(ViewController.SPACING * i + leftIndent);
+        node.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA);
         node.setShape(rectangle);
         return node;
     }

@@ -31,21 +31,23 @@ import javafx.scene.text.Text;
  */
 public class AnimUtils {
     
-    public static Animation moveDownToX(BrickNode sp, int X, int i) {
+    public static Animation moveDownToX(BrickNode sp, int fromX, int toX, double startLeftIndent, double withLeftIndent) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
         transition.setDuration(ViewController.SPEED);
         //get start position of node to allow backward animation
-        transition.setFromX(i * ViewController.SPACING 
-                + ViewController.LEFT_INDENT);
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
         transition.setFromY(ViewController.TOP_INDENT);
-        transition.setToX(X * ViewController.SPACING 
-                + ViewController.LEFT_INDENT);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
         transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA);
         return transition;
-
     }
     
+    public static Animation moveDownToX(BrickNode sp, int toX, int fromX) {
+        return moveDownToX(sp, fromX, toX, ViewController.LEFT_INDENT , ViewController.LEFT_INDENT);
+    }
     
     public static TranslateTransition moveTo(BrickNode sp, int X, int i) {
         TranslateTransition transition = new TranslateTransition();
@@ -57,6 +59,20 @@ public class AnimUtils {
         return transition;
     }
 
+    public static Animation moveUpToX(BrickNode sp, int fromX, int toX, double startLeftIndent, double withLeftIndent){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        //get start position of node to allow backward animation
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
+        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
+        transition.setToY(ViewController.TOP_INDENT);
+        return transition;
+    }
+    
     public static TranslateTransition moveNodeUp(BrickNode sp){
         TranslateTransition moveNodeUp = new TranslateTransition();
         moveNodeUp.setNode(sp);
@@ -142,7 +158,4 @@ public class AnimUtils {
         return node;
     }
     
-    public static boolean isLineSelected(List<StackPane> codeLines, int line){
-        return codeLines.get(line).getShape().getFill() == ViewController.LINE_SELECTION;
-    }
 }

@@ -17,6 +17,7 @@ public class ViewController {
     public static int N_VALUES = 10;
     public static final int SPACING = 60;
     //counting from center as 0; half of (spacing * number of elements)
+    public static int DEFAULT_LEFT_INDENT = (int)(((double)10 / 2) * -SPACING);
     public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
     public static final int TOP_INDENT = -350;
     public static final int SORT_GROUP_MOVE_DELTA = 250 + TOP_INDENT;
