@@ -9,7 +9,10 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.FillTransition;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
@@ -24,6 +27,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  *
@@ -156,6 +160,16 @@ public class AnimUtils {
         //node.setTranslateY(ViewController.TOP_INDENT);
         node.setShape(rectangle);
         return node;
+    }
+    
+    public static Animation setText(Label lbl, String fromVal, String descImp) {
+        String content = descImp;
+        String oldVal = fromVal;
+        return new Timeline(
+            new KeyFrame(Duration.millis(0),
+                new KeyValue(lbl.textProperty(), oldVal)),
+            new KeyFrame(ViewController.SPEED,
+                new KeyValue(lbl.textProperty(), content)));
     }
     
 }
