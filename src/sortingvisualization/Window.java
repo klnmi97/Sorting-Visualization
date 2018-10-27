@@ -379,9 +379,11 @@ public class Window extends Application {
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
             case 7:
-                transitions = countingSort(list, max, displayPane);
+                List<Label> labels = createLabelsList(max);
+                transitions = countingSort(list, labels, max, displayPane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
+                displayPane.getChildren().addAll(labels);
             default:
         }
            
@@ -420,6 +422,17 @@ public class Window extends Application {
             subList.add(stackPane);
         }
         return subList;
+    }
+    
+    private List<Label> createLabelsList(int count){
+        List<Label> labels = new ArrayList<>();
+        for(int i = 0; i < count; i++){
+            Label label = new Label("0");
+            label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
+            label.setTranslateY(220);
+            labels.add(label);
+        }
+        return labels;
     }
     
     private void stopAllAnimations(){
