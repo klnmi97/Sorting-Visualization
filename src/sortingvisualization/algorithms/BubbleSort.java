@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -27,24 +28,30 @@ public class BubbleSort {
         ParallelTransition parallelTransition;
         int n = list.size();  
         BrickNode temp;
-        List<StackPane> codeLines = new ArrayList<>();
         
-        addPseudocode(codePane, codeLines);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        addAnimToList(anim, pc.selectLine(0));
         for(int i=0; i < n; i++){  
             parallelTransition = new ParallelTransition();
+            addAnimToList(anim, pc.selectLine(1));
             for(int j=1; j < (n-i); j++){ 
+                
                 //select elements to compare (anim)
                 if(j == 1){
-                    anim.add(AnimUtils.selectNodes(list.get(j-1), list.get(j)));
+                    anim.add(AnimUtils.makeParallel(pc.selectLine(2),
+                            AnimUtils.selectNodes(list.get(j-1), list.get(j))));
                 } else {
                     parallelTransition.getChildren().add(AnimUtils.setColor(
                             list.get(j), ViewController.DEFAULT, 
                             ViewController.COMPARE));
-                    anim.add(parallelTransition);
+                    anim.add(AnimUtils.makeParallel(parallelTransition, 
+                            pc.selectLine(2)));
                 }
                 if(list.get(j-1).getValue() > list.get(j).getValue()){  
                     //swap elements  
-                    anim.add(AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1));
+                    anim.add(AnimUtils.makeParallel(AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
+                            pc.selectLine(3)));
                     temp = list.get(j-1);  
                     list.set(j-1, list.get(j));  
                     list.set(j, temp);
@@ -64,18 +71,25 @@ public class BubbleSort {
                 }
             }
         }
-        anim.add(AnimUtils.setColor(list.get(0), 
-                ViewController.DEFAULT, ViewController.SORTED));
+        anim.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(0), 
+                ViewController.DEFAULT, ViewController.SORTED),
+                pc.unselectAll()));
         return anim;
     } 
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("for i = 0 to sizeOfArray-1"));
-        code.add(AnimUtils.createLine("  for j = 1 to lastUnsortedElement-1"));
-        code.add(AnimUtils.createLine("    if leftElement > rightElement"));
-        code.add(AnimUtils.createLine("      swap(leftElement, rightElement)"));
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, "for i = 0 to sizeOfArray-1",
+                "  for j = 1 to lastUnsortedElement-1",
+                "    if leftElement > rightElement",
+                "      swap(leftElement, rightElement)");
     }
     
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
+    }
 }

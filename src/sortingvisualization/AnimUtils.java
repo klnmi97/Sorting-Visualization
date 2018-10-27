@@ -106,7 +106,7 @@ public class AnimUtils {
         return parallelTransition;
     }
     
-    public static Animation setColor(BrickNode sp, Color fromColor, Color toColor){
+    public static Animation setColor(StackPane sp, Color fromColor, Color toColor){
         return new FillTransition(ViewController.SPEED, sp.getShape(), fromColor, toColor);
     }
     
@@ -162,6 +162,7 @@ public class AnimUtils {
         return node;
     }
     
+<<<<<<< HEAD
     public static Animation setText(Label lbl, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
@@ -170,6 +171,16 @@ public class AnimUtils {
                 new KeyValue(lbl.textProperty(), oldVal)),
             new KeyFrame(ViewController.SPEED,
                 new KeyValue(lbl.textProperty(), content)));
+=======
+    public static Animation makeParallel(Animation... anims){
+        ParallelTransition pt = new ParallelTransition();
+        for(Animation anim : anims){
+            if(anim != null){
+                pt.getChildren().add(anim);
+            }
+        }
+        return pt;
+>>>>>>> codePanel
     }
     
 }

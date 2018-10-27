@@ -11,9 +11,9 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 
@@ -35,25 +35,33 @@ public class CocktailShakerSort {
         int lastStart = i;
         int lastFinish = j;
         parallelTransition = new ParallelTransition();
-        List<StackPane> codeLines = new ArrayList<>();
         
-        addPseudocode(codePane, codeLines);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        addAnimToList(sq, pc.selectLines(0, 1));
         while(i < j && swapped) 
         {
+            addAnimToList(sq, pc.selectLines(2, 3));
             swapped = false;
             for(int k = i; k < j; k++) 
             {
                 if(k == 0){
-                    sq.add(AnimUtils.selectNodes(list.get(k), list.get(k+1)));
+                    sq.add(AnimUtils.makeParallel(
+                            pc.selectLine(4),
+                            AnimUtils.selectNodes(list.get(k), list.get(k+1))));
                 } else {
                     parallelTransition.getChildren().add(
                             AnimUtils.setColor(list.get(k+1), 
                                     ViewController.DEFAULT, ViewController.COMPARE));
-                    sq.add(parallelTransition);
+                    sq.add(AnimUtils.makeParallel(
+                                    pc.selectLine(4),
+                                    parallelTransition));
                 }
                 if(list.get(k).compareTo(list.get(k+1)) == 1) 
                 {
-                    sq.add(AnimUtils.swap(list.get(k), list.get(k + 1), k, k + 1));
+                    sq.add(AnimUtils.makeParallel(
+                            pc.selectLines(5, 6), 
+                            AnimUtils.swap(list.get(k), list.get(k + 1), k, k + 1)));
                     BrickNode temp = list.get(k);
                     list.set(k, list.get(k + 1));
                     list.set(k + 1, temp);
@@ -78,21 +86,26 @@ public class CocktailShakerSort {
             j--;
             lastStart = i;
             lastFinish = j + 2;
-            
+            addAnimToList(sq, pc.selectLine(7));
             if(swapped) 
             {
+                addAnimToList(sq, pc.selectLines(8,9));
                 swapped = false;
                 for(int k = j; k > i; k--) 
                 {
                     
                     parallelTransition.getChildren().add(AnimUtils.setColor(
                             list.get(k-1), ViewController.DEFAULT, 
-                            ViewController.COMPARE));
-                    sq.add(parallelTransition);
+                                ViewController.COMPARE));
+                    sq.add(AnimUtils.makeParallel(
+                            pc.selectLine(10),
+                            parallelTransition));
                     
                     if(list.get(k).compareTo(list.get(k - 1)) == -1) 
                     {
-                        sq.add(AnimUtils.swap(list.get(k), list.get(k - 1), k, k - 1));
+                        sq.add(AnimUtils.makeParallel(
+                                AnimUtils.swap(list.get(k), list.get(k - 1), k, k - 1),
+                                pc.selectLines(11, 12)));
                         BrickNode temp = list.get(k);
                         list.set(k, list.get(k - 1));
                         list.set(k - 1, temp);
@@ -117,7 +130,7 @@ public class CocktailShakerSort {
                 lastFinish = j + 1;
             }
             i++;
-
+            addAnimToList(sq, pc.selectLine(13));
         }
         
         parallelTransition = new ParallelTransition();
@@ -125,24 +138,40 @@ public class CocktailShakerSort {
             parallelTransition.getChildren().add(AnimUtils
                     .setColor(list.get(k), ViewController.DEFAULT, ViewController.SORTED));
         }
-        sq.add(new SequentialTransition(
+        
+        sq.add(AnimUtils.makeParallel(new SequentialTransition(
                 AnimUtils.unselectNodes(list.get(firstSelected), list.get(secondSelected)), 
-                parallelTransition));
+                parallelTransition),
+                pc.unselectAll()));
+        
         
         return sq;
     } 
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("swapped := true"));
-        code.add(AnimUtils.createLine("do"));
-        code.add(AnimUtils.createLine("  for i = 0 to lastUnsortedElementRight-1"));
-        code.add(AnimUtils.createLine("      if leftElement > rightElement"));
-        code.add(AnimUtils.createLine("        swap(leftElement, rightElement)"));
-        code.add(AnimUtils.createLine("  for j = lastUnsortedElementRight-1 to lastUnsortedElementLeft-1"));
-        code.add(AnimUtils.createLine("    if leftElement > rightElement"));
-        code.add(AnimUtils.createLine("      swap(leftElement, rightElement)"));
-        code.add(AnimUtils.createLine("while swapped"));
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, 
+                "swapped = true",
+                "do",
+                "  swapped = false",
+                "  for i = 0 to lastUnsortedRight-1",
+                "    if leftElement > rightElement",
+                "      swap(leftElement, rightElement)",
+                "      swapped = true",
+                "  if swapped",
+                "    swapped = false",
+                "    for j = lastUnsortedRight-1 to lastUnsortedLeft-1",
+                "     if leftElement > rightElement",
+                "       swap(leftElement, rightElement)",
+                "       swapped = true",
+                "while swapped");
+    }
+    
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
     }
 }

@@ -279,7 +279,7 @@ public class Window extends Application {
         alg6.getStyleClass().add("button");
         alg6.setOnAction(event->initialize(6, null));
         
-        alg7 = new Button("COU(beta)");
+        alg7 = new Button("COU");
         alg7.setTooltip(new Tooltip("Counting Sort"));
         alg7.getStyleClass().add("button");
         alg7.setOnAction(event->initialize(7, null));

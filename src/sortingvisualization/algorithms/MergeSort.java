@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -26,15 +27,14 @@ public class MergeSort {
     public static List<Animation> mergeSort(ArrayList<BrickNode> list, Pane codePane) {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
-        List<StackPane> codeLines = new ArrayList<>();
-        
-        addPseudocode(codePane, codeLines);
-        sortRange(0, number - 1, anim, list, codeLines, 120, -1);
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        sortRange(0, number - 1, anim, list, pc, 150, -1);
         return anim;
     }
 
     private static void sortRange(int low, int high, List<Animation> sq, 
-            ArrayList<BrickNode> list, List<StackPane> codeLines, int newHue, int currentHue) {
+            ArrayList<BrickNode> list, Pseudocode code, int newHue, int currentHue) {
         Color original;
         if(currentHue == -1){
              original = Color.hsb(180, 1.0, 0.55);
@@ -52,25 +52,37 @@ public class MergeSort {
             for(int i = low; i <= high; i++){
                 pt.getChildren().add(AnimUtils.setColor(list.get(i), original, current));
             }
-            sq.add(pt);
+            sq.add(AnimUtils.makeParallel(
+                    pt,
+                    code.selectLines(1,2)));
             
             List<BrickNode> helperLow = new ArrayList<>();
             Color nextColorLow = Color.hsb(newHue - (newHue / 2), 1.0, 1.0);
             for(int i = low; i <=middle; i++){
                 helperLow.add(list.get(i));
             }
+            
+            
             // Sort the left side of the array
-            sortRange(low, middle, sq, list, codeLines, newHue - (newHue / 2), newHue);
+            addAnimToList(sq, code.selectLine(3));
+            sortRange(low, middle, sq, list, code, newHue - (newHue / 2), newHue);
+            
             
             List<BrickNode> helperHigh = new ArrayList<>();
             Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
             for(int i = middle + 1; i <=high; i++){
                 helperHigh.add(list.get(i));
             }
+            
+            
             // Sort the right side of the array
-            sortRange(middle + 1, high, sq, list, codeLines, newHue + (newHue / 2), newHue);
+            addAnimToList(sq, code.selectLine(4));
+            sortRange(middle + 1, high, sq, list, code, newHue + (newHue / 2), newHue);
+            
+            
             // Combine them both
-            merge(low, middle, high, list, sq, codeLines);
+            addAnimToList(sq, code.selectLine(5));
+            merge(low, middle, high, list, sq, code);
             
             pt = new ParallelTransition();
             for(BrickNode node : helperLow){
@@ -81,13 +93,15 @@ public class MergeSort {
             }
             sq.add(pt);
         } else {
-            sq.add(AnimUtils.setColor(list.get(low), original, current));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.setColor(list.get(low), original, current),
+                    code.selectLine(1)));
+            addAnimToList(sq, code.selectLine(6));
         }
     }
 
-
     private static void merge(int low, int middle, int high, 
-            ArrayList<BrickNode> list, List<Animation> sq, List<StackPane> codeLines) {
+            ArrayList<BrickNode> list, List<Animation> sq, Pseudocode code) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
         // Copy both parts into the helper array
         for (int i = low; i <= high; i++) {
@@ -104,11 +118,15 @@ public class MergeSort {
             
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
-                sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
+                sq.add(AnimUtils.makeParallel(
+                        AnimUtils.moveDownToX(helperNodes[i], k, i),
+                        code.selectLines(10, 11, 12)));
                 i++;
             } else {
                 list.set(k, helperNodes[j]);
-                sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
+                sq.add(AnimUtils.makeParallel(
+                        AnimUtils.moveDownToX(helperNodes[j], k, j),
+                        code.selectLines(10, 11, 13)));
                 j++;
             }
             k++;
@@ -116,7 +134,9 @@ public class MergeSort {
         // Copy the rest of the left side of the array into the target array
         while (i <= middle) {
             list.set(k, helperNodes[i]);
-            sq.add(AnimUtils.moveDownToX(helperNodes[i], k, i));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.moveDownToX(helperNodes[i], k, i),
+                    code.selectLines(14,15)));
             k++;
             i++;
         }
@@ -124,7 +144,9 @@ public class MergeSort {
         // Even if we didn't move in the array because it was already ordered, 
         // move on screen for any remaining nodes in the target array.
         while (j <= high) {
-            sq.add(AnimUtils.moveDownToX(helperNodes[j], k, j));
+            sq.add(AnimUtils.makeParallel(
+                    AnimUtils.moveDownToX(helperNodes[j], k, j),
+                    code.selectLines(14, 15)));
             k++;
             j++;
         }
@@ -141,18 +163,38 @@ public class MergeSort {
             moveUp.getChildren().add(moveNodeUp);
         }
 
-        sq.add(moveUp);
+        sq.add(AnimUtils.makeParallel(
+                moveUp,
+                code.selectLine(16)));
     }
     
-    private static void addPseudocode(Pane pane, List<StackPane> code){
+    private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.add(AnimUtils.createLine("split each element into partitions of size 1"));
-        code.add(AnimUtils.createLine("recursively merge partitions"));
-        code.add(AnimUtils.createLine("  for i = leftPartIdx to rightPartIdx"));
-        code.add(AnimUtils.createLine("    if leftPartValue <= rightPartValue"));
-        code.add(AnimUtils.createLine("      copy leftPartValue"));
-        code.add(AnimUtils.createLine("    else: copy rightPartValue"));
-        code.add(AnimUtils.createLine("copy elements back to original array"));
-        pane.getChildren().addAll(code);
+        code.addLines(codePane, 
+                "MergeSort(arr, left, right):",
+                "  if left < right",
+                "    mid = (left + right) / 2",
+                "    MergeSort(arr, left, mid - 1)",
+                "    MergeSort(arr, mid + 1, right)",
+                "    Merge(arr, left, mid, right)",
+                "  else return",
+                "",
+                "Merge(array, left, mid, right):", //8
+                "  create array result[right - left]",
+                "  while arrayLIndex <= mid and arrayRIndex <= right",
+                "    if arrayLHeadValue < arrayRHeadValue", //11
+                "      copy arrayLHeadValue to result",
+                "    else: copy arrayRHeadValue",
+                "  while(arrayL or arrayR has elements)", //14
+                "    copy currentValue to result",
+                "  copy elements back to original array");
+    }
+    
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
     }
 }
