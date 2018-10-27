@@ -162,7 +162,7 @@ public class AnimUtils {
         return node;
     }
     
-<<<<<<< HEAD
+
     public static Animation setText(Label lbl, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
@@ -171,7 +171,8 @@ public class AnimUtils {
                 new KeyValue(lbl.textProperty(), oldVal)),
             new KeyFrame(ViewController.SPEED,
                 new KeyValue(lbl.textProperty(), content)));
-=======
+    }
+    
     public static Animation makeParallel(Animation... anims){
         ParallelTransition pt = new ParallelTransition();
         for(Animation anim : anims){
@@ -180,7 +181,6 @@ public class AnimUtils {
             }
         }
         return pt;
->>>>>>> codePanel
     }
     
 }
