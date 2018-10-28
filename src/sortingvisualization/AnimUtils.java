@@ -143,34 +143,22 @@ public class AnimUtils {
         return parallelTransition;
     }
     
-    public static StackPane createLine(String line) {
-        Rectangle rectangle = new Rectangle(300, 25);
-        rectangle.setFill(Color.TRANSPARENT);
-        
-        Text text = new Text(line);
-        text.setFont(Font.font("Courier new", FontWeight.BOLD, 12));
-        StackPane node = new StackPane();
-        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        //node.setId(String.valueOf(num));
-        //stackPane.setValue(num);
-        node.getChildren().addAll(rectangle, text);
-        StackPane.setAlignment(text, Pos.CENTER_LEFT);
-        //node.setAlignment(Pos.BOTTOM_CENTER);
-        //node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
-        //node.setTranslateY(ViewController.TOP_INDENT);
-        node.setShape(rectangle);
-        return node;
-    }
-    
-
     public static Animation setText(Label lbl, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
         return new Timeline(
             new KeyFrame(Duration.millis(0),
                 new KeyValue(lbl.textProperty(), oldVal)),
+            new KeyFrame(Duration.millis(1),
+                new KeyValue(lbl.textFillProperty(), Color.RED)),
+            new KeyFrame(Duration.millis(100),
+                new KeyValue(lbl.textProperty(), content)),
+            new KeyFrame(Duration.millis(101),
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", FontWeight.BOLD, 12))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.textProperty(), content)));
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", FontWeight.NORMAL, 12))),
+            new KeyFrame(ViewController.SPEED,
+                new KeyValue(lbl.textFillProperty(), Color.BLACK)));
     }
     
     public static Animation makeParallel(Animation... anims){

@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Pseudocode;
 import sortingvisualization.ViewController;
 
 /**
@@ -23,6 +24,9 @@ public class CountingSort {
     
     public static List<Animation> countingSort(ArrayList<BrickNode> list, List<Label> counters, int maxValue, Pane codePane) { 
         List<Animation> anim = new ArrayList<>();
+        Pseudocode pc = new Pseudocode();
+        addPseudocode(codePane, pc);
+        
          // array of 0's at indices 0...maxValue
         int[] count = new int[maxValue];
         for(int i : count){
@@ -32,17 +36,15 @@ public class CountingSort {
         for (BrickNode num : list) {
             ++count[num.getValue()];
             //animation part
-            //make parallel right
             int value = count[num.getValue()];
             String oldValue = Integer.toString(value-1);
             String newValue = Integer.toString(value);
-            ParallelTransition pt = new ParallelTransition(
-                    AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(), 
-                    ViewController.LEFT_INDENT, ViewController.DEFAULT_LEFT_INDENT),
-            AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue));
-            anim.add(pt);
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
+                            ViewController.LEFT_INDENT, ViewController.DEFAULT_LEFT_INDENT),
+                    AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue)));
         }
-        System.out.println(count.length);
+        
         for(int i = 1; i < count.length; i++){
             String oldVal = Integer.toString(count[i]);
             count[i] += count[i - 1]; 
@@ -64,5 +66,13 @@ public class CountingSort {
             
         }
         return anim;
+    }
+
+    private static void addPseudocode(Pane codePane, Pseudocode code) {
+        code.addLines(codePane, 
+                "create array size of max value",
+                "fill it with 0s",
+                "",
+                "");
     }
 }
