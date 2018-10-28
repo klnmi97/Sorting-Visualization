@@ -380,7 +380,7 @@ public class Window extends Application {
                 break;
             case 7:
                 List<Label> labels = createLabelsList(max);
-                transitions = countingSort(list, labels, max, displayPane);
+                transitions = countingSort(list, labels, max, codePane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
                 displayPane.getChildren().addAll(labels);
@@ -413,11 +413,8 @@ public class Window extends Application {
     }
     
     private List<BrickNode> createCountingArrayVis(int count){
-        //int leftIndent = (int)(((double)count / 2) 
-        //            * -ViewController.SPACING);
         List<BrickNode> subList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            //int value = i;
             BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, ViewController.DEFAULT_LEFT_INDENT);
             subList.add(stackPane);
         }
@@ -428,8 +425,9 @@ public class Window extends Application {
         List<Label> labels = new ArrayList<>();
         for(int i = 0; i < count; i++){
             Label label = new Label("0");
+            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
-            label.setTranslateY(220);
+            label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
             labels.add(label);
         }
         return labels;
