@@ -150,15 +150,15 @@ public class AnimUtils {
             new KeyFrame(Duration.millis(0),
                 new KeyValue(lbl.textProperty(), oldVal)),
             new KeyFrame(Duration.millis(1),
-                new KeyValue(lbl.textFillProperty(), Color.RED)),
+                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)))),
             new KeyFrame(Duration.millis(100),
                 new KeyValue(lbl.textProperty(), content)),
             new KeyFrame(Duration.millis(101),
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", FontWeight.BOLD, 12))),
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", FontWeight.NORMAL, 12))),
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.textFillProperty(), Color.BLACK)));
+                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)))));
     }
     
     public static Animation makeParallel(Animation... anims){
