@@ -42,37 +42,47 @@ public class CountingSort {
             anim.add(AnimUtils.makeParallel(
                     AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
                             ViewController.LEFT_INDENT, ViewController.DEFAULT_LEFT_INDENT),
-                    AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue)));
+                    AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue),
+                    pc.selectLine(2)));
         }
         
         for(int i = 1; i < count.length; i++){
             String oldVal = Integer.toString(count[i]);
             count[i] += count[i - 1]; 
             String newVal = Integer.toString(count[i]);
-            anim.add(AnimUtils.setText(counters.get(i), oldVal, newVal));
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.setText(counters.get(i), oldVal, newVal),
+                    pc.selectLine(4)));
         }
         
         
         BrickNode[] sorted = new BrickNode[list.size()];
         // for each num in numCounts
         for(int i = list.size() - 1; i >= 0; i--){
-            sorted[count[list.get(i).getValue()] - 1] = list.get(i);
-            anim.add(AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()] - 1, 
-                    ViewController.DEFAULT_LEFT_INDENT, ViewController.LEFT_INDENT));
             count[list.get(i).getValue()]--;
             String oldVal = Integer.toString(count[list.get(i).getValue()] + 1);
             String newVal = Integer.toString(count[list.get(i).getValue()]);
-            anim.add(AnimUtils.setText(counters.get(list.get(i).getValue()), oldVal, newVal));
-            
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.setText(counters.get(list.get(i).getValue()), oldVal, newVal),
+                    pc.selectLine(6)));
+            sorted[count[list.get(i).getValue()]] = list.get(i);
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
+                    ViewController.DEFAULT_LEFT_INDENT, ViewController.LEFT_INDENT),
+                    pc.selectLine(7)));
         }
         return anim;
     }
 
     private static void addPseudocode(Pane codePane, Pseudocode code) {
         code.addLines(codePane, 
-                "create array size of max value",
-                "fill it with 0s",
-                "",
-                "");
+                "create a counting array size of max value - 1",
+                "for each element in the initial array",
+                "  increase the corresponding counter by 1",
+                "for each counter in counting array",
+                "  currentCounter += prevoiusCounter",
+                "for each element in the initial array",
+                "  decrease the corresponding counter by 1",
+                "  move currentElement to result[current counter]");
     }
 }
