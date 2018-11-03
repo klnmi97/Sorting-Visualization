@@ -415,7 +415,8 @@ public class Window extends Application {
     private List<BrickNode> createCountingArrayVis(int count){
         List<BrickNode> subList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, ViewController.DEFAULT_LEFT_INDENT);
+            BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, 
+                    ViewController.DEFAULT_LEFT_INDENT, ViewController.SORT_GROUP_MOVE_DELTA);
             subList.add(stackPane);
         }
         return subList;
@@ -428,6 +429,7 @@ public class Window extends Application {
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
             label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
+            label.fontProperty().set(Font.font("Helvetica", 20));
             labels.add(label);
         }
         return labels;
@@ -462,7 +464,7 @@ public class Window extends Application {
     
     private BrickNode createValueNode(int i, int value, int currentMax) {
         
-        int num;
+        /*int num;
         if(value < min)
             num = min;
         else 
@@ -482,11 +484,13 @@ public class Window extends Application {
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
         node.setTranslateY(ViewController.TOP_INDENT);
-        node.setShape(rectangle);
-        return node;
+        node.setShape(rectangle);*/
+        return createCustomNode(i, value, currentMax, ViewController.DEFAULT, 
+                ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
     }
     
-    private BrickNode createCustomNode(int i, int value, int currentMax, Color color, double leftIndent) {
+    private BrickNode createCustomNode(int i, int value, int currentMax, 
+            Color color, double leftIndent, double topIndent) {
         
         int num;
         if(value < min)
@@ -498,7 +502,7 @@ public class Window extends Application {
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));
-        text.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+        text.setFont(Font.font("Helvetica", 20));
         BrickNode node = new BrickNode(num);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         //node.setId(String.valueOf(num));
@@ -507,7 +511,7 @@ public class Window extends Application {
         BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(ViewController.SPACING * i + leftIndent);
-        node.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA);
+        node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
     }
