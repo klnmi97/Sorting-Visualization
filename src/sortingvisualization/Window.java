@@ -42,11 +42,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
+import sortingvisualization.algorithms.BucketSort;
 import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
 import sortingvisualization.algorithms.CountingSort;
 import static sortingvisualization.algorithms.CountingSort.countingSort;
@@ -83,6 +85,7 @@ public class Window extends Application {
     Button alg5;
     Button alg6;
     Button alg7;
+    Button alg8;
     Button playBtn;
     Button pauseBtn;
     Button stepBackBtn;
@@ -284,7 +287,12 @@ public class Window extends Application {
         alg7.getStyleClass().add("button");
         alg7.setOnAction(event->initialize(7, null));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7);
+        alg8 = new Button("BCKT(beta)");
+        alg8.setTooltip(new Tooltip("Bucket Sort"));
+        alg8.getStyleClass().add("button");
+        alg8.setOnAction(event->initialize(8, null));
+        
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7, alg8);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -339,7 +347,11 @@ public class Window extends Application {
                     * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 int value = random.nextInt(max - min) + min;
-                BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
+                BrickNode stackPane;
+                if(algorithm == 8)
+                    stackPane = createBucketNode(i, value, ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
+                else
+                    stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
             }
         }
@@ -384,6 +396,11 @@ public class Window extends Application {
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
                 displayPane.getChildren().addAll(labels);
+                break;
+            case 8:
+                transitions = BucketSort.bucketSort(list, codePane);
+                headerLbl.setText("Bucket Sort");
+                break;
             default:
         }
            
@@ -516,6 +533,28 @@ public class Window extends Application {
         return node;
     }
     
+    /***** Bucket, Radix *****/
+    
+    private BrickNode createBucketNode(int i, int value, double leftIndent, double topIndent){
+        //TODO: add numbers color change
+        Rectangle rectangle = new Rectangle(50, 40);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setFill(Color.WHITE);
+        //test on different screens!
+        //rectangle.widthProperty().set(Screen.getPrimary().getVisualBounds().getWidth() * 0.033);
+        Text text = new Text(String.valueOf(value));
+        text.setFont(Font.font("Helvetica", 20));
+        BrickNode node = new BrickNode(value);
+        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+        node.getChildren().addAll(rectangle, text);
+        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        node.setAlignment(Pos.BOTTOM_CENTER);
+        node.setTranslateX(ViewController.SPACING * i + leftIndent);
+        node.setTranslateY(topIndent);
+        node.setShape(rectangle);
+        return node;
+    }
+    
      /*bidings*/
      private BooleanBinding createAnyPlayingBinding(List<Animation> transitions) {
         return new BooleanBinding() {
@@ -567,6 +606,9 @@ public class Window extends Application {
                     break;
                 case Merge:
                     initialize(5, customInput);
+                    break;
+                case Counting:
+                    initialize(7, customInput);
                     break;
                 default:
                     initialize(1, customInput);
