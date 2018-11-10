@@ -6,6 +6,7 @@
 package sortingvisualization;
 
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -380,10 +381,12 @@ public class Window extends Application {
                 break;
             case 7:
                 List<Label> labels = createLabelsList(max);
+                List<Label> positionLabels = createPositionLabels(ViewController.N_VALUES);
                 transitions = countingSort(list, labels, max, codePane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
                 displayPane.getChildren().addAll(labels);
+                displayPane.getChildren().addAll(positionLabels);
             default:
         }
            
@@ -429,6 +432,19 @@ public class Window extends Application {
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
             label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
+            label.fontProperty().set(Font.font("Helvetica", 20));
+            labels.add(label);
+        }
+        return labels;
+    }
+    
+    private List<Label> createPositionLabels(int count){
+        List<Label> labels = new ArrayList<>();
+        for(int i = 0; i < count; i++){
+            Label label = new Label(MessageFormat.format("{0}", i));
+            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
+            label.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
+            label.setTranslateY(ViewController.TOP_INDENT + 30);
             label.fontProperty().set(Font.font("Helvetica", 20));
             labels.add(label);
         }
