@@ -63,7 +63,7 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
  */
 public class Window extends Application {
     
-    private final int max = 10;
+    private final int max = 100;
     private final int min = (int)(max * 0.05);
     
     private MenuBar menuBar;
@@ -331,7 +331,7 @@ public class Window extends Application {
         displayPane.getChildren().clear();
         codePane.getChildren().clear();
         list = new ArrayList<>();
-        
+        int arrMax = 0;
         
         if(input!=null){
             ViewController.N_VALUES = input.length;
@@ -340,6 +340,9 @@ public class Window extends Application {
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 BrickNode stackPane = createValueNode(i, input[i], max);
                 list.add(stackPane);
+                if(input[i] > arrMax){
+                    arrMax = input[i];
+                }
             }
         }else{
             ViewController.N_VALUES = 12;
@@ -353,6 +356,9 @@ public class Window extends Application {
                 else
                     stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
+                if(value > arrMax){
+                    arrMax = value;
+                }
             }
         }
         
@@ -400,6 +406,8 @@ public class Window extends Application {
             case 8:
                 transitions = BucketSort.bucketSort(list, codePane);
                 headerLbl.setText("Bucket Sort");
+                List<Line> buckets = createBuckets((arrMax - min) / 15 + 1);
+                displayPane.getChildren().addAll(buckets);
                 break;
             default:
         }
@@ -537,7 +545,7 @@ public class Window extends Application {
     
     private BrickNode createBucketNode(int i, int value, double leftIndent, double topIndent){
         //TODO: add numbers color change
-        Rectangle rectangle = new Rectangle(50, 40);
+        Rectangle rectangle = new Rectangle(50, 30);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
         //test on different screens!
@@ -553,6 +561,21 @@ public class Window extends Application {
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
+    }
+    
+    private List<Line> createBuckets(int count){
+        List<Line> buckets = new ArrayList<>();
+        int y = ViewController.SORT_GROUP_MOVE_DELTA + 10;
+        int leftIndent = (int)(((double)count / 2) * -ViewController.SPACING); //indent calculation function is needed
+        for(int i = 0; i < count; i++){
+            Line baseLine = new Line(0, 0, 50, 0);
+            baseLine.setStrokeWidth(5);
+            StackPane.setAlignment(baseLine, Pos.BOTTOM_CENTER);
+            baseLine.setTranslateX(ViewController.SPACING * i + leftIndent);
+            baseLine.setTranslateY(y);
+            buckets.add(baseLine);
+        }
+        return buckets;
     }
     
      /*bidings*/

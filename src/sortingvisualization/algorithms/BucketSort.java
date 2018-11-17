@@ -8,9 +8,13 @@ package sortingvisualization.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
+import sortingvisualization.ViewController;
 
 /**
  *
@@ -35,16 +39,21 @@ public class BucketSort {
         }
         
         // Initialise buckets
-        int bucketSize = 5;
+        int bucketSize = 15;
         int bucketCount = (maxValue - minValue) / bucketSize + 1;
         List<List<BrickNode>> buckets = new ArrayList<List<BrickNode>>(bucketCount);
         for (int i = 0; i < bucketCount; i++) {
             buckets.add(new ArrayList<BrickNode>());
         }
+        int bucketsLIndent = (int)(((double)bucketCount / 2) * -ViewController.SPACING);
         
         // Distribute input array values into buckets
         for (int i = 0; i < list.size(); i++) {
-            buckets.get((list.get(i).getValue() - minValue) / bucketSize).add(list.get(i));
+            int selectedBucket = (list.get(i).getValue() - minValue) / bucketSize;
+            buckets.get(selectedBucket).add(list.get(i));
+            int nextBucketVal = buckets.get(selectedBucket).size() - 1;
+            anim.add(AnimUtils.moveTo(list.get(i), i, selectedBucket, nextBucketVal, ViewController.TOP_INDENT, bucketsLIndent));
+            //System.out.println(((Text)list.get(i).getChildren().stream().filter(e -> e instanceof Text).findFirst().get()).getText());
         }
         
         // Sort buckets and place back into input array
@@ -52,9 +61,10 @@ public class BucketSort {
         for (int i = 0; i < buckets.size(); i++) {
             BrickNode[] bucketArray = new BrickNode[buckets.get(i).size()];
             bucketArray = buckets.get(i).toArray(bucketArray);
-            sort(bucketArray);
+            sort(bucketArray, anim);
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
+                anim.add(AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, bucketsLIndent, ViewController.TOP_INDENT));
             }
         }
         
@@ -72,19 +82,24 @@ public class BucketSort {
     /*
     * Local Insertion sort for sorting buckets
     */
-    private static void sort(BrickNode[] bucketArray) {
+    private static void sort(BrickNode[] bucketArray, List<Animation> anim) {
         int n = bucketArray.length;
         
         for (int i = 1; i < n; ++i)
         {
+            ParallelTransition moveUp = new ParallelTransition();
             BrickNode key = bucketArray[i];
             int j = i-1;
             while (j>=0 && bucketArray[j].compareTo(key) == 1) 
             {
                 bucketArray[j + 1] = bucketArray[j];
+                moveUp.getChildren().add(AnimUtils.moveY(bucketArray[j], j, j + 1));
                 j = j-1;
             }
             bucketArray[j + 1] = key;
+            anim.add(AnimUtils.makeParallel(
+                    moveUp,
+                    AnimUtils.moveY(key, i, j + 1)));
         }
     }
     

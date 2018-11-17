@@ -35,6 +35,46 @@ import javafx.util.Duration;
  */
 public class AnimUtils {
     
+    //three first functions need clever refactoring
+    public static Animation moveTo(BrickNode sp, int fromX, int toX, int toY, 
+            double startLeftIndent, double withLeftIndent){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        //get start position of node to allow backward animation
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
+        transition.setFromY(ViewController.TOP_INDENT);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
+        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        return transition;
+    }
+    
+    public static Animation moveFrom(BrickNode sp, int toX, int fromX, int fromY, 
+            double startLeftIndent, double withLeftIndent){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        //get start position of node to allow backward animation
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
+        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
+        transition.setToY(ViewController.TOP_INDENT);
+        return transition;
+    }
+    
+    public static Animation moveY(BrickNode sp, int fromY, int toY){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
+        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        return transition;
+    }
+    
     public static Animation moveDownToX(BrickNode sp, int fromX, int toX, double startLeftIndent, double withLeftIndent) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
@@ -53,7 +93,7 @@ public class AnimUtils {
         return moveDownToX(sp, fromX, toX, ViewController.LEFT_INDENT , ViewController.LEFT_INDENT);
     }
     
-    public static TranslateTransition moveTo(BrickNode sp, int X, int i) {
+    public static TranslateTransition moveToX(BrickNode sp, int X, int i) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
         transition.setDuration(ViewController.SPEED);
