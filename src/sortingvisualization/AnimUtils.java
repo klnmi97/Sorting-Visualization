@@ -189,23 +189,27 @@ public class AnimUtils {
         return new Timeline(
             new KeyFrame(Duration.millis(0),
                 new KeyValue(lbl.textProperty(), oldVal)),
-            new KeyFrame(Duration.millis(1),
-                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)))),
-            new KeyFrame(Duration.millis(100),
+            new KeyFrame(ViewController.SPEED.multiply(0.9),
                 new KeyValue(lbl.textProperty(), content)),
-            new KeyFrame(Duration.millis(101),
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
+            new KeyFrame(Duration.millis(1),
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
-            new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)))));
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))));
     }
     
-    public static Animation makeParallel(Animation... anims){
+    public static ParallelTransition makeParallel(Animation... anims){
         ParallelTransition pt = new ParallelTransition();
         for(Animation anim : anims){
             if(anim != null){
-                pt.getChildren().add(anim);
+                if(ParallelTransition.class.isInstance(anim)){
+                    ParallelTransition currentTransition = (ParallelTransition) anim;
+                    if(!(currentTransition.getChildren().size() < 1)){
+                        pt.getChildren().add(anim);
+                    }
+                } else{
+                    pt.getChildren().add(anim);
+                }
+                
             }
         }
         return pt;

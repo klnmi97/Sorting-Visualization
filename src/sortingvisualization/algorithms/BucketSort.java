@@ -71,15 +71,7 @@ public class BucketSort {
         return anim;
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(codePane, 
-                "pseudocode",
-                "code",
-                "code",
-                "code");
-    }
-
-    /*
+     /*
     * Local Insertion sort for sorting buckets
     */
     private static void sort(BrickNode[] bucketArray, List<Animation> anim) {
@@ -97,10 +89,28 @@ public class BucketSort {
                 j = j-1;
             }
             bucketArray[j + 1] = key;
-            anim.add(AnimUtils.makeParallel(
+            //replace with new list implementation
+            if(i != j + 1){
+                ParallelTransition parallel = AnimUtils.makeParallel(
                     moveUp,
-                    AnimUtils.moveY(key, i, j + 1)));
+                    AnimUtils.moveY(key, i, j + 1));
+                if(parallel.getChildren().size() > 0){
+                    anim.add(parallel);
+                }
+            }
         }
     }
+    
+    private static void addPseudocode(Pane codePane, Pseudocode code) {
+        code.addLines(codePane, 
+                "create buckets",
+                "distribute array into buckets",
+                "for each bucket:",
+                "  sort bucket with insertion sort",
+                "  for each element in bucket:",
+                "    place element back into input array");
+    }
+
+   
     
 }
