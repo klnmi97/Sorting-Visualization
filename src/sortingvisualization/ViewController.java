@@ -33,4 +33,8 @@ public class ViewController {
     public static final Color DEFAULT = Color.DARKCYAN;
     public static final Color SORTED = Color.ORANGE;
     public static final Color LINE_SELECTION = Color.WHITE;
+    
+    public static int countIndent(int number){
+        return (int)(((double)number / 2) * -SPACING);
+    }
 }

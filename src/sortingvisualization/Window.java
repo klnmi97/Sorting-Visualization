@@ -49,12 +49,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
 import sortingvisualization.algorithms.BucketSort;
+import static sortingvisualization.algorithms.BucketSort.bucketSort;
 import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
 import sortingvisualization.algorithms.CountingSort;
 import static sortingvisualization.algorithms.CountingSort.countingSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
+import static sortingvisualization.algorithms.RadixSort.radixSort;
 import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
@@ -86,6 +88,7 @@ public class Window extends Application {
     Button alg6;
     Button alg7;
     Button alg8;
+    Button alg9;
     Button playBtn;
     Button pauseBtn;
     Button stepBackBtn;
@@ -292,7 +295,12 @@ public class Window extends Application {
         alg8.getStyleClass().add("button");
         alg8.setOnAction(event->initialize(8, null));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7, alg8);
+        alg9 = new Button("RDX(beta)");
+        alg9.setTooltip(new Tooltip("Radix Sort"));
+        alg9.getStyleClass().add("button");
+        alg9.setOnAction(event->initialize(9, null));
+        
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7, alg8, alg9);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -332,6 +340,7 @@ public class Window extends Application {
         codePane.getChildren().clear();
         list = new ArrayList<>();
         int arrMax = 0;
+        int arrMin = max;
         
         if(input!=null){
             ViewController.N_VALUES = input.length;
@@ -343,6 +352,9 @@ public class Window extends Application {
                 if(input[i] > arrMax){
                     arrMax = input[i];
                 }
+                if(input[i] < arrMin){
+                    arrMin = input[i];
+                }
             }
         }else{
             ViewController.N_VALUES = 12;
@@ -351,13 +363,16 @@ public class Window extends Application {
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 int value = random.nextInt(max - min) + min;
                 BrickNode stackPane;
-                if(algorithm == 8)
+                if(algorithm == 8 || algorithm == 9)
                     stackPane = createBucketNode(i, value, ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
                 else
                     stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
                 if(value > arrMax){
                     arrMax = value;
+                }
+                if(value < arrMin){
+                    arrMin = value;
                 }
             }
         }
@@ -404,10 +419,16 @@ public class Window extends Application {
                 displayPane.getChildren().addAll(labels);
                 break;
             case 8:
-                transitions = BucketSort.bucketSort(list, codePane);
+                transitions = bucketSort(list, codePane);
                 headerLbl.setText("Bucket Sort");
-                List<Line> buckets = createBuckets((arrMax - min) / 15 + 1);
+                List<Line> buckets = createBuckets((arrMax - arrMin) / 15 + 1);
                 displayPane.getChildren().addAll(buckets);
+                break;
+            case 9:
+                transitions = radixSort(list, codePane);
+                headerLbl.setText("Radix Sort");
+                List<Line> bucket = createBuckets(10);
+                displayPane.getChildren().addAll(bucket);
                 break;
             default:
         }
