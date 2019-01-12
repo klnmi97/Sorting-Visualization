@@ -45,12 +45,12 @@ public class RadixSort {
     
     private static void addPseudocode(Pane codePane, Pseudocode code) {
         code.addLines(codePane, 
-                "create buckets",
-                "distribute array into buckets",
-                "for each bucket:",
-                "  sort bucket with insertion sort",
-                "  for each element in bucket:",
-                "    place element back into input array");
+                "d = max number of digits",
+                "for i = 1 to d:",
+                "  do Counting Sort(array, i)",
+                "",
+                "",
+                "");
     }
     
     static void countSort(ArrayList<BrickNode> list, int n, int exp, List<Animation> anim) 
@@ -70,10 +70,14 @@ public class RadixSort {
                     ViewController.LEFT_INDENT, ViewController.countIndent(10)));
         }
   
+        //fill helper array for animation
+        for(i = 0; i < 10; i++){
+            helperCount[i] = count[i];
+        }
+        
         // Change count[i] so that count[i] now contains 
         // actual position of this digit in output[] 
         for (i = 1; i < 10; i++) {
-            helperCount[i] = count[i];
             count[i] += count[i - 1]; 
         }
             
@@ -83,7 +87,7 @@ public class RadixSort {
         { 
            
             output[count[ (list.get(i).getValue()/exp)%10 ] - 1] = list.get(i);
-            anim.add(AnimUtils.moveFrom(list.get(i), count[ (list.get(i).getValue()/exp)%10 ], 
+            anim.add(AnimUtils.moveFrom(list.get(i), count[ (list.get(i).getValue()/exp)%10 ] - 1, 
                     (list.get(i).getValue()/exp)%10, 
                     helperCount[(list.get(i).getValue()/exp)%10] - 1, 
                     ViewController.countIndent(10), ViewController.LEFT_INDENT));
