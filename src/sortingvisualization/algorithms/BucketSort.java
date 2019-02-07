@@ -52,7 +52,7 @@ public class BucketSort {
             int selectedBucket = (list.get(i).getValue() - minValue) / bucketSize;
             buckets.get(selectedBucket).add(list.get(i));
             int nextBucketVal = buckets.get(selectedBucket).size() - 1;
-            anim.add(AnimUtils.moveTo(list.get(i), i, selectedBucket, nextBucketVal, ViewController.TOP_INDENT, bucketsLIndent));
+            anim.add(AnimUtils.moveTo(list.get(i), i, selectedBucket, nextBucketVal, ViewController.LEFT_INDENT, bucketsLIndent));
             //System.out.println(((Text)list.get(i).getChildren().stream().filter(e -> e instanceof Text).findFirst().get()).getText());
         }
         
@@ -64,7 +64,7 @@ public class BucketSort {
             sort(bucketArray, anim);
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
-                anim.add(AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, bucketsLIndent, ViewController.TOP_INDENT));
+                anim.add(AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, bucketsLIndent, ViewController.LEFT_INDENT));
             }
         }
         
