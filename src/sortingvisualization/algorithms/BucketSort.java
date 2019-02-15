@@ -53,7 +53,10 @@ public class BucketSort {
             buckets.get(selectedBucket).add(list.get(i));
             int nextBucketVal = buckets.get(selectedBucket).size() - 1;
             
-            anim.add(AnimUtils.moveTo(list.get(i), i, selectedBucket, nextBucketVal, ViewController.LEFT_INDENT, bucketsLIndent));
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.moveTo(list.get(i), i, selectedBucket, 
+                            nextBucketVal, ViewController.LEFT_INDENT, bucketsLIndent),
+                    pc.selectLine(1)));
             //System.out.println(((Text)list.get(i).getChildren().stream().filter(e -> e instanceof Text).findFirst().get()).getText());
         }
         
@@ -62,10 +65,13 @@ public class BucketSort {
         for (int i = 0; i < buckets.size(); i++) {
             BrickNode[] bucketArray = new BrickNode[buckets.get(i).size()];
             bucketArray = buckets.get(i).toArray(bucketArray);
-            sort(bucketArray, anim);
+            sort(bucketArray, anim, pc);
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
-                anim.add(AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, bucketsLIndent, ViewController.LEFT_INDENT));
+                anim.add(AnimUtils.makeParallel(
+                        AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, 
+                                bucketsLIndent, ViewController.LEFT_INDENT),
+                        pc.selectLines(4, 5)));
             }
         }
         
@@ -75,7 +81,7 @@ public class BucketSort {
      /*
     * Local Insertion sort for sorting buckets
     */
-    private static void sort(BrickNode[] bucketArray, List<Animation> anim) {
+    private static void sort(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
         int n = bucketArray.length;
         
         for (int i = 1; i < n; ++i)
@@ -96,9 +102,13 @@ public class BucketSort {
                     moveUp,
                     AnimUtils.moveY(key, i, j + 1));
                 if(parallel.getChildren().size() > 0){
-                    anim.add(parallel);
+                    anim.add(AnimUtils.makeParallel(
+                                parallel,
+                                pc.selectLines(2, 3)));
+                } else{
+                    anim.add(pc.selectLines(2, 3));
                 }
-            }
+            } //else... handle null
         }
     }
     
