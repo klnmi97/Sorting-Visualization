@@ -420,13 +420,13 @@ public class Window extends Application {
             case 8:
                 transitions = bucketSort(list, codePane);
                 headerLbl.setText("Bucket Sort");
-                List<FlowPane> buckets = createBucketList((arrMax - arrMin) / 15 + 1);
+                List<FlowPane> buckets = createBucketList((arrMax - arrMin) / 15 + 1, arrMin, 15); //bucket size = 15 TODO: smarter desicion
                 displayPane.getChildren().addAll(buckets);
                 break;
             case 9:
                 transitions = radixSort(list, codePane);
                 headerLbl.setText("Radix Sort");
-                List<FlowPane> bucket = createBucketList(10);
+                List<FlowPane> bucket = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                 displayPane.getChildren().addAll(bucket);
                 break;
             default:
@@ -570,7 +570,7 @@ public class Window extends Application {
         Rectangle rectangle = new Rectangle(50, 30);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
-        //test on different screens!
+        //TODO: test on different screens!
         //rectangle.widthProperty().set(Screen.getPrimary().getVisualBounds().getWidth() * 0.033);
         Text text = new Text(String.valueOf(value));
         text.setFont(font);
@@ -595,18 +595,21 @@ public class Window extends Application {
         label.setFont(font);
         base.getChildren().addAll(baseLine, label);
         base.setTranslateX(x);
-        base.setTranslateY(y);
+        base.setTranslateY(y + 25); //TODO: smarter Y position. Problem with height of children because of FlowPane alignment
+        
         return base;
     }
     
-    private List<FlowPane> createBucketList(int count){
+    private List<FlowPane> createBucketList(int count, int startLabelCounter, int diff){
         List<FlowPane> buckets = new ArrayList<>();
         int y = ViewController.SORT_GROUP_MOVE_DELTA + 10;
+        int currentLabel = startLabelCounter;
         int leftIndent = (int)(((double)count / 2) * -ViewController.SPACING); //indent calculation function is needed
         for(int i = 0; i < count; i++){
             int x = ViewController.SPACING * i + leftIndent;
-            FlowPane bucket = createBucket(x, y, "");
+            FlowPane bucket = createBucket(x, y, Integer.toString(currentLabel));
             buckets.add(bucket);
+            currentLabel += diff;
         }
         return buckets;
     }

@@ -39,7 +39,7 @@ public class BucketSort {
         }
         
         // Initialise buckets
-        int bucketSize = 15;
+        int bucketSize = 15; //TODO: create global bucket size
         int bucketCount = (maxValue - minValue) / bucketSize + 1;
         List<List<BrickNode>> buckets = new ArrayList<List<BrickNode>>(bucketCount);
         for (int i = 0; i < bucketCount; i++) {
@@ -52,6 +52,7 @@ public class BucketSort {
             int selectedBucket = (list.get(i).getValue() - minValue) / bucketSize;
             buckets.get(selectedBucket).add(list.get(i));
             int nextBucketVal = buckets.get(selectedBucket).size() - 1;
+            
             anim.add(AnimUtils.moveTo(list.get(i), i, selectedBucket, nextBucketVal, ViewController.LEFT_INDENT, bucketsLIndent));
             //System.out.println(((Text)list.get(i).getChildren().stream().filter(e -> e instanceof Text).findFirst().get()).getText());
         }
