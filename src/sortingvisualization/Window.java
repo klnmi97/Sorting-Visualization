@@ -156,6 +156,7 @@ public class Window extends Application {
         ImageView rbImgView = new ImageView(rewBackImg);
         rbImgView.setFitHeight(25);
         rbImgView.setFitWidth(25);
+        stepBackBtn.setTooltip(new Tooltip("Step Back"));
         stepBackBtn.setGraphic(rbImgView);
         stepBackBtn.getStyleClass().add("playButton");
         stepBackBtn.setOnAction(event->goStepBack());
@@ -165,6 +166,7 @@ public class Window extends Application {
         ImageView rfImgView = new ImageView(rewForthImg);
         rfImgView.setFitHeight(25);
         rfImgView.setFitWidth(25);
+        stepForthBtn.setTooltip(new Tooltip("Step Forth"));
         stepForthBtn.setGraphic(rfImgView);
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());

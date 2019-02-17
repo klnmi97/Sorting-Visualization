@@ -134,7 +134,7 @@ public class QuickSort {
                 "  pivot = arr[high]",
                 "  index = (low - 1)",
                 "  for j = low to high - 1",
-                "    if arr[j] <= pivot",
+                "    if arr[j] ≤ pivot",
                 "      swap(arr[j], arr[index])",
                 "      index++",
                 "  swap(arr[index + 1], pivot)",
