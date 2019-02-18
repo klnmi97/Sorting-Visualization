@@ -84,6 +84,7 @@ public class BucketSort {
     private static void sort(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
         int n = bucketArray.length;
         
+        addAnimToList(anim, pc.selectLines(2, 3));
         for (int i = 1; i < n; ++i)
         {
             ParallelTransition moveUp = new ParallelTransition();
@@ -108,7 +109,7 @@ public class BucketSort {
                 } else{
                     anim.add(pc.selectLines(2, 3));
                 }
-            } //else... handle null
+            } 
         }
     }
     
@@ -122,6 +123,13 @@ public class BucketSort {
                 "    place element back into input array");
     }
 
-   
+    //temporary solution
+    private static void addAnimToList(List<Animation> animList, Animation... anims){
+        for(Animation anim : anims){
+            if(anim != null){
+                animList.add(anim);
+            }
+        }
+    }
     
 }

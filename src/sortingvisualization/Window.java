@@ -289,7 +289,7 @@ public class Window extends Application {
         alg7.getStyleClass().add("button");
         alg7.setOnAction(event->initialize(7, null));
         
-        alg8 = new Button("BCKT(beta)");
+        alg8 = new Button("BCKT");
         alg8.setTooltip(new Tooltip("Bucket Sort"));
         alg8.getStyleClass().add("button");
         alg8.setOnAction(event->initialize(8, null));
