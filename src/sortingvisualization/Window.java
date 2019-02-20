@@ -22,7 +22,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -65,8 +64,8 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
  */
 public class Window extends Application {
     
-    private final int max = 100;
-    private final int min = (int)(max * 0.05);
+    private int max = 100;
+    private int min = (int)(max * 0.05);
     private final Font font = Font.font("Helvetica", 20);
     
     private MenuBar menuBar;
@@ -345,6 +344,21 @@ public class Window extends Application {
         int arrMax = 0;
         int arrMin = max;
         
+        switch (algorithm) {
+            case 7:
+                max = 10;
+                min = 0;
+                break;
+            case 9:
+                max = 9999;
+                min = 0;
+                break;
+            default:
+                max = 100;
+                min = 7;
+                break;
+        }
+        
         if(input!=null){
             ViewController.N_VALUES = input.length;
             ViewController.LEFT_INDENT = (int)(((double)input.length / 2) 
@@ -360,14 +374,14 @@ public class Window extends Application {
                 }
             }
         }else{
-            ViewController.N_VALUES = 10;
+            ViewController.N_VALUES = 12;
             ViewController.LEFT_INDENT = (int)(((double)ViewController.N_VALUES / 2) 
                     * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 int value = random.nextInt(max - min) + min;
                 BrickNode stackPane;
                 if(algorithm == 8 || algorithm == 9)
-                    stackPane = createFixedNode(i, value, ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
+                    stackPane = createFixedNode(i, value, ViewController.LEFT_INDENT, ViewController.LEVEL1);
                 else
                     stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
@@ -415,13 +429,13 @@ public class Window extends Application {
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
             case 7:
-                List<Label> labels = createLabelsList(max, 0);
-                List<Label> positionLabels = createPositionLabels(ViewController.N_VALUES);
-                transitions = countingSort(list, labels, max, codePane);
+                List<Label> positionLabels = createLabelsList(ViewController.N_VALUES, 1, ViewController.LEVEL1 + 30);
+                List<Label> countLabels = createLabelsList(max, 0, ViewController.LEVEL2 + 30);
+                transitions = countingSort(list, countLabels, max, codePane);
                 headerLbl.setText("Counting Sort");
-                displayPane.getChildren().addAll(0, createCountingArrayVis(max));
-                displayPane.getChildren().addAll(labels);
-                displayPane.getChildren().addAll(positionLabels);
+                displayPane.getChildren().addAll(0, createGreyNodes(max));
+                displayPane.getChildren().addAll(countLabels);
+                displayPane.getChildren().addAll(1, positionLabels);
                 break;
             case 8:
                 transitions = bucketSort(list, codePane);
@@ -440,18 +454,14 @@ public class Window extends Application {
         }
            
         anyPlayingAnim = createAnyPlayingBinding(transitions);
-        
         stepForthBtn.disableProperty().bind(nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
                 .or(anyPlayingAnim)
         );
-        
         stepBackBtn.disableProperty().bind(nextTransitionIndex.lessThanOrEqualTo(0)
                 .or(anyPlayingAnim));
-        
         playBtn.disableProperty().bind(nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
                 .or(anyPlayingAnim)
         );
-        
         speedSlider.valueProperty().addListener(new ChangeListener<Number>(){
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -459,49 +469,38 @@ public class Window extends Application {
                     transitions.get(i).setRate(newValue.doubleValue());
                 }
             }
-            
         });
-        
     }
     
-    private List<BrickNode> createCountingArrayVis(int count){
+    private List<BrickNode> createGreyNodes(int count){
         List<BrickNode> subList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, 
-                    ViewController.DEFAULT_LEFT_INDENT, ViewController.SORT_GROUP_MOVE_DELTA);
+                    ViewController.DEFAULT_LEFT_INDENT, ViewController.LEVEL2);
             subList.add(stackPane);
         }
         return subList;
     }
     
-    private List<Label> createLabelsList(int count, int step){
+    private List<Label> createLabelsList(int count, int step, int y){
         List<Label> labels = new ArrayList<>();
         int currentValue = 0;
+        int leftIndent = ViewController.countIndent(count);
         for(int i = 0; i < count; i++){
             currentValue += step;
             Label label = new Label(Integer.toString(currentValue));
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
-            label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
-            label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
+            label.setTranslateX(ViewController.SPACING * i + leftIndent);
+            label.setTranslateY(y);
             label.fontProperty().set(font);
             labels.add(label);
         }
         return labels;
     }
-    
-    private List<Label> createPositionLabels(int count){
-        List<Label> labels = new ArrayList<>();
-        for(int i = 0; i < count; i++){
-            Label label = new Label(MessageFormat.format("{0}", i));
-            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
-            label.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
-            label.setTranslateY(ViewController.TOP_INDENT + 30);
-            label.fontProperty().set(Font.font("Helvetica", 20));
-            labels.add(label);
-        }
-        return labels;
-    }
-    
+   
+   /*
+    * Animation actions
+    */
     private void stopAllAnimations(){
         transitions.stream()
                 .forEach(anim->anim.stop());
@@ -529,36 +528,16 @@ public class Window extends Application {
                 }));
     }
     
+   /*
+    * Nodes creating
+    */
     private BrickNode createValueNode(int i, int value, int currentMax) {
-        
-        /*int num;
-        if(value < min)
-            num = min;
-        else 
-            num = value;
-        double percent = (double)num / currentMax;
-        Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
-        rectangle.setFill(ViewController.DEFAULT);
-        
-        Text text = new Text(String.valueOf(num));
-        text.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-        BrickNode node = new BrickNode(num);
-        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        //node.setId(String.valueOf(num));
-        //stackPane.setValue(num);
-        node.getChildren().addAll(rectangle, text);
-        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
-        node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
-        node.setTranslateY(ViewController.TOP_INDENT);
-        node.setShape(rectangle);*/
         return createCustomNode(i, value, currentMax, ViewController.DEFAULT, 
-                ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
+                ViewController.LEFT_INDENT, ViewController.LEVEL1);
     }
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 
             Color color, double leftIndent, double topIndent) {
-        
         int num;
         if(value < min)
             num = min;
@@ -608,13 +587,6 @@ public class Window extends Application {
             index--;
         }
         node.getChildren().addAll(rectangle, numberBox);
-        //This was used for local testing of color setting
-        /*for (Text n : node.getDigits()) {
-            if ("1".equals(n.getUserData())) {
-                n.setFill(Color.RED);
-            }
-        }*/
-        //BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(ViewController.SPACING * i + leftIndent);
         node.setTranslateY(topIndent);
@@ -632,16 +604,15 @@ public class Window extends Application {
         label.setFont(font);
         base.getChildren().addAll(baseLine, label);
         base.setTranslateX(x);
-        base.setTranslateY(y + 25); //TODO: smarter Y position. Problem with height of children because of FlowPane alignment
-        
+        base.setTranslateY(y + 24); //TODO: smarter Y position. Problem with height of children because of FlowPane alignmen
         return base;
     }
     
     private List<FlowPane> createBucketList(int count, int startLabelCounter, int diff){
         List<FlowPane> buckets = new ArrayList<>();
-        int y = ViewController.SORT_GROUP_MOVE_DELTA + 10;
+        int y = ViewController.LEVEL2 + 10;
         int currentLabel = startLabelCounter;
-        int leftIndent = (int)(((double)count / 2) * -ViewController.SPACING); //indent calculation function is needed
+        int leftIndent = ViewController.countIndent(count); 
         for(int i = 0; i < count; i++){
             int x = ViewController.SPACING * i + leftIndent;
             FlowPane bucket = createBucket(x, y, Integer.toString(currentLabel));
@@ -651,7 +622,9 @@ public class Window extends Application {
         return buckets;
     }
     
-     /*bidings*/
+   /*
+    * Animation bindings
+    */
      private BooleanBinding createAnyPlayingBinding(List<Animation> transitions) {
         return new BooleanBinding() {
             { // Anonymous constructor
@@ -671,6 +644,9 @@ public class Window extends Application {
 
     }
 
+    /*
+     * Custom input dialog call
+     */
     private void createNewSorting() {
         int[] customInput;
         InputDialog dialog = new InputDialog(max, min);

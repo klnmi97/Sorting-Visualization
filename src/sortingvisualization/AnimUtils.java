@@ -44,10 +44,10 @@ public class AnimUtils {
         //get start position of node to allow backward animation
         transition.setFromX(fromX * ViewController.SPACING 
                 + startLeftIndent);
-        transition.setFromY(ViewController.TOP_INDENT);
+        transition.setFromY(ViewController.LEVEL1);
         transition.setToX(toX * ViewController.SPACING 
                 + withLeftIndent);
-        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        transition.setToY(ViewController.LEVEL2 - toY * ViewController.SPACING / 2);
         return transition;
     }
     
@@ -59,10 +59,10 @@ public class AnimUtils {
         //get start position of node to allow backward animation
         transition.setFromX(fromX * ViewController.SPACING 
                 + startLeftIndent);
-        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
+        transition.setFromY(ViewController.LEVEL2 - fromY * ViewController.SPACING / 2);
         transition.setToX(toX * ViewController.SPACING 
                 + withLeftIndent);
-        transition.setToY(ViewController.TOP_INDENT);
+        transition.setToY(ViewController.LEVEL1);
         return transition;
     }
     
@@ -70,8 +70,8 @@ public class AnimUtils {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
         transition.setDuration(ViewController.SPEED);
-        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
-        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        transition.setFromY(ViewController.LEVEL2 - fromY * ViewController.SPACING / 2);
+        transition.setToY(ViewController.LEVEL2 - toY * ViewController.SPACING / 2);
         return transition;
     }
     
@@ -82,10 +82,10 @@ public class AnimUtils {
         //get start position of node to allow backward animation
         transition.setFromX(fromX * ViewController.SPACING 
                 + startLeftIndent);
-        transition.setFromY(ViewController.TOP_INDENT);
+        transition.setFromY(ViewController.LEVEL1);
         transition.setToX(toX * ViewController.SPACING 
                 + withLeftIndent);
-        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA);
+        transition.setToY(ViewController.LEVEL2);
         return transition;
     }
     
@@ -110,10 +110,10 @@ public class AnimUtils {
         //get start position of node to allow backward animation
         transition.setFromX(fromX * ViewController.SPACING 
                 + startLeftIndent);
-        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
+        transition.setFromY(ViewController.LEVEL2);
         transition.setToX(toX * ViewController.SPACING 
                 + withLeftIndent);
-        transition.setToY(ViewController.TOP_INDENT);
+        transition.setToY(ViewController.LEVEL1);
         return transition;
     }
     
@@ -121,8 +121,8 @@ public class AnimUtils {
         TranslateTransition moveNodeUp = new TranslateTransition();
         moveNodeUp.setNode(sp);
         moveNodeUp.setDuration(ViewController.SPEED);
-        moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
-        moveNodeUp.setToY(ViewController.TOP_INDENT);
+        moveNodeUp.setFromY(ViewController.LEVEL2);
+        moveNodeUp.setToY(ViewController.LEVEL1);
         return moveNodeUp;
     }
     

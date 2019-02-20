@@ -158,8 +158,8 @@ public class MergeSort {
             moveNodeUp.setNode(helperNodes[z]);
             moveNodeUp.setDuration(ViewController.SPEED);
             //Set start Y position for reverse animation
-            moveNodeUp.setFromY(ViewController.SORT_GROUP_MOVE_DELTA);
-            moveNodeUp.setToY(ViewController.TOP_INDENT);
+            moveNodeUp.setFromY(ViewController.LEVEL2);
+            moveNodeUp.setToY(ViewController.LEVEL1);
             moveUp.getChildren().add(moveNodeUp);
         }
 

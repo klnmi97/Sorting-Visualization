@@ -19,8 +19,8 @@ public class ViewController {
     //counting from center as 0; half of (spacing * number of elements)
     public static int DEFAULT_LEFT_INDENT = (int)(((double)10 / 2) * -SPACING);
     public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
-    public static final int TOP_INDENT = -350;
-    public static final int SORT_GROUP_MOVE_DELTA = 250 + TOP_INDENT;
+    public static final int LEVEL1 = -350;
+    public static final int LEVEL2 = 250 + LEVEL1;
 
     public static final Duration SPEED = Duration.millis(1000);
     
