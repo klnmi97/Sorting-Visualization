@@ -21,6 +21,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -566,7 +567,6 @@ public class Window extends Application {
     /***** Bucket, Radix *****/
     
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
-        //TODO: add numbers color change
         Rectangle rectangle = new Rectangle(50, 30);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
@@ -576,8 +576,26 @@ public class Window extends Application {
         text.setFont(font);
         BrickNode node = new BrickNode(value);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        node.getChildren().addAll(rectangle, text);
-        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        HBox numberBox = new HBox();
+        String valueToSet = String.valueOf(value);
+        int index = valueToSet.toCharArray().length - 1;
+        for(char ch: valueToSet.toCharArray()){
+            Text digit = new Text(Character.toString(ch));
+            digit.setUserData(String.valueOf(index));
+            digit.setFont(font);
+            numberBox.getChildren().add(digit);
+            numberBox.setAlignment(Pos.BOTTOM_CENTER);
+            node.getDigits().add(digit);
+            index--;
+        }
+        node.getChildren().addAll(rectangle, numberBox);
+        //This was used for local testing of color setting
+        /*for (Text n : node.getDigits()) {
+            if ("1".equals(n.getUserData())) {
+                n.setFill(Color.RED);
+            }
+        }*/
+        //BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(ViewController.SPACING * i + leftIndent);
         node.setTranslateY(topIndent);
