@@ -429,13 +429,13 @@ public class Window extends Application {
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
             case 7:
-                List<Label> positionLabels = createLabelsList(ViewController.N_VALUES, 1, ViewController.LEVEL1 + 30);
-                List<Label> countLabels = createLabelsList(max, 0, ViewController.LEVEL2 + 30);
+                List<Text> positionLabels = createLabelsList(ViewController.N_VALUES, 1, ViewController.LEVEL1 + 30);
+                List<Text> countLabels = createLabelsList(max, 0, ViewController.LEVEL2 + 30);
                 transitions = countingSort(list, countLabels, max, codePane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createGreyNodes(max));
                 displayPane.getChildren().addAll(countLabels);
-                displayPane.getChildren().addAll(1, positionLabels);
+                displayPane.getChildren().addAll(0, positionLabels);
                 break;
             case 8:
                 transitions = bucketSort(list, codePane);
@@ -482,18 +482,18 @@ public class Window extends Application {
         return subList;
     }
     
-    private List<Label> createLabelsList(int count, int step, int y){
-        List<Label> labels = new ArrayList<>();
+    private List<Text> createLabelsList(int count, int step, int y){
+        List<Text> labels = new ArrayList<>();
         int currentValue = 0;
         int leftIndent = ViewController.countIndent(count);
         for(int i = 0; i < count; i++){
-            currentValue += step;
-            Label label = new Label(Integer.toString(currentValue));
+            Text label = new Text(String.valueOf(currentValue));
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(ViewController.SPACING * i + leftIndent);
             label.setTranslateY(y);
             label.fontProperty().set(font);
             labels.add(label);
+            currentValue += step;
         }
         return labels;
     }

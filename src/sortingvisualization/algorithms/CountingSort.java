@@ -8,9 +8,8 @@ package sortingvisualization.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
@@ -22,7 +21,7 @@ import sortingvisualization.ViewController;
  */
 public class CountingSort {
     
-    public static List<Animation> countingSort(ArrayList<BrickNode> list, List<Label> counters, int maxValue, Pane codePane) { 
+    public static List<Animation> countingSort(ArrayList<BrickNode> list, List<Text> counters, int maxValue, Pane codePane) { 
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);

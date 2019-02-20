@@ -184,18 +184,18 @@ public class AnimUtils {
     }
     
     //TODO: 
-    public static Animation setText(Label lbl, String fromVal, String descImp) {
+    public static Animation setText(Text label, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
         return new Timeline(
             new KeyFrame(Duration.millis(0),
-                new KeyValue(lbl.textProperty(), oldVal)),
+                new KeyValue(label.textProperty(), oldVal)),
             new KeyFrame(ViewController.SPEED.multiply(0.9),
-                new KeyValue(lbl.textProperty(), content)),
+                new KeyValue(label.textProperty(), content)),
             new KeyFrame(Duration.millis(1),
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 30))),
+                new KeyValue(label.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))));
+                new KeyValue(label.fontProperty(), Font.font("Helvetica", 20))));
     }
     
     public static Animation setNodeDigitColor(BrickNode fixedNode, int digitPlace, Color formerColor, Color newColor){
