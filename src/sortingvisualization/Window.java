@@ -295,7 +295,7 @@ public class Window extends Application {
         alg8.getStyleClass().add("button");
         alg8.setOnAction(event->initialize(8, null));
         
-        alg9 = new Button("RDX(beta)");
+        alg9 = new Button("RDX");
         alg9.setTooltip(new Tooltip("Radix Sort"));
         alg9.getStyleClass().add("button");
         alg9.setOnAction(event->initialize(9, null));

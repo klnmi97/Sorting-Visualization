@@ -74,7 +74,7 @@ public class BucketSort {
                         pc.selectLines(4, 5)));
             }
         }
-        
+        anim.add(pc.unselectAll());
         return anim;
     }
     

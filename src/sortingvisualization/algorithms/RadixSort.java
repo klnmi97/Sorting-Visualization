@@ -39,21 +39,22 @@ public class RadixSort {
         }
         
         for (int exp = 1, i = 0; maxValue/exp > 0; exp *= 10, i++){ 
-            anim.add(AnimUtils.setDigitsColor(list, i, Color.BLACK, Color.RED));
+            anim.add(AnimUtils.makeParallel(
+                    AnimUtils.setDigitsColor(list, i, Color.BLACK, Color.RED),
+                    pc.selectLine(1)));
+            anim.add(pc.selectLine(2));
             countSort(list, list.size(), exp, anim);
             anim.add(AnimUtils.setDigitsColor(list, i, Color.RED, Color.BLACK));
         }
+        anim.add(pc.unselectAll());
         return anim;
     }
     
     private static void addPseudocode(Pane codePane, Pseudocode code) {
         code.addLines(codePane, 
-                "d = max number of digits",
+                "d is max number of digits",
                 "for i = 1 to d:",
-                "  do Counting Sort(array, i)",
-                "",
-                "",
-                "");
+                "  do Counting(Stable) Sort for i-th digit");
     }
     
     static void countSort(ArrayList<BrickNode> list, int n, int exp, List<Animation> anim) 
