@@ -6,6 +6,7 @@
 package sortingvisualization;
 
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -161,6 +162,7 @@ public class Window extends Application {
         ImageView rbImgView = new ImageView(rewBackImg);
         rbImgView.setFitHeight(25);
         rbImgView.setFitWidth(25);
+        stepBackBtn.setTooltip(new Tooltip("Step Back"));
         stepBackBtn.setGraphic(rbImgView);
         stepBackBtn.getStyleClass().add("playButton");
         stepBackBtn.setOnAction(event->goStepBack());
@@ -170,6 +172,7 @@ public class Window extends Application {
         ImageView rfImgView = new ImageView(rewForthImg);
         rfImgView.setFitHeight(25);
         rfImgView.setFitWidth(25);
+        stepForthBtn.setTooltip(new Tooltip("Step Forth"));
         stepForthBtn.setGraphic(rfImgView);
         stepForthBtn.getStyleClass().add("playButton");
         stepForthBtn.setOnAction(event->goStepForth());
@@ -413,10 +416,12 @@ public class Window extends Application {
                 break;
             case 7:
                 List<Label> labels = createLabelsList(max, 0);
+                List<Label> positionLabels = createPositionLabels(ViewController.N_VALUES);
                 transitions = countingSort(list, labels, max, codePane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
                 displayPane.getChildren().addAll(labels);
+                displayPane.getChildren().addAll(positionLabels);
                 break;
             case 8:
                 transitions = bucketSort(list, codePane);
@@ -431,6 +436,7 @@ public class Window extends Application {
                 displayPane.getChildren().addAll(bucket);
                 break;
             default:
+                break;
         }
            
         anyPlayingAnim = createAnyPlayingBinding(transitions);
@@ -478,6 +484,19 @@ public class Window extends Application {
             label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
             label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
             label.fontProperty().set(font);
+            labels.add(label);
+        }
+        return labels;
+    }
+    
+    private List<Label> createPositionLabels(int count){
+        List<Label> labels = new ArrayList<>();
+        for(int i = 0; i < count; i++){
+            Label label = new Label(MessageFormat.format("{0}", i));
+            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
+            label.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
+            label.setTranslateY(ViewController.TOP_INDENT + 30);
+            label.fontProperty().set(Font.font("Helvetica", 20));
             labels.add(label);
         }
         return labels;
