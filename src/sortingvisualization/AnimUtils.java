@@ -183,6 +183,7 @@ public class AnimUtils {
         return parallelTransition;
     }
     
+    //TODO: 
     public static Animation setText(Label lbl, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
@@ -195,6 +196,28 @@ public class AnimUtils {
                 new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(ViewController.SPEED,
                 new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))));
+    }
+    
+    public static Animation setNodeDigitColor(BrickNode fixedNode, int digitPlace, Color formerColor, Color newColor){
+        String digitPosition = String.valueOf(digitPlace);
+        for (Text digit : fixedNode.getDigits()) {
+            if (digitPosition.equals(digit.getUserData())) {
+                return new FillTransition(ViewController.SPEED, digit, formerColor, newColor);
+            }
+        }
+        return null;
+    }
+    
+    //TODO: check if list is not null/create notnull list for animation
+    public static Animation setDigitsColor(List<BrickNode> nodes, int digitPlace, Color formerColor, Color newColor){
+        ParallelTransition pt = new ParallelTransition();
+        for(int i = 0; i < nodes.size(); i++){
+            Animation setColor = setNodeDigitColor(nodes.get(i), digitPlace, formerColor, newColor);
+            if(setColor != null){
+                pt.getChildren().add(setColor);
+            }
+        }
+        return pt;
     }
     
     public static ParallelTransition makeParallel(Animation... anims){

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
@@ -25,6 +26,7 @@ public class RadixSort {
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
         
+        //TODO: move to parent class
         // Determine minimum and maximum values
         int minValue = list.get(0).getValue();
         int maxValue = list.get(0).getValue();
@@ -36,10 +38,11 @@ public class RadixSort {
             }
         }
         
-        for (int exp = 1; maxValue/exp > 0; exp *= 10) 
-            countSort(list, list.size(), exp, anim); 
-        
-        
+        for (int exp = 1, i = 0; maxValue/exp > 0; exp *= 10, i++){ 
+            anim.add(AnimUtils.setDigitsColor(list, i, Color.BLACK, Color.RED));
+            countSort(list, list.size(), exp, anim);
+            anim.add(AnimUtils.setDigitsColor(list, i, Color.RED, Color.BLACK));
+        }
         return anim;
     }
     
