@@ -35,6 +35,46 @@ import javafx.util.Duration;
  */
 public class AnimUtils {
     
+    //three first functions need clever refactoring
+    public static Animation moveTo(BrickNode sp, int fromX, int toX, int toY, 
+            double startLeftIndent, double withLeftIndent){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        //get start position of node to allow backward animation
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
+        transition.setFromY(ViewController.TOP_INDENT);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
+        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        return transition;
+    }
+    
+    public static Animation moveFrom(BrickNode sp, int toX, int fromX, int fromY, 
+            double startLeftIndent, double withLeftIndent){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        //get start position of node to allow backward animation
+        transition.setFromX(fromX * ViewController.SPACING 
+                + startLeftIndent);
+        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
+        transition.setToX(toX * ViewController.SPACING 
+                + withLeftIndent);
+        transition.setToY(ViewController.TOP_INDENT);
+        return transition;
+    }
+    
+    public static Animation moveY(BrickNode sp, int fromY, int toY){
+        TranslateTransition transition = new TranslateTransition();
+        transition.setNode(sp);
+        transition.setDuration(ViewController.SPEED);
+        transition.setFromY(ViewController.SORT_GROUP_MOVE_DELTA - fromY * ViewController.SPACING / 2);
+        transition.setToY(ViewController.SORT_GROUP_MOVE_DELTA - toY * ViewController.SPACING / 2);
+        return transition;
+    }
+    
     public static Animation moveDownToX(BrickNode sp, int fromX, int toX, double startLeftIndent, double withLeftIndent) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
@@ -53,7 +93,7 @@ public class AnimUtils {
         return moveDownToX(sp, fromX, toX, ViewController.LEFT_INDENT , ViewController.LEFT_INDENT);
     }
     
-    public static TranslateTransition moveTo(BrickNode sp, int X, int i) {
+    public static TranslateTransition moveToX(BrickNode sp, int X, int i) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(sp);
         transition.setDuration(ViewController.SPEED);
@@ -143,29 +183,56 @@ public class AnimUtils {
         return parallelTransition;
     }
     
+    //TODO: 
     public static Animation setText(Label lbl, String fromVal, String descImp) {
         String content = descImp;
         String oldVal = fromVal;
         return new Timeline(
             new KeyFrame(Duration.millis(0),
                 new KeyValue(lbl.textProperty(), oldVal)),
-            new KeyFrame(Duration.millis(1),
-                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)))),
-            new KeyFrame(Duration.millis(100),
+            new KeyFrame(ViewController.SPEED.multiply(0.9),
                 new KeyValue(lbl.textProperty(), content)),
-            new KeyFrame(Duration.millis(101),
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
+            new KeyFrame(Duration.millis(1),
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))),
-            new KeyFrame(ViewController.SPEED,
-                new KeyValue(lbl.backgroundProperty(), new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)))));
+                new KeyValue(lbl.fontProperty(), Font.font("Helvetica", 20))));
     }
     
-    public static Animation makeParallel(Animation... anims){
+    public static Animation setNodeDigitColor(BrickNode fixedNode, int digitPlace, Color formerColor, Color newColor){
+        String digitPosition = String.valueOf(digitPlace);
+        for (Text digit : fixedNode.getDigits()) {
+            if (digitPosition.equals(digit.getUserData())) {
+                return new FillTransition(ViewController.SPEED, digit, formerColor, newColor);
+            }
+        }
+        return null;
+    }
+    
+    //TODO: check if list is not null/create notnull list for animation
+    public static Animation setDigitsColor(List<BrickNode> nodes, int digitPlace, Color formerColor, Color newColor){
+        ParallelTransition pt = new ParallelTransition();
+        for(int i = 0; i < nodes.size(); i++){
+            Animation setColor = setNodeDigitColor(nodes.get(i), digitPlace, formerColor, newColor);
+            if(setColor != null){
+                pt.getChildren().add(setColor);
+            }
+        }
+        return pt;
+    }
+    
+    public static ParallelTransition makeParallel(Animation... anims){
         ParallelTransition pt = new ParallelTransition();
         for(Animation anim : anims){
             if(anim != null){
-                pt.getChildren().add(anim);
+                if(ParallelTransition.class.isInstance(anim)){
+                    ParallelTransition currentTransition = (ParallelTransition) anim;
+                    if(!(currentTransition.getChildren().size() < 1)){
+                        pt.getChildren().add(anim);
+                    }
+                } else{
+                    pt.getChildren().add(anim);
+                }
+                
             }
         }
         return pt;

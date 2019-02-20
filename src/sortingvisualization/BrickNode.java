@@ -5,12 +5,16 @@
  */
 package sortingvisualization;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -19,10 +23,19 @@ import javafx.scene.shape.Rectangle;
 public class BrickNode extends StackPane implements Comparable<BrickNode>{
     
     private IntegerProperty value;
-    private Rectangle rect;
-    
+    private List<Text> digits;
+
+    public List<Text> getDigits() {
+        return digits;
+    }
+
+    public void setDigits(List<Text> digits) {
+        this.digits = digits;
+    }
+
     public BrickNode(int value){
         this.value = new SimpleIntegerProperty(value);
+        this.digits = new ArrayList<>();
     }
     
     public final IntegerProperty valueProperty() {

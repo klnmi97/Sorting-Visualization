@@ -145,14 +145,14 @@ public class InputDialog extends Dialog<Results> {
         Random randomValue = new Random();
         int[] randomArray = new int[size];
         for(int i = 0; i < size; i++){
-            randomArray[i] = randomValue.nextInt(maxInputValue - 6) + 7;
+            randomArray[i] = randomValue.nextInt(maxInputValue - 6) + 6;
         }
         return randomArray;
     }
         
 }
 
-enum Algorithm {Bubble, CocktailShaker, Insertion, Selection, Merge, Quick}
+enum Algorithm {Bubble, CocktailShaker, Insertion, Selection, Merge, Quick, Counting}
 
 class Results {
 

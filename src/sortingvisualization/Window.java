@@ -18,8 +18,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,16 +47,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
+import static sortingvisualization.algorithms.BucketSort.bucketSort;
 import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
-import sortingvisualization.algorithms.CountingSort;
 import static sortingvisualization.algorithms.CountingSort.countingSort;
 import static sortingvisualization.algorithms.InsertionSort.insertionSort;
 import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
+import static sortingvisualization.algorithms.RadixSort.radixSort;
 import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 
 /**
@@ -62,8 +65,9 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
  */
 public class Window extends Application {
     
-    private final int max = 10;
+    private final int max = 100;
     private final int min = (int)(max * 0.05);
+    private final Font font = Font.font("Helvetica", 20);
     
     private MenuBar menuBar;
     Menu menuFile;
@@ -84,6 +88,8 @@ public class Window extends Application {
     Button alg5;
     Button alg6;
     Button alg7;
+    Button alg8;
+    Button alg9;
     Button playBtn;
     Button pauseBtn;
     Button stepBackBtn;
@@ -287,7 +293,17 @@ public class Window extends Application {
         alg7.getStyleClass().add("button");
         alg7.setOnAction(event->initialize(7, null));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7);
+        alg8 = new Button("BCKT");
+        alg8.setTooltip(new Tooltip("Bucket Sort"));
+        alg8.getStyleClass().add("button");
+        alg8.setOnAction(event->initialize(8, null));
+        
+        alg9 = new Button("RDX");
+        alg9.setTooltip(new Tooltip("Radix Sort"));
+        alg9.getStyleClass().add("button");
+        alg9.setOnAction(event->initialize(9, null));
+        
+        algorithmButtonBox.getChildren().addAll(algLbl, alg1, alg6, alg2, alg3, alg4, alg5, alg7, alg8, alg9);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -326,7 +342,8 @@ public class Window extends Application {
         displayPane.getChildren().clear();
         codePane.getChildren().clear();
         list = new ArrayList<>();
-        
+        int arrMax = 0;
+        int arrMin = max;
         
         if(input!=null){
             ViewController.N_VALUES = input.length;
@@ -335,15 +352,31 @@ public class Window extends Application {
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 BrickNode stackPane = createValueNode(i, input[i], max);
                 list.add(stackPane);
+                if(input[i] > arrMax){
+                    arrMax = input[i];
+                }
+                if(input[i] < arrMin){
+                    arrMin = input[i];
+                }
             }
         }else{
-            ViewController.N_VALUES = 12;
+            ViewController.N_VALUES = 10;
             ViewController.LEFT_INDENT = (int)(((double)ViewController.N_VALUES / 2) 
                     * -ViewController.SPACING);
             for (int i = 0; i < ViewController.N_VALUES; i++) {
                 int value = random.nextInt(max - min) + min;
-                BrickNode stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
+                BrickNode stackPane;
+                if(algorithm == 8 || algorithm == 9)
+                    stackPane = createFixedNode(i, value, ViewController.LEFT_INDENT, ViewController.TOP_INDENT);
+                else
+                    stackPane = createValueNode(i, value/*customInputArray[i]*/, max);
                 list.add(stackPane);
+                if(value > arrMax){
+                    arrMax = value;
+                }
+                if(value < arrMin){
+                    arrMin = value;
+                }
             }
         }
         
@@ -382,14 +415,28 @@ public class Window extends Application {
                 headerLbl.setText("Cocktail Shaker Sort");
                 break;
             case 7:
-                List<Label> labels = createLabelsList(max);
+                List<Label> labels = createLabelsList(max, 0);
                 List<Label> positionLabels = createPositionLabels(ViewController.N_VALUES);
                 transitions = countingSort(list, labels, max, codePane);
                 headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createCountingArrayVis(max));
                 displayPane.getChildren().addAll(labels);
                 displayPane.getChildren().addAll(positionLabels);
+                break;
+            case 8:
+                transitions = bucketSort(list, codePane);
+                headerLbl.setText("Bucket Sort");
+                List<FlowPane> buckets = createBucketList((arrMax - arrMin) / 15 + 1, arrMin, 15); //bucket size = 15 TODO: smarter desicion
+                displayPane.getChildren().addAll(buckets);
+                break;
+            case 9:
+                transitions = radixSort(list, codePane);
+                headerLbl.setText("Radix Sort");
+                List<FlowPane> bucket = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                displayPane.getChildren().addAll(bucket);
+                break;
             default:
+                break;
         }
            
         anyPlayingAnim = createAnyPlayingBinding(transitions);
@@ -427,14 +474,16 @@ public class Window extends Application {
         return subList;
     }
     
-    private List<Label> createLabelsList(int count){
+    private List<Label> createLabelsList(int count, int step){
         List<Label> labels = new ArrayList<>();
+        int currentValue = 0;
         for(int i = 0; i < count; i++){
-            Label label = new Label("0");
+            currentValue += step;
+            Label label = new Label(Integer.toString(currentValue));
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(ViewController.SPACING * i + ViewController.DEFAULT_LEFT_INDENT);
             label.setTranslateY(ViewController.SORT_GROUP_MOVE_DELTA + 30);
-            label.fontProperty().set(Font.font("Helvetica", 20));
+            label.fontProperty().set(font);
             labels.add(label);
         }
         return labels;
@@ -520,7 +569,7 @@ public class Window extends Application {
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));
-        text.setFont(Font.font("Helvetica", 20));
+        text.setFont(font);
         BrickNode node = new BrickNode(num);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         //node.setId(String.valueOf(num));
@@ -532,6 +581,74 @@ public class Window extends Application {
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
+    }
+    
+    /***** Bucket, Radix *****/
+    
+    private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
+        Rectangle rectangle = new Rectangle(50, 30);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setFill(Color.WHITE);
+        //TODO: test on different screens!
+        //rectangle.widthProperty().set(Screen.getPrimary().getVisualBounds().getWidth() * 0.033);
+        Text text = new Text(String.valueOf(value));
+        text.setFont(font);
+        BrickNode node = new BrickNode(value);
+        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
+        HBox numberBox = new HBox();
+        String valueToSet = String.valueOf(value);
+        int index = valueToSet.toCharArray().length - 1;
+        for(char ch: valueToSet.toCharArray()){
+            Text digit = new Text(Character.toString(ch));
+            digit.setUserData(String.valueOf(index));
+            digit.setFont(font);
+            numberBox.getChildren().add(digit);
+            numberBox.setAlignment(Pos.BOTTOM_CENTER);
+            node.getDigits().add(digit);
+            index--;
+        }
+        node.getChildren().addAll(rectangle, numberBox);
+        //This was used for local testing of color setting
+        /*for (Text n : node.getDigits()) {
+            if ("1".equals(n.getUserData())) {
+                n.setFill(Color.RED);
+            }
+        }*/
+        //BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        node.setAlignment(Pos.BOTTOM_CENTER);
+        node.setTranslateX(ViewController.SPACING * i + leftIndent);
+        node.setTranslateY(topIndent);
+        node.setShape(rectangle);
+        return node;
+    }
+    
+    private FlowPane createBucket(int x, int y, String labelText){
+        FlowPane base = new FlowPane(Orientation.VERTICAL);
+        base.setColumnHalignment(HPos.CENTER);
+        base.setAlignment(Pos.BOTTOM_CENTER);
+        Line baseLine = new Line(0, 0, 50, 0);
+        baseLine.setStrokeWidth(5);
+        Text label = new Text(labelText);
+        label.setFont(font);
+        base.getChildren().addAll(baseLine, label);
+        base.setTranslateX(x);
+        base.setTranslateY(y + 25); //TODO: smarter Y position. Problem with height of children because of FlowPane alignment
+        
+        return base;
+    }
+    
+    private List<FlowPane> createBucketList(int count, int startLabelCounter, int diff){
+        List<FlowPane> buckets = new ArrayList<>();
+        int y = ViewController.SORT_GROUP_MOVE_DELTA + 10;
+        int currentLabel = startLabelCounter;
+        int leftIndent = (int)(((double)count / 2) * -ViewController.SPACING); //indent calculation function is needed
+        for(int i = 0; i < count; i++){
+            int x = ViewController.SPACING * i + leftIndent;
+            FlowPane bucket = createBucket(x, y, Integer.toString(currentLabel));
+            buckets.add(bucket);
+            currentLabel += diff;
+        }
+        return buckets;
     }
     
      /*bidings*/
@@ -585,6 +702,9 @@ public class Window extends Application {
                     break;
                 case Merge:
                     initialize(5, customInput);
+                    break;
+                case Counting:
+                    initialize(7, customInput);
                     break;
                 default:
                     initialize(1, customInput);
