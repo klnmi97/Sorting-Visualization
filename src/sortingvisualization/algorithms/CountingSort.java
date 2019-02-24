@@ -21,7 +21,8 @@ import sortingvisualization.ViewController;
  */
 public class CountingSort {
     
-    public static List<Animation> countingSort(ArrayList<BrickNode> list, List<Text> counters, int maxValue, Pane codePane) { 
+    public static List<Animation> countingSort(List<BrickNode> list, List<Text> counters, 
+            int maxValue, Pane codePane) { 
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
@@ -40,7 +41,7 @@ public class CountingSort {
             String newValue = Integer.toString(value);
             anim.add(AnimUtils.makeParallel(
                     AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
-                            ViewController.LEFT_INDENT, ViewController.DEFAULT_LEFT_INDENT),
+                            ViewController.LEFT_INDENT, ViewController.TEN_LEFT_INDENT),
                     AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue),
                     pc.selectLine(2)));
         }
@@ -67,7 +68,7 @@ public class CountingSort {
             sorted[count[list.get(i).getValue()]] = list.get(i);
             anim.add(AnimUtils.makeParallel(
                     AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
-                    ViewController.DEFAULT_LEFT_INDENT, ViewController.LEFT_INDENT),
+                    ViewController.TEN_LEFT_INDENT, ViewController.LEFT_INDENT),
                     pc.selectLine(7)));
         }
         return anim;

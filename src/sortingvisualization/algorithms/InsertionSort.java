@@ -23,7 +23,7 @@ import sortingvisualization.ViewController;
  */
 public class InsertionSort {
 
-    public static List<Animation> insertionSort(ArrayList<BrickNode> list, Pane codePane)
+    public static List<Animation> insertionSort(List<BrickNode> list, Pane codePane)
     {
         List<Animation> sq = new ArrayList<>();
         int n = list.size();

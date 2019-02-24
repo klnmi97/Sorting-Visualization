@@ -24,7 +24,7 @@ import sortingvisualization.ViewController;
  */
 public class MergeSort {
 
-    public static List<Animation> mergeSort(ArrayList<BrickNode> list, Pane codePane) {
+    public static List<Animation> mergeSort(List<BrickNode> list, Pane codePane) {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
@@ -34,7 +34,7 @@ public class MergeSort {
     }
 
     private static void sortRange(int low, int high, List<Animation> sq, 
-            ArrayList<BrickNode> list, Pseudocode code, int newHue, int currentHue) {
+            List<BrickNode> list, Pseudocode code, int newHue, int currentHue) {
         Color original;
         if(currentHue == -1){
              original = Color.hsb(180, 1.0, 0.55);
@@ -100,8 +100,8 @@ public class MergeSort {
         }
     }
 
-    private static void merge(int low, int middle, int high, 
-            ArrayList<BrickNode> list, List<Animation> sq, Pseudocode code) {
+    private static void merge(int low, int middle, int high, List<BrickNode> list, 
+            List<Animation> sq, Pseudocode code) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
         // Copy both parts into the helper array
         for (int i = low; i <= high; i++) {

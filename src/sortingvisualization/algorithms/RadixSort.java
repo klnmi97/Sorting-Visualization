@@ -21,7 +21,7 @@ import sortingvisualization.ViewController;
  * @author mihae
  */
 public class RadixSort {
-    public static List<Animation> radixSort(ArrayList<BrickNode> list, Pane codePane){
+    public static List<Animation> radixSort(List<BrickNode> list, Pane codePane){
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
@@ -57,8 +57,7 @@ public class RadixSort {
                 "  do Counting(Stable) Sort for i-th digit");
     }
     
-    static void countSort(ArrayList<BrickNode> list, int n, int exp, List<Animation> anim) 
-    { 
+    static void countSort(List<BrickNode> list, int n, int exp, List<Animation> anim){ 
         //int output[] = new int[n]; // output array 
         BrickNode output[] = new BrickNode[n];
         int i; 

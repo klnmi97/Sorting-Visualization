@@ -23,7 +23,7 @@ import sortingvisualization.ViewController;
 public class BubbleSort {
 
     
-    public static List<Animation> bubbleSort(ArrayList<BrickNode> list, Pane codePane) { 
+    public static List<Animation> bubbleSort(List<BrickNode> list, Pane codePane) { 
         List<Animation> anim = new ArrayList<>();
         ParallelTransition parallelTransition;
         int n = list.size();  

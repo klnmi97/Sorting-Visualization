@@ -23,7 +23,7 @@ import sortingvisualization.ViewController;
  */
 public class SelectionSort{
 
-    public static List<Animation> selectionSort(ArrayList<BrickNode> list, Pane codePane){
+    public static List<Animation> selectionSort(List<BrickNode> list, Pane codePane){
         List<Animation> anim = new ArrayList<>();
         int arrayLength = list.size();
         ParallelTransition parallelTransition;

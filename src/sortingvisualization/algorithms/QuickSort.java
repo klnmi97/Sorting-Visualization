@@ -23,7 +23,7 @@ import sortingvisualization.ViewController;
  */
 public class QuickSort {
 
-    public static List<Animation> quickSort(ArrayList<BrickNode> list, Pane codePane){
+    public static List<Animation> quickSort(List<BrickNode> list, Pane codePane){
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);
@@ -32,7 +32,7 @@ public class QuickSort {
         return anim;
     } 
      
-    private static void sort(ArrayList<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
+    private static void sort(List<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
     { 
         addAnimToList(anim, code.selectLine(1));
         if (low < high) 
@@ -51,7 +51,7 @@ public class QuickSort {
         }
     } 
      
-    private static int partition(ArrayList<BrickNode> list, int low, int high, 
+    private static int partition(List<BrickNode> list, int low, int high, 
             List<Animation> sq, Pseudocode code) 
     { 
         ParallelTransition parallelTransition = new ParallelTransition();

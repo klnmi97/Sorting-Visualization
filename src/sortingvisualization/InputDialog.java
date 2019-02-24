@@ -152,8 +152,6 @@ public class InputDialog extends Dialog<Results> {
         
 }
 
-enum Algorithm {Bubble, CocktailShaker, Insertion, Selection, Merge, Quick, Counting}
-
 class Results {
 
     String input;

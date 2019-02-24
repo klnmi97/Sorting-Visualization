@@ -22,7 +22,7 @@ import sortingvisualization.ViewController;
  */
 public class BucketSort {
     
-    public static List<Animation> bucketSort(ArrayList<BrickNode> list, Pane codePane){
+    public static List<Animation> bucketSort(List<BrickNode> list, Pane codePane){
         List<Animation> anim = new ArrayList<>();
         Pseudocode pc = new Pseudocode();
         addPseudocode(codePane, pc);

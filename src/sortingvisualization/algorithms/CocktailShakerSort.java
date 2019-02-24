@@ -23,7 +23,7 @@ import sortingvisualization.ViewController;
  */
 public class CocktailShakerSort {
 
-    public static List<Animation> cocktailShakerSort(ArrayList<BrickNode> list, Pane codePane) {  
+    public static List<Animation> cocktailShakerSort(List<BrickNode> list, Pane codePane) {  
         List<Animation> sq = new ArrayList<>();
         ParallelTransition parallelTransition;
         boolean swapped = true;
