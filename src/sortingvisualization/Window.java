@@ -286,7 +286,7 @@ public class Window extends Application {
         alg8.getStyleClass().add("button");
         alg8.setOnAction(event->initialize(Algorithm.Radix, null));
         
-        algorithmButtonBox.getChildren().addAll(algLbl, alg0, alg1, alg2, alg3, alg4, alg5, alg7, alg8);
+        algorithmButtonBox.getChildren().addAll(algLbl, alg0, alg1, alg2, alg3, alg4, alg5, alg6, alg7, alg8);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }

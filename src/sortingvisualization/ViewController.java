@@ -43,7 +43,7 @@ import static sortingvisualization.algorithms.SelectionSort.selectionSort;
 public class ViewController {
     
     //TODO: create new metrics
-    public static int N_VALUES = 11;
+    public static int N_VALUES = 12;
     public static final int SPACING = 60;
     //counting from center as 0; half of (spacing * number of elements)
     public static int TEN_LEFT_INDENT = (int)(((double)10 / 2) * -SPACING);
@@ -241,11 +241,7 @@ public class ViewController {
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 
             Color color, double leftIndent, double topIndent) {
-        int num;
-        if(value < min)
-            num = min;
-        else 
-            num = value;
+        int num = value;
         double percent = (double)num / currentMax;
         Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
         rectangle.setFill(color);
@@ -386,8 +382,8 @@ public class ViewController {
             N_VALUES = input.length;
             generatedArray = input;
         } else {
-            N_VALUES = 11; //TODO: add dependency on screen size
-            generatedArray = generateRandomArray(N_VALUES, currentMin, currentMax);
+            N_VALUES = 12; //TODO: add dependency on screen size
+            generatedArray = generateRandomArray(N_VALUES, currentMin, currentMax - 1);
         }
         
         LEFT_INDENT = countIndent(N_VALUES);
@@ -420,46 +416,37 @@ public class ViewController {
         switch(instanceType){
             case Bubble:
                 transitions = bubbleSort(list, infoPanel);
-                //headerLbl.setText("Bubble Sort");
                 break;
             case CocktailShaker:
                 transitions = cocktailShakerSort(list, infoPanel);
-                //headerLbl.setText("Cocktail-Shaker Sort");
                 break;
             case Insertion:
                 transitions = insertionSort(list, infoPanel);
-                //headerLbl.setText("Insertion Sort");
                 break;
             case Selection:
                 transitions = selectionSort(list, infoPanel);
-                //headerLbl.setText("Selection Sort");
                 break;
             case Quick:
                 transitions = quickSort(list, infoPanel);
-                //headerLbl.setText("Quick Sort");
                 break;
             case Merge:
                 transitions = mergeSort(list, infoPanel);
-                //headerLbl.setText("Merge Sort");
                 break;
             case Counting:
                 List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
                 List<Text> countLabels = createLabelsList(currentMax, 0, LEVEL2 + 30);
                 transitions = countingSort(list, countLabels, currentMax, infoPanel);
-                //headerLbl.setText("Counting Sort");
                 displayPane.getChildren().addAll(0, createGreyNodes(currentMax));
                 displayPane.getChildren().addAll(countLabels);
                 displayPane.getChildren().addAll(0, positionLabels);
                 break;
             case Bucket:
                 transitions = bucketSort(list, infoPanel);
-                //headerLbl.setText("Bucket Sort");
                 List<FlowPane> buckets = createBucketList((arrayMax - arrayMin) / 15 + 1, arrayMin, 15); //bucket size = 15 TODO: smarter desicion
                 displayPane.getChildren().addAll(buckets);
                 break;
             case Radix:
                 transitions = radixSort(list, infoPanel);
-                //headerLbl.setText("Radix Sort");
                 List<FlowPane> bucket = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                 displayPane.getChildren().addAll(bucket);
                 break;
