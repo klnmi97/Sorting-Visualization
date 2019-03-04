@@ -36,12 +36,15 @@ public class Pseudocode {
         selection = new ArrayList<>();
     }
     
-    public void addLines(Pane codePane, String... args){
+    public void addLines(String... args){
         for(String arg : args){
             codeLines.add(createLine(arg));
             selection.add(false);
         }
-        codePane.getChildren().addAll(codeLines);
+    }
+    
+    public List<StackPane> getCode(){
+        return codeLines;
     }
     
     public Animation selectLine(int line){
@@ -72,7 +75,7 @@ public class Pseudocode {
             }
         }
         
-        if(pt.getChildren().size() == 0){
+        if(pt.getChildren().isEmpty()){
             return null;
         }
         return pt;

@@ -51,7 +51,7 @@ public class RadixSort {
     }
     
     private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(codePane, 
+        code.addLines(
                 "d is max number of digits",
                 "for i = 1 to d:",
                 "  do Counting(Stable) Sort for i-th digit");

@@ -75,7 +75,7 @@ public class CountingSort {
     }
 
     private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(codePane, 
+        code.addLines(
                 "create a counting array size of max value - 1",
                 "for each element in the initial array",
                 "  increase the corresponding counter by 1",

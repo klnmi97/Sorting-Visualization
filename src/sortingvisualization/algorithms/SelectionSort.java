@@ -93,7 +93,7 @@ public class SelectionSort{
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines( 
                 "set the first unsorted element as the minimum",
                 "  for i = 1 to sizeOfArray-1",
                 "    if currentElement < currentMin",

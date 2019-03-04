@@ -13,6 +13,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,7 +28,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
+import sortingvisualization.algorithms.BubbleSort;
+//import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
 import static sortingvisualization.algorithms.BucketSort.bucketSort;
 import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
 import static sortingvisualization.algorithms.CountingSort.countingSort;
@@ -35,6 +38,7 @@ import static sortingvisualization.algorithms.MergeSort.mergeSort;
 import static sortingvisualization.algorithms.QuickSort.quickSort;
 import static sortingvisualization.algorithms.RadixSort.radixSort;
 import static sortingvisualization.algorithms.SelectionSort.selectionSort;
+import sortingvisualization.algorithms.Sorting;
 
 /**
  *
@@ -69,7 +73,7 @@ public class ViewController {
     public static final Color SORTED = Color.ORANGE;
     public static final Color LINE_SELECTION = Color.WHITE;
     
-    private IntegerProperty nextTransitionIndex;
+    //private IntegerProperty nextTransitionIndex;
     private BooleanBinding anyPlayingAnim;
     private BooleanBinding stepForthBinding;
     private BooleanBinding stepBackBinding;
@@ -104,7 +108,7 @@ public class ViewController {
         this.displayPane = displayPane;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        nextTransitionIndex = new SimpleIntegerProperty();
+        //nextTransitionIndex = new SimpleIntegerProperty();
     }
     
     public static int countIndent(int number){
@@ -123,7 +127,7 @@ public class ViewController {
     /*
     * Animation actions
     */
-    private void stopAllAnimations(){
+    /*private void stopAllAnimations(){
         transitions.stream()
                 .forEach(anim->anim.stop());
     }
@@ -150,20 +154,24 @@ public class ViewController {
     }
     
     public void goStepBack() {
-        int index = nextTransitionIndex.get()-1;
-        Animation anim = transitions.get(index);
-        anim.setOnFinished(evt -> nextTransitionIndex.set(index));
-        anim.setRate(-currentSpeed);
-        anim.play();
+        if(!stepBackBinding.get()){
+            int index = nextTransitionIndex.get()-1;
+            Animation anim = transitions.get(index);
+            anim.setOnFinished(evt -> nextTransitionIndex.set(index));
+            anim.setRate(-currentSpeed);
+            anim.play();
+        }
     }
     
     public void goStepForth() {
-        int index = nextTransitionIndex.get();
-        Animation anim = transitions.get(index);
-        anim.setOnFinished(evt -> nextTransitionIndex.set(index+1));
-        anim.setRate(currentSpeed);
-        anim.play();
-    }
+        if(!stepForthBinding.get()){
+            int index = nextTransitionIndex.get();
+            Animation anim = transitions.get(index);
+            anim.setOnFinished(evt -> nextTransitionIndex.set(index+1));
+            anim.setRate(currentSpeed);
+            anim.play();
+        }
+    }*/
     
     private int getMinimum(Algorithm type){
         switch (type) {
@@ -268,7 +276,7 @@ public class ViewController {
     /*
     * Animation bindings
     */
-     private BooleanBinding createAnyPlayingBinding(List<Animation> transitions) {
+    /*private BooleanBinding createAnyPlayingBinding(List<Animation> transitions) {
         return new BooleanBinding() {
             { // Anonymous constructor
                 // bind to the status properties of all the transitions
@@ -285,7 +293,7 @@ public class ViewController {
             }
         };
 
-    }
+    }*/
     
     private List<BrickNode> createGreyNodes(int count){
         List<BrickNode> subList = new ArrayList<>();
@@ -342,14 +350,14 @@ public class ViewController {
     }
      
     private void initValues(){
-        nextTransitionIndex.set(0);
+        //nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
         infoPanel.getChildren().clear();
         list.clear();
         transitions.clear();
     }
     
-    private void createBindings() {
+    /*private void createBindings() {
         anyPlayingAnim = createAnyPlayingBinding(transitions);
         stepForthBinding = nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
                 .or(anyPlayingAnim);
@@ -363,13 +371,13 @@ public class ViewController {
                 currentSpeed = newValue.doubleValue();
             }
         };
-    }
+    }*/
     
-    public void initialize(Algorithm instanceType, int[] input){
+    public List<BrickNode> initialize(Algorithm instanceType, int[] input){
         int[] generatedArray;
         Random random = new Random();
         currentInstance = instanceType;
-        stopAllAnimations();
+        //stopAllAnimations();
         initValues();
         
         int arrayMin;
@@ -410,12 +418,20 @@ public class ViewController {
         StackPane.setAlignment(pol, Pos.TOP_CENTER);*/
         displayPane.getChildren().addAll(list);
         //displayPane.getChildren().add(pol);
-        
+        return list;
         //transitions = new ArrayList<>();
-        
+        /*Sorting bs;
         switch(instanceType){
             case Bubble:
-                transitions = bubbleSort(list, infoPanel);
+                bs = new BubbleSort(list);
+                bs.setOnReady(event -> displayPane.setVisible(false));
+                bs.setOnSucceeded(event -> {
+                    transitions = bs.getValue();
+                    bs.addCodeToUI(infoPanel);
+                    //createBindings();
+                    displayPane.setVisible(true);});
+                bs.start();
+                //transitions = bubbleSort(list, infoPanel);
                 break;
             case CocktailShaker:
                 transitions = cocktailShakerSort(list, infoPanel);
@@ -452,10 +468,11 @@ public class ViewController {
                 break;
             default:
                 break;
-        }
+        }*/
            
-        createBindings();
+        //createBindings();
     }
+    
 
     
 }

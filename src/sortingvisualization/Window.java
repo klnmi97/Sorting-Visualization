@@ -83,7 +83,9 @@ public class Window extends Application {
     FlowPane codePane;
     
     Data data; 
-    ViewController controller;
+    BindingData buttonBindings;
+    ViewController creator;
+    AnimationController controller;
     
     Scene scene;
     public Window(){}
@@ -94,7 +96,8 @@ public class Window extends Application {
         codePane = new FlowPane();
         codePane.setPadding(new Insets(30, 10, 30, 10));
         data = new Data();
-        controller = new ViewController(data, displayPane, codePane);
+        creator = new ViewController(data, displayPane, codePane);
+        controller = new AnimationController();
         //menu
         initializeMenu(primaryStage);
         
@@ -294,16 +297,26 @@ public class Window extends Application {
     
     //03.09: fixed play
     private void initialize(Algorithm type, int[] input){
-        controller.initialize(type, input);
-        initButtonBinding();
+        data.setCurrentInstance(type);
+        List<BrickNode> nodes = creator.initialize(type, input);
+        //initButtonBinding();
         headerLbl.setText(type.getName());
+        AnimationJob animationJob = new AnimationJob(nodes, type);
+        animationJob.setOnSucceeded(e->{
+            BindingData bindings = controller.setupInstance(animationJob.getValue());
+            stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
+            stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
+            playBtn.disableProperty().bind(bindings.getPlayBinding());
+            speedSlider.valueProperty().addListener(bindings.getSpeedListener());
+        });
+        animationJob.start();
     }
     
     private void initButtonBinding(){
-        stepForthBtn.disableProperty().bind(controller.getStepForthBinding());
-        stepBackBtn.disableProperty().bind(controller.getStepBackBinding());
-        playBtn.disableProperty().bind(controller.getPlayBinding());
-        speedSlider.valueProperty().addListener(controller.getSpeedListener());
+        stepForthBtn.disableProperty().bind(creator.getStepForthBinding());
+        stepBackBtn.disableProperty().bind(creator.getStepBackBinding());
+        playBtn.disableProperty().bind(creator.getPlayBinding());
+        speedSlider.valueProperty().addListener(creator.getSpeedListener());
     }
     
     /*

@@ -10,7 +10,7 @@ package sortingvisualization;
  * @author Mykhailo Klunko
  */
 
-enum Algorithm {
+public enum Algorithm {
     Bubble          (0, "Bubble Sort"), 
     CocktailShaker  (1, "Cocktail-Shaker Sort"), 
     Insertion       (2, "Insertion Sort"), 

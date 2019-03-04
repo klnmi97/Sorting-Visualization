@@ -114,7 +114,7 @@ public class BucketSort {
     }
     
     private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(codePane, 
+        code.addLines( 
                 "create buckets",
                 "distribute array into buckets",
                 "for each bucket:",

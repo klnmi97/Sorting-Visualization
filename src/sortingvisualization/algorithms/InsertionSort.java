@@ -80,7 +80,7 @@ public class InsertionSort {
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines( 
                 "set first element as sorted",
                 "for each unsorted element",
                 "  select the element i",

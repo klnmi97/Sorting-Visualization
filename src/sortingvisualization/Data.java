@@ -27,6 +27,14 @@ public class Data {
         currentInstance = Algorithm.Bubble;
     }
     
+    public Algorithm getCurrentInstance() {
+        return currentInstance;
+    }
+
+    public void setCurrentInstance(Algorithm currentInstance) {
+        this.currentInstance = currentInstance;
+    }
+
     public List<Animation> getTransitions() {
         return transitions;
     }

@@ -123,7 +123,7 @@ public class QuickSort {
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines(
                 "QuickSort(arr, low, high):",
                 "  if low < high",
                 "    mid = Partition(arr, low, high)",

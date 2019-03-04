@@ -170,7 +170,7 @@ public class MergeSort {
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines(
                 "MergeSort(arr, left, right):",
                 "  if left < right",
                 "    mid = (left + right) / 2",

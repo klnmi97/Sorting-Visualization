@@ -150,7 +150,7 @@ public class CocktailShakerSort {
     
     private static void addPseudocode(Pane codePane, Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines(
                 "swapped = true",
                 "do",
                 "  swapped = false",
