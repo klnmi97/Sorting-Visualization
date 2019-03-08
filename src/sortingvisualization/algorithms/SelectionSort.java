@@ -10,6 +10,7 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
@@ -21,16 +22,24 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class SelectionSort{
+public class SelectionSort extends Sorting{
 
-    public static List<Animation> selectionSort(List<BrickNode> list, Pane codePane){
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public SelectionSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         int arrayLength = list.size();
         ParallelTransition parallelTransition;
         ParallelTransition compareTransition;
         
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         for (int i = 0; i < arrayLength - 1; i++){  
             int index = i;
             anim.add(AnimUtils.makeParallel(
@@ -91,7 +100,7 @@ public class SelectionSort{
         return anim;
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines( 
                 "set the first unsorted element as the minimum",
@@ -101,4 +110,9 @@ public class SelectionSort{
                 "    swap currentMin with first unsorted element");
     }
     
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
+    }
 }

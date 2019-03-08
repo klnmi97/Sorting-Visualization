@@ -19,8 +19,6 @@ import sortingvisualization.BrickNode;
 public abstract class Sorting {
 
     
-    public abstract void addCodeToUI(Pane codePane);
-    
     protected void addAnimToList(List<Animation> animList, Animation... anims){
         for(Animation anim : anims){
             if(anim != null){

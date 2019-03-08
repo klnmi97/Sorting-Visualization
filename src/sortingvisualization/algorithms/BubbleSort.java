@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -24,13 +25,14 @@ public class BubbleSort extends Sorting {
     List<BrickNode> list;
     Pseudocode pc;
     
-    public BubbleSort(List<BrickNode> list){
+    public BubbleSort(List<BrickNode> list, Pane infoPane){
         this.list = list;
         pc = new Pseudocode();
         addPseudocode(pc);
+        addCodeToUI(infoPane);
     }
     
-    public List<Animation> bubbleSort(List<BrickNode> list) { 
+    public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         ParallelTransition parallelTransition;
         int n = list.size();  
@@ -90,9 +92,9 @@ public class BubbleSort extends Sorting {
                 "      swap(leftElement, rightElement)");
     }
     
-    @Override
-    public void addCodeToUI(Pane codePane){
-        codePane.getChildren().addAll(pc.getCode());
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
-    
 }

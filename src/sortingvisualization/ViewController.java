@@ -8,12 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -29,16 +26,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import sortingvisualization.algorithms.BubbleSort;
-//import static sortingvisualization.algorithms.BubbleSort.bubbleSort;
-import static sortingvisualization.algorithms.BucketSort.bucketSort;
-import static sortingvisualization.algorithms.CocktailShakerSort.cocktailShakerSort;
-import static sortingvisualization.algorithms.CountingSort.countingSort;
-import static sortingvisualization.algorithms.InsertionSort.insertionSort;
-import static sortingvisualization.algorithms.MergeSort.mergeSort;
-import static sortingvisualization.algorithms.QuickSort.quickSort;
-import static sortingvisualization.algorithms.RadixSort.radixSort;
-import static sortingvisualization.algorithms.SelectionSort.selectionSort;
-import sortingvisualization.algorithms.Sorting;
+import sortingvisualization.algorithms.BucketSort;
+import sortingvisualization.algorithms.CocktailShakerSort;
+import sortingvisualization.algorithms.CountingSort;
+import sortingvisualization.algorithms.InsertionSort;
+import sortingvisualization.algorithms.MergeSort;
+import sortingvisualization.algorithms.QuickSort;
+import sortingvisualization.algorithms.RadixSort;
+import sortingvisualization.algorithms.SelectionSort;
 
 /**
  *
@@ -59,12 +54,12 @@ public class ViewController {
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
     
-    private final int max = 100;
-    private final int min = 6;
-    private final int couMax = 10; //check if 10 or 9?
-    private final int couMin = 0;
-    private final int radixMax = 9999;
-    private final int radixMin = 0;
+    private static final int MAX = 100;
+    private static final int MIN = 6;
+    private static final int CNT_MAX = 10; //check if 10 or 9?
+    private static final int CNT_MIN = 0;
+    private static final int RDX_MAX = 9999;
+    private static final int RDX_MIN = 0;
     //Style
     //colours of bricks:
     //COMPARE - selected, DEFAULT - main color
@@ -73,42 +68,16 @@ public class ViewController {
     public static final Color SORTED = Color.ORANGE;
     public static final Color LINE_SELECTION = Color.WHITE;
     
-    //private IntegerProperty nextTransitionIndex;
-    private BooleanBinding anyPlayingAnim;
-    private BooleanBinding stepForthBinding;
-    private BooleanBinding stepBackBinding;
-    private BooleanBinding playBinding;
-    private ChangeListener<Number> speedListener;
-
-    public ChangeListener<Number> getSpeedListener() {
-        return speedListener;
-    }
-
-    public BooleanBinding getStepBackBinding() {
-        return stepBackBinding;
-    }
-
-    public BooleanBinding getPlayBinding() {
-        return playBinding;
-    }
-    
-    public BooleanBinding getStepForthBinding() {
-        return stepForthBinding;
-    }
-    
-    private List<Animation> transitions;
-    private List<BrickNode> list;
+    private int[] currentArray;
     private Pane displayPane;
     private Pane infoPanel;
     private Algorithm currentInstance;
     
-    public ViewController(Data data, Pane displayPane, Pane infoPanel){
-        this.transitions = data.getTransitions();
-        this.list = data.getList();
+    public ViewController(Pane displayPane, Pane infoPanel){
         this.displayPane = displayPane;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        //nextTransitionIndex = new SimpleIntegerProperty();
+        currentArray = generateRandomArray(N_VALUES, MIN, MAX);
     }
     
     public static int countIndent(int number){
@@ -124,74 +93,25 @@ public class ViewController {
         return randomArray;
     }
     
-    /*
-    * Animation actions
-    */
-    /*private void stopAllAnimations(){
-        transitions.stream()
-                .forEach(anim->anim.stop());
-    }
-    
-    public void play(){
-        if(nextTransitionIndex.get()<transitions.size()){
-            int index = nextTransitionIndex.get();
-            Animation anim = transitions.get(index);
-            anim.setOnFinished(evt -> {
-                nextTransitionIndex.set(index+1);
-                play();
-            });
-            anim.setRate(currentSpeed);
-            anim.play();}
-    }
-    
-    public void pause(){
-        transitions.stream()
-                .filter(anim -> anim.getStatus()==Animation.Status.RUNNING)
-                .forEach(anim -> anim.setOnFinished(evt ->{
-                    int index = nextTransitionIndex.get();
-                    nextTransitionIndex.set(index+1);
-                }));
-    }
-    
-    public void goStepBack() {
-        if(!stepBackBinding.get()){
-            int index = nextTransitionIndex.get()-1;
-            Animation anim = transitions.get(index);
-            anim.setOnFinished(evt -> nextTransitionIndex.set(index));
-            anim.setRate(-currentSpeed);
-            anim.play();
-        }
-    }
-    
-    public void goStepForth() {
-        if(!stepForthBinding.get()){
-            int index = nextTransitionIndex.get();
-            Animation anim = transitions.get(index);
-            anim.setOnFinished(evt -> nextTransitionIndex.set(index+1));
-            anim.setRate(currentSpeed);
-            anim.play();
-        }
-    }*/
-    
     private int getMinimum(Algorithm type){
         switch (type) {
             case Counting:
-                return couMin;
+                return CNT_MIN;
             case Radix:
-                return radixMin;
+                return RDX_MIN;
             default:
-                return min;
+                return MIN;
         }
     }
     
     private int getMaximum(Algorithm type){
         switch (type) {
             case Counting:
-                return couMax;
+                return CNT_MAX;
             case Radix:
-                return radixMax;
+                return RDX_MAX;
             default:
-                return max;
+                return MAX;
         }
     }
     
@@ -273,28 +193,6 @@ public class ViewController {
         return createCustomNode(i, value, currentMax, DEFAULT, leftIndent, LEVEL1);
     }
     
-    /*
-    * Animation bindings
-    */
-    /*private BooleanBinding createAnyPlayingBinding(List<Animation> transitions) {
-        return new BooleanBinding() {
-            { // Anonymous constructor
-                // bind to the status properties of all the transitions
-                // (i.e. mark this binding as invalid if any of the status properties change)
-                transitions.stream()
-                    .map(Animation::statusProperty)
-                    .forEach(this::bind);
-            }
-            @Override
-            protected boolean computeValue() {
-                // return true if any of the transitions statuses are equal to RUNNING:
-                return transitions.stream()
-                    .anyMatch(anim -> anim.getStatus()==Animation.Status.RUNNING);
-            }
-        };
-
-    }*/
-    
     private List<BrickNode> createGreyNodes(int count){
         List<BrickNode> subList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -350,38 +248,17 @@ public class ViewController {
     }
      
     private void initValues(){
-        //nextTransitionIndex.set(0);
         displayPane.getChildren().clear();
         infoPanel.getChildren().clear();
-        list.clear();
-        transitions.clear();
     }
     
-    /*private void createBindings() {
-        anyPlayingAnim = createAnyPlayingBinding(transitions);
-        stepForthBinding = nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
-                .or(anyPlayingAnim);
-        stepBackBinding = nextTransitionIndex.lessThanOrEqualTo(0)
-                .or(anyPlayingAnim);
-        playBinding = nextTransitionIndex.greaterThanOrEqualTo(transitions.size())
-                .or(anyPlayingAnim);
-        speedListener = (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            for(int i = 0; i < transitions.size(); i++){
-                transitions.get(i).setRate(newValue.doubleValue());
-                currentSpeed = newValue.doubleValue();
-            }
-        };
-    }*/
-    
-    public List<BrickNode> initialize(Algorithm instanceType, int[] input){
+    private List<BrickNode> initialize(Algorithm instanceType, int[] input){
         int[] generatedArray;
         Random random = new Random();
+        List<BrickNode> list = new ArrayList<>();
         currentInstance = instanceType;
-        //stopAllAnimations();
         initValues();
         
-        int arrayMin;
-        int arrayMax;
         int leftIndent;
         int currentMin = getMinimum(instanceType);
         int currentMax = getMaximum(instanceType);
@@ -394,9 +271,8 @@ public class ViewController {
             generatedArray = generateRandomArray(N_VALUES, currentMin, currentMax - 1);
         }
         
+        this.currentArray = generatedArray;
         LEFT_INDENT = countIndent(N_VALUES);
-        arrayMin = getArrayMin(generatedArray);
-        arrayMax = getArrayMax(generatedArray);
         leftIndent = countIndent(N_VALUES);
         
         for(int i = 0; i < N_VALUES; i++){
@@ -411,68 +287,81 @@ public class ViewController {
             }
             list.add(node);
         }
-        
-        /*Polygon pol = QuickSort.createPointingTriangle();
-        pol.setOpacity(0.4);
-        pol.setTranslateX(ViewController.LEFT_INDENT);
-        StackPane.setAlignment(pol, Pos.TOP_CENTER);*/
-        displayPane.getChildren().addAll(list);
-        //displayPane.getChildren().add(pol);
         return list;
-        //transitions = new ArrayList<>();
-        /*Sorting bs;
-        switch(instanceType){
-            case Bubble:
-                bs = new BubbleSort(list);
-                bs.setOnReady(event -> displayPane.setVisible(false));
-                bs.setOnSucceeded(event -> {
-                    transitions = bs.getValue();
-                    bs.addCodeToUI(infoPanel);
-                    //createBindings();
-                    displayPane.setVisible(true);});
-                bs.start();
-                //transitions = bubbleSort(list, infoPanel);
-                break;
-            case CocktailShaker:
-                transitions = cocktailShakerSort(list, infoPanel);
-                break;
-            case Insertion:
-                transitions = insertionSort(list, infoPanel);
-                break;
-            case Selection:
-                transitions = selectionSort(list, infoPanel);
-                break;
-            case Quick:
-                transitions = quickSort(list, infoPanel);
-                break;
-            case Merge:
-                transitions = mergeSort(list, infoPanel);
-                break;
-            case Counting:
-                List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
-                List<Text> countLabels = createLabelsList(currentMax, 0, LEVEL2 + 30);
-                transitions = countingSort(list, countLabels, currentMax, infoPanel);
-                displayPane.getChildren().addAll(0, createGreyNodes(currentMax));
-                displayPane.getChildren().addAll(countLabels);
-                displayPane.getChildren().addAll(0, positionLabels);
-                break;
-            case Bucket:
-                transitions = bucketSort(list, infoPanel);
-                List<FlowPane> buckets = createBucketList((arrayMax - arrayMin) / 15 + 1, arrayMin, 15); //bucket size = 15 TODO: smarter desicion
-                displayPane.getChildren().addAll(buckets);
-                break;
-            case Radix:
-                transitions = radixSort(list, infoPanel);
-                List<FlowPane> bucket = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
-                displayPane.getChildren().addAll(bucket);
-                break;
-            default:
-                break;
-        }*/
-           
-        //createBindings();
     }
     
-
+    public Task<List<Animation>> sort(Algorithm instanceType, int[] input){
+       
+        List<BrickNode> list = initialize(instanceType, input);
+        return new Task<List<Animation>>() {
+            @Override
+            protected List<Animation> call() throws Exception {
+                Platform.runLater(() -> {
+                    displayPane.getChildren().addAll(list);
+                });
+                List<Animation> anim = new ArrayList<>();
+                switch(currentInstance){
+                    case Bubble:
+                        BubbleSort bubble = new BubbleSort(list, infoPanel);
+                        anim = bubble.sort();
+                        break;
+                    case CocktailShaker:
+                        CocktailShakerSort shaker = new CocktailShakerSort(list, infoPanel);
+                        anim = shaker.sort();
+                        break;
+                    case Insertion:
+                        InsertionSort insert = new InsertionSort(list, infoPanel);
+                        anim = insert.sort();
+                        break;
+                    case Selection:
+                        SelectionSort select = new SelectionSort(list, infoPanel);
+                        anim = select.sort();
+                        break;
+                    case Quick:
+                        QuickSort quick = new QuickSort(list, infoPanel);
+                        anim = quick.sort();
+                        break;
+                    case Merge:
+                        MergeSort merge = new MergeSort(list, infoPanel);
+                        anim = merge.sort();
+                        break;
+                    case Counting:
+                        List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
+                        List<Text> countLabels = createLabelsList(getMaximum(instanceType), 0, LEVEL2 + 30);
+                        List<BrickNode> placeHolders = createGreyNodes(getMaximum(instanceType));
+                        CountingSort counting = new CountingSort(list, countLabels, infoPanel);
+                        anim = counting.sort();
+                        Platform.runLater(() -> {
+                            displayPane.getChildren().addAll(0, placeHolders);
+                            displayPane.getChildren().addAll(countLabels);
+                            displayPane.getChildren().addAll(0, positionLabels);
+                        });
+                        break;
+                    case Bucket:
+                        BucketSort bucket = new BucketSort(list, infoPanel);
+                        anim = bucket.sort();
+                        List<FlowPane> buckets = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        Platform.runLater(() -> {
+                            displayPane.getChildren().addAll(buckets);
+                        });
+                        break;
+                    case Radix:
+                        RadixSort radix = new RadixSort(list, infoPanel);
+                        anim = radix.sort();
+                        List<FlowPane> rbuckets = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        Platform.runLater(() -> {
+                            displayPane.getChildren().addAll(rbuckets);
+                        });
+                        break;
+                    default:
+                        //BubbleSort bs = new BubbleSort(list);
+                        //anim = bs.bubbleSort(list);
+                        break;
+                }
+                
+                return anim;
+            }
+        };
+    }
     
 }

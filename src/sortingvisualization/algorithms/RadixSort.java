@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
@@ -21,10 +22,19 @@ import sortingvisualization.ViewController;
  * @author mihae
  */
 public class RadixSort {
-    public static List<Animation> radixSort(List<BrickNode> list, Pane codePane){
+    
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public RadixSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         
         //TODO: move to parent class
         // Determine minimum and maximum values
@@ -50,12 +60,6 @@ public class RadixSort {
         return anim;
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(
-                "d is max number of digits",
-                "for i = 1 to d:",
-                "  do Counting(Stable) Sort for i-th digit");
-    }
     
     static void countSort(List<BrickNode> list, int n, int exp, List<Animation> anim){ 
         //int output[] = new int[n]; // output array 
@@ -102,5 +106,18 @@ public class RadixSort {
         // contains sorted numbers according to curent digit 
         for (i = 0; i < n; i++) 
             list.set(i, output[i]); 
+    }
+    
+    private static void addPseudocode(Pseudocode code) {
+        code.addLines(
+                "d is max number of digits",
+                "for i = 1 to d:",
+                "  do Counting(Stable) Sort for i-th digit");
+    }
+    
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }

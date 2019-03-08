@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
@@ -20,12 +20,20 @@ import sortingvisualization.ViewController;
  *
  * @author mihae
  */
-public class BucketSort {
+public class BucketSort extends Sorting {
     
-    public static List<Animation> bucketSort(List<BrickNode> list, Pane codePane){
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public BucketSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         
         // Determine minimum and maximum values
         int minValue = list.get(0).getValue();
@@ -65,7 +73,7 @@ public class BucketSort {
         for (int i = 0; i < buckets.size(); i++) {
             BrickNode[] bucketArray = new BrickNode[buckets.get(i).size()];
             bucketArray = buckets.get(i).toArray(bucketArray);
-            sort(bucketArray, anim, pc);
+            BucketSort.this.sort(bucketArray, anim, pc);
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
                 anim.add(AnimUtils.makeParallel(
@@ -81,7 +89,7 @@ public class BucketSort {
      /*
     * Local Insertion sort for sorting buckets
     */
-    private static void sort(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
+    private void sort(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
         int n = bucketArray.length;
         
         addAnimToList(anim, pc.selectLines(2, 3));
@@ -113,7 +121,7 @@ public class BucketSort {
         }
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code) {
+    private void addPseudocode(Pseudocode code) {
         code.addLines( 
                 "create buckets",
                 "distribute array into buckets",
@@ -123,13 +131,11 @@ public class BucketSort {
                 "    place element back into input array");
     }
 
-    //temporary solution
-    private static void addAnimToList(List<Animation> animList, Animation... anims){
-        for(Animation anim : anims){
-            if(anim != null){
-                animList.add(anim);
-            }
-        }
+
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
     
 }

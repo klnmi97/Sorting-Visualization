@@ -10,6 +10,7 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
@@ -21,15 +22,23 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class InsertionSort {
+public class InsertionSort extends Sorting{
 
-    public static List<Animation> insertionSort(List<BrickNode> list, Pane codePane)
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public InsertionSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort()
     {
         List<Animation> sq = new ArrayList<>();
         int n = list.size();
         
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         for (int i = 1; i < n; ++i)
         {
             BrickNode key = list.get(i);
@@ -78,7 +87,7 @@ public class InsertionSort {
         return sq;
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code){
+    private static void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines( 
                 "set first element as sorted",
@@ -90,11 +99,9 @@ public class InsertionSort {
                 "      else insert element i here");
     }
     
-    private static void addAnimToList(List<Animation> animList, Animation... anims){
-        for(Animation anim : anims){
-            if(anim != null){
-                animList.add(anim);
-            }
-        }
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }

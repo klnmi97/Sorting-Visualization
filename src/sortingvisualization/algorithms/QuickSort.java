@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -21,18 +21,27 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class QuickSort {
+public class QuickSort extends Sorting {
 
-    public static List<Animation> quickSort(List<BrickNode> list, Pane codePane){
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public QuickSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
-        sort(list, 0, list.size()-1, anim, pc);
+        
+        quickSort(list, 0, list.size()-1, anim, pc);
         addAnimToList(anim, pc.unselectAll());
         return anim;
     } 
      
-    private static void sort(List<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
+    private void quickSort(List<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
     { 
         addAnimToList(anim, code.selectLine(1));
         if (low < high) 
@@ -42,9 +51,9 @@ public class QuickSort {
             int partitionIndex = partition(list, low, high, anim, code);
             
             addAnimToList(anim, code.selectLine(3));
-            sort(list, low, partitionIndex-1, anim, code); 
+            quickSort(list, low, partitionIndex-1, anim, code); 
             addAnimToList(anim, code.selectLine(4));
-            sort(list, partitionIndex+1, high, anim, code); 
+            quickSort(list, partitionIndex+1, high, anim, code); 
         }
         else if(low == high){
             anim.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
@@ -121,7 +130,7 @@ public class QuickSort {
         return i+1; 
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code){
+    private static void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines(
                 "QuickSort(arr, low, high):",
@@ -141,11 +150,9 @@ public class QuickSort {
                 "  return index + 1");
     }
     
-    private static void addAnimToList(List<Animation> animList, Animation... anims){
-        for(Animation anim : anims){
-            if(anim != null){
-                animList.add(anim);
-            }
-        }
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }

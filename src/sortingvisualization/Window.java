@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -37,7 +38,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -47,7 +47,7 @@ import javafx.stage.Stage;
 public class Window extends Application {
     
     private int max = 100;
-    private int min = (int)(max * 0.05);
+    private int min = 7;
     
     private MenuBar menuBar;
     Menu menuFile;
@@ -82,7 +82,6 @@ public class Window extends Application {
     VBox sidePanel;
     FlowPane codePane;
     
-    Data data; 
     BindingData buttonBindings;
     ViewController creator;
     AnimationController controller;
@@ -95,8 +94,7 @@ public class Window extends Application {
         displayPane = new StackPane();
         codePane = new FlowPane();
         codePane.setPadding(new Insets(30, 10, 30, 10));
-        data = new Data();
-        creator = new ViewController(data, displayPane, codePane);
+        creator = new ViewController(displayPane, codePane);
         controller = new AnimationController();
         //menu
         initializeMenu(primaryStage);
@@ -294,29 +292,22 @@ public class Window extends Application {
         algorithmButtonBox.setMinHeight(40);
     }
     
-    
-    //03.09: fixed play
     private void initialize(Algorithm type, int[] input){
-        data.setCurrentInstance(type);
-        List<BrickNode> nodes = creator.initialize(type, input);
-        //initButtonBinding();
+        //TODO: create loading
         headerLbl.setText(type.getName());
-        AnimationJob animationJob = new AnimationJob(nodes, type);
-        animationJob.setOnSucceeded(e->{
-            BindingData bindings = controller.setupInstance(animationJob.getValue());
-            stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
-            stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
-            playBtn.disableProperty().bind(bindings.getPlayBinding());
-            speedSlider.valueProperty().addListener(bindings.getSpeedListener());
+        Task<List<Animation>> sortingTask = creator.sort(type, input);
+        sortingTask.setOnSucceeded(e->{
+            BindingData bindings = controller.setupInstance(sortingTask.getValue());
+            initButtonBinding(bindings);
         });
-        animationJob.start();
+        sortingTask.run();
     }
     
-    private void initButtonBinding(){
-        stepForthBtn.disableProperty().bind(creator.getStepForthBinding());
-        stepBackBtn.disableProperty().bind(creator.getStepBackBinding());
-        playBtn.disableProperty().bind(creator.getPlayBinding());
-        speedSlider.valueProperty().addListener(creator.getSpeedListener());
+    private void initButtonBinding(BindingData bindings){
+        stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
+        stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
+        playBtn.disableProperty().bind(bindings.getPlayBinding());
+        speedSlider.valueProperty().addListener(bindings.getSpeedListener());
     }
     
     /*
@@ -335,6 +326,7 @@ public class Window extends Application {
             for (int i = 0; i < intStr.length; i++) {
                 customInput[i] = Integer.parseInt(intStr[i]);
             }
+            //TODO: finish
             switch(result.get().algoritm){
                 case Bubble: case CocktailShaker: case Insertion: case Selection:
                 case Quick: case Merge:

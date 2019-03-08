@@ -8,6 +8,7 @@ package sortingvisualization.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import sortingvisualization.AnimUtils;
@@ -19,16 +20,25 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class CountingSort {
+public class CountingSort extends Sorting {
     
-    public static List<Animation> countingSort(List<BrickNode> list, List<Text> counters, 
-            int maxValue, Pane codePane) { 
+    List<BrickNode> list;
+    Pseudocode pc;
+    List<Text> counters;
+    
+    public CountingSort(List<BrickNode> list, List<Text> counters, Pane infoPane){
+        this.list = list;
+        this.pc = new Pseudocode();
+        this.counters = counters;
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         
          // array of 0's at indices 0...maxValue
-        int[] count = new int[maxValue];
+        int[] count = new int[10]; //change 10 to take max value for this type
         for(int i : count){
             count[i] = 0;
         }
@@ -74,7 +84,7 @@ public class CountingSort {
         return anim;
     }
 
-    private static void addPseudocode(Pane codePane, Pseudocode code) {
+    private void addPseudocode(Pseudocode code) {
         code.addLines(
                 "create a counting array size of max value - 1",
                 "for each element in the initial array",
@@ -84,5 +94,11 @@ public class CountingSort {
                 "for each element in the initial array",
                 "  decrease the corresponding counter by 1",
                 "  move currentElement to result[current counter]");
+    }
+
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }
