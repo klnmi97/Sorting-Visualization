@@ -6,14 +6,10 @@
 package sortingvisualization;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
 import javafx.application.Application;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -326,15 +322,7 @@ public class Window extends Application {
             for (int i = 0; i < intStr.length; i++) {
                 customInput[i] = Integer.parseInt(intStr[i]);
             }
-            //TODO: finish
-            switch(result.get().algoritm){
-                case Bubble: case CocktailShaker: case Insertion: case Selection:
-                case Quick: case Merge:
-                    initialize(result.get().algoritm, customInput);
-                    break;
-                default:
-                    initialize(Algorithm.Bubble, customInput);
-            } 
+            initialize(result.get().algoritm, customInput);
         }
     }
     

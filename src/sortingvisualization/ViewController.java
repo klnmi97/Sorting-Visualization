@@ -54,12 +54,12 @@ public class ViewController {
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
     
-    private static final int MAX = 100;
-    private static final int MIN = 6;
-    private static final int CNT_MAX = 10; //check if 10 or 9?
-    private static final int CNT_MIN = 0;
-    private static final int RDX_MAX = 9999;
-    private static final int RDX_MIN = 0;
+    public static final int MAX = 100;
+    public static final int MIN = 6;
+    public static final int CNT_MAX = 10; //check if 10 or 9?
+    public static final int CNT_MIN = 0;
+    public static final int RDX_MAX = 9999;
+    public static final int RDX_MIN = 0;
     //Style
     //colours of bricks:
     //COMPARE - selected, DEFAULT - main color
@@ -113,27 +113,6 @@ public class ViewController {
             default:
                 return MAX;
         }
-    }
-    
-    //TODO: add exception handling
-    private int getArrayMin(int[] array){
-        int minimum = array[0];
-        for(int i = 0; i < array.length; i++){
-            if(array[i] < minimum){
-                minimum = array[i];
-            }
-        }
-        return minimum;
-    }
-    
-    private int getArrayMax(int[] array){
-        int maximum = array[0];
-        for(int i = 0; i < array.length; i++){
-            if(array[i] > maximum){
-                maximum = array[i];
-            }
-        }
-        return maximum;
     }
     
     //TODO: refactor!
@@ -293,12 +272,10 @@ public class ViewController {
     public Task<List<Animation>> sort(Algorithm instanceType, int[] input){
        
         List<BrickNode> list = initialize(instanceType, input);
+        displayPane.getChildren().addAll(list);
         return new Task<List<Animation>>() {
             @Override
             protected List<Animation> call() throws Exception {
-                Platform.runLater(() -> {
-                    displayPane.getChildren().addAll(list);
-                });
                 List<Animation> anim = new ArrayList<>();
                 switch(currentInstance){
                     case Bubble:
@@ -340,7 +317,8 @@ public class ViewController {
                     case Bucket:
                         BucketSort bucket = new BucketSort(list, infoPanel);
                         anim = bucket.sort();
-                        List<FlowPane> buckets = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) / 15 + 1;
+                        List<FlowPane> buckets = createBucketList(bucketCount, ArrayUtils.getMinValue(list), 15); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(buckets);
                         });

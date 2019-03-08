@@ -8,10 +8,13 @@ package sortingvisualization;
 import java.util.Arrays;
 import java.util.Random;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -24,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -40,15 +45,22 @@ public class InputDialog extends Dialog<Results> {
     private int maxInputValue;
     private int minInputValue;
     
-    public InputDialog(int maxInputValue, int minInputValue){
-        this.maxInputValue = maxInputValue;
-        this.minInputValue = minInputValue;
+    public InputDialog(int max, int min){
+        this.maxInputValue = max;
+        this.minInputValue = min;
         setTitle("New sorting");
         setHeaderText("Please, specify data!");
         
         //dialog.initOwner(scene.getWindow()); //TODO: restyle
         
         DialogPane dialogPane = getDialogPane();
+        Scene scene = dialogPane.getScene();
+        scene.getStylesheets().add("dialog.css");
+        dialogPane.getStyleClass().add("dialog");
+        
+        Stage stage = (Stage) scene.getWindow();
+        stage.setOpacity(0.8);
+        
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         final Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
         
@@ -61,14 +73,31 @@ public class InputDialog extends Dialog<Results> {
         errorLbl.textFillProperty().setValue(Color.RED);
         errorLbl.setFont(dialogFont);
         
+        ObservableList<Algorithm> options =
+            FXCollections.observableArrayList(Algorithm.values());
+        comboBox = new ComboBox<>(options);
+        comboBox.getSelectionModel().selectFirst();
+        comboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Algorithm>(){
+            @Override
+            public void changed(ObservableValue<? extends Algorithm> observable, Algorithm oldValue, Algorithm newValue) {
+                updateBounds(newValue);
+                try{
+                    isInputValid(inputTextField.getText(), minInputValue, maxInputValue);
+                } catch(Exception e){
+                    errorLbl.setText("Invalid input! " + e.getMessage());
+                }
+            }
+            
+        });
+        
         inputTextField = new TextField(Arrays.toString(
-                generateRandomArray(10))
+                ArrayUtils.generateRandomArray(10, minInputValue, maxInputValue))
                 .replaceAll("\\s+", " ").replaceAll("\\[|\\]", ""));
         inputTextField.setPrefWidth(200);
         
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
             try{
-                isInputValid(inputTextField.getText());
+                isInputValid(inputTextField.getText(), minInputValue, maxInputValue);
             } catch(Exception e){
                 errorLbl.setText("Invalid input! " + e.getMessage());
                 event.consume(); //not valid
@@ -78,11 +107,6 @@ public class InputDialog extends Dialog<Results> {
             }*/
         });
         
-        ObservableList<Algorithm> options =
-            FXCollections.observableArrayList(Algorithm.values());
-        comboBox = new ComboBox<>(options);
-        comboBox.getSelectionModel().selectFirst();
-        
         VBox leftColumn = new VBox(inputLbl,choiseLbl);
         leftColumn.setSpacing(12);
         leftColumn.setPadding(new Insets(4,4,4,4));
@@ -90,10 +114,15 @@ public class InputDialog extends Dialog<Results> {
         rightColumn.setSpacing(5);
         VBox leftBottomBox = new VBox(errorLbl);
         leftBottomBox.setPadding(new Insets(4,4,4,4));
-        dialogPane.setContent(new VBox(8, new HBox(
+        
+        HBox selectionLine = new HBox(choiseLbl, comboBox);
+        
+        HBox inputLine = new HBox(inputLbl, inputTextField);
+        dialogPane.setContent(new VBox(selectionLine, inputLine, leftBottomBox));
+        /*dialogPane.setContent(new VBox(8, new HBox(
                 leftColumn, 
                 rightColumn), 
-                leftBottomBox));
+                leftBottomBox));*/
         
         setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
@@ -106,31 +135,42 @@ public class InputDialog extends Dialog<Results> {
         Platform.runLater(inputTextField::requestFocus);
     }
     
-    private boolean isInputValid(String inputText) throws Exception{
-        
+    private void updateBounds(Algorithm type){
+        switch(type){
+            case Counting:
+                this.minInputValue = ViewController.CNT_MIN;
+                this.maxInputValue = ViewController.CNT_MAX;
+                break;
+            case Radix:
+                this.minInputValue = ViewController.RDX_MIN;
+                this.maxInputValue = ViewController.RDX_MAX;
+                break;
+            default:
+                this.minInputValue = ViewController.MIN;
+                this.maxInputValue = ViewController.MAX;
+                break;
+        }
+    }
+    
+    private boolean isInputValid(String inputText, int min, int max) throws Exception{
+        Algorithm instance = comboBox.getValue();
         String[] intStr = inputText.split("(\\D+)");
         int [] input = new int[intStr.length];
-        int maxValue = 0;
-        int minValue = 6;
         for (int i = 0; i < intStr.length; i++) {
             try{
                 input[i] = Integer.parseInt(intStr[i]);
             } catch(Exception e){
                 throw new Exception("");
             }
-            if(input[i] > maxValue){
-                maxValue = input[i];
-            }
-            if(input[i] < minValue){
-                minValue = input[i];
-            }
         }
+        int minValue = ArrayUtils.getArrayMin(input);
+        int maxValue = ArrayUtils.getArrayMax(input);
         //return maxValue <= maxInputValue && minValue > 5 && intStr.length > 1;
-        if(maxValue > maxInputValue){
-            throw new Exception("Input value must be less than " + maxInputValue);
+        if(maxValue > max){
+            throw new Exception("Input value must be less than " + max);
         }
-        if(minValue < minInputValue){
-            throw new Exception("Input value must be bigger than " + minInputValue);
+        if(minValue < min){
+            throw new Exception("Input value must be bigger than " + min);
         }
         if(intStr.length <= 1){
             throw new Exception("Enter at least two numbers");
@@ -140,16 +180,6 @@ public class InputDialog extends Dialog<Results> {
         }
         return true;
     }
-    
-    private int[] generateRandomArray(int size){
-        Random randomValue = new Random();
-        int[] randomArray = new int[size];
-        for(int i = 0; i < size; i++){
-            randomArray[i] = randomValue.nextInt(maxInputValue - 6) + 6;
-        }
-        return randomArray;
-    }
-        
 }
 
 class Results {
