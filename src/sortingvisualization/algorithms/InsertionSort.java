@@ -22,7 +22,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class InsertionSort extends Sorting{
+public class InsertionSort extends Sorting implements AbstractAlgorithm {
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -34,6 +34,7 @@ public class InsertionSort extends Sorting{
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort()
     {
         List<Animation> sq = new ArrayList<>();
@@ -87,7 +88,7 @@ public class InsertionSort extends Sorting{
         return sq;
     }
     
-    private static void addPseudocode(Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines( 
                 "set first element as sorted",

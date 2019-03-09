@@ -21,7 +21,7 @@ import sortingvisualization.ViewController;
  *
  * @author mihae
  */
-public class RadixSort {
+public class RadixSort extends Sorting implements AbstractAlgorithm {
     
     List<BrickNode> list;
     Pseudocode pc;
@@ -33,6 +33,7 @@ public class RadixSort {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         
@@ -108,7 +109,7 @@ public class RadixSort {
             list.set(i, output[i]); 
     }
     
-    private static void addPseudocode(Pseudocode code) {
+    private void addPseudocode(Pseudocode code) {
         code.addLines(
                 "d is max number of digits",
                 "for i = 1 to d:",

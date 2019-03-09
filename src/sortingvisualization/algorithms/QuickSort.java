@@ -21,7 +21,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class QuickSort extends Sorting {
+public class QuickSort extends Sorting implements AbstractAlgorithm {
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -33,6 +33,7 @@ public class QuickSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         
@@ -130,7 +131,7 @@ public class QuickSort extends Sorting {
         return i+1; 
     }
     
-    private static void addPseudocode(Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines(
                 "QuickSort(arr, low, high):",

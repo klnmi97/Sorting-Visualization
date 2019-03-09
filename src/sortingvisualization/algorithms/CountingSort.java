@@ -20,7 +20,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class CountingSort extends Sorting {
+public class CountingSort extends Sorting implements AbstractAlgorithm {
     
     List<BrickNode> list;
     Pseudocode pc;
@@ -34,6 +34,7 @@ public class CountingSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         

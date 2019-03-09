@@ -12,7 +12,6 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -23,7 +22,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class MergeSort extends Sorting {
+public class MergeSort extends Sorting implements AbstractAlgorithm {
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -35,6 +34,7 @@ public class MergeSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort() {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
@@ -72,11 +72,9 @@ public class MergeSort extends Sorting {
                 helperLow.add(list.get(i));
             }
             
-            
             // Sort the left side of the array
             addAnimToList(sq, code.selectLine(3));
             sortRange(low, middle, sq, list, code, newHue - (newHue / 2), newHue);
-            
             
             List<BrickNode> helperHigh = new ArrayList<>();
             Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
@@ -84,11 +82,9 @@ public class MergeSort extends Sorting {
                 helperHigh.add(list.get(i));
             }
             
-            
             // Sort the right side of the array
             addAnimToList(sq, code.selectLine(4));
             sortRange(middle + 1, high, sq, list, code, newHue + (newHue / 2), newHue);
-            
             
             // Combine them both
             addAnimToList(sq, code.selectLine(5));

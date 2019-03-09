@@ -20,7 +20,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class BubbleSort extends Sorting {
+public class BubbleSort extends Sorting implements AbstractAlgorithm{
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -32,6 +32,7 @@ public class BubbleSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         ParallelTransition parallelTransition;
@@ -84,7 +85,7 @@ public class BubbleSort extends Sorting {
         return anim;
     } 
     
-    private static void addPseudocode(Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines("for i = 0 to sizeOfArray-1",
                 "  for j = 1 to lastUnsortedElement-1",

@@ -20,7 +20,7 @@ import sortingvisualization.ViewController;
  *
  * @author mihae
  */
-public class BucketSort extends Sorting {
+public class BucketSort extends Sorting implements AbstractAlgorithm{
     
     List<BrickNode> list;
     Pseudocode pc;
@@ -32,6 +32,7 @@ public class BucketSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         
@@ -73,7 +74,7 @@ public class BucketSort extends Sorting {
         for (int i = 0; i < buckets.size(); i++) {
             BrickNode[] bucketArray = new BrickNode[buckets.get(i).size()];
             bucketArray = buckets.get(i).toArray(bucketArray);
-            BucketSort.this.sort(bucketArray, anim, pc);
+            sortStable(bucketArray, anim, pc);
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
                 anim.add(AnimUtils.makeParallel(
@@ -89,7 +90,7 @@ public class BucketSort extends Sorting {
      /*
     * Local Insertion sort for sorting buckets
     */
-    private void sort(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
+    private void sortStable(BrickNode[] bucketArray, List<Animation> anim, Pseudocode pc) {
         int n = bucketArray.length;
         
         addAnimToList(anim, pc.selectLines(2, 3));

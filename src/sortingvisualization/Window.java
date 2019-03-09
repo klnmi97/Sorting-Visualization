@@ -24,6 +24,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -229,6 +230,7 @@ public class Window extends Application {
         
         menuItemNew = new MenuItem("Create sorting");
         menuItemNew.setOnAction(event->createNewSorting());
+        menuItemNew.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         menuFile.getItems().add(menuItemNew);
         
         menuBar = new MenuBar();

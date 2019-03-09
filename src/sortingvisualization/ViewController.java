@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Random;
 import javafx.animation.Animation;
 import javafx.application.Platform;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -25,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sortingvisualization.algorithms.AbstractAlgorithm;
 import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.BucketSort;
 import sortingvisualization.algorithms.CocktailShakerSort;
@@ -273,41 +272,36 @@ public class ViewController {
        
         List<BrickNode> list = initialize(instanceType, input);
         displayPane.getChildren().addAll(list);
+        
         return new Task<List<Animation>>() {
             @Override
             protected List<Animation> call() throws Exception {
-                List<Animation> anim = new ArrayList<>();
+                AbstractAlgorithm sorting;
+                List<Animation> anim;
                 switch(currentInstance){
                     case Bubble:
-                        BubbleSort bubble = new BubbleSort(list, infoPanel);
-                        anim = bubble.sort();
+                        sorting = new BubbleSort(list, infoPanel);
                         break;
                     case CocktailShaker:
-                        CocktailShakerSort shaker = new CocktailShakerSort(list, infoPanel);
-                        anim = shaker.sort();
+                        sorting = new CocktailShakerSort(list, infoPanel);
                         break;
                     case Insertion:
-                        InsertionSort insert = new InsertionSort(list, infoPanel);
-                        anim = insert.sort();
+                        sorting = new InsertionSort(list, infoPanel);
                         break;
                     case Selection:
-                        SelectionSort select = new SelectionSort(list, infoPanel);
-                        anim = select.sort();
+                        sorting = new SelectionSort(list, infoPanel);
                         break;
                     case Quick:
-                        QuickSort quick = new QuickSort(list, infoPanel);
-                        anim = quick.sort();
+                        sorting = new QuickSort(list, infoPanel);
                         break;
                     case Merge:
-                        MergeSort merge = new MergeSort(list, infoPanel);
-                        anim = merge.sort();
+                        sorting = new MergeSort(list, infoPanel);
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
                         List<Text> countLabels = createLabelsList(getMaximum(instanceType), 0, LEVEL2 + 30);
                         List<BrickNode> placeHolders = createGreyNodes(getMaximum(instanceType));
-                        CountingSort counting = new CountingSort(list, countLabels, infoPanel);
-                        anim = counting.sort();
+                        sorting = new CountingSort(list, countLabels, infoPanel);
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(0, placeHolders);
                             displayPane.getChildren().addAll(countLabels);
@@ -315,8 +309,7 @@ public class ViewController {
                         });
                         break;
                     case Bucket:
-                        BucketSort bucket = new BucketSort(list, infoPanel);
-                        anim = bucket.sort();
+                        sorting = new BucketSort(list, infoPanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) / 15 + 1;
                         List<FlowPane> buckets = createBucketList(bucketCount, ArrayUtils.getMinValue(list), 15); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
@@ -324,19 +317,17 @@ public class ViewController {
                         });
                         break;
                     case Radix:
-                        RadixSort radix = new RadixSort(list, infoPanel);
-                        anim = radix.sort();
+                        sorting = new RadixSort(list, infoPanel);
                         List<FlowPane> rbuckets = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
                         });
                         break;
                     default:
-                        //BubbleSort bs = new BubbleSort(list);
-                        //anim = bs.bubbleSort(list);
+                        sorting = new BubbleSort(list, infoPanel);
                         break;
                 }
-                
+                anim = sorting.sort();
                 return anim;
             }
         };

@@ -22,7 +22,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class SelectionSort extends Sorting{
+public class SelectionSort extends Sorting implements AbstractAlgorithm {
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -34,6 +34,7 @@ public class SelectionSort extends Sorting{
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         int arrayLength = list.size();

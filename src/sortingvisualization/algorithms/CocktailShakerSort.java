@@ -22,7 +22,7 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class CocktailShakerSort extends Sorting {
+public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
 
     List<BrickNode> list;
     Pseudocode pc;
@@ -34,6 +34,7 @@ public class CocktailShakerSort extends Sorting {
         addCodeToUI(infoPane);
     }
     
+    @Override
     public List<Animation> sort() {  
         List<Animation> sq = new ArrayList<>();
         ParallelTransition parallelTransition;
@@ -157,7 +158,7 @@ public class CocktailShakerSort extends Sorting {
         return sq;
     } 
     
-    private static void addPseudocode(Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines(
                 "swapped = true",

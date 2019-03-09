@@ -6,14 +6,12 @@
 package sortingvisualization;
 
 import java.util.Arrays;
-import java.util.Random;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,19 +20,20 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class InputDialog extends Dialog<Results> {
+    
+    private final int MAX_INPUT_LENGTH = 14;
     
     private Label inputLbl;
     private Label choiseLbl;
@@ -49,29 +48,27 @@ public class InputDialog extends Dialog<Results> {
         this.maxInputValue = max;
         this.minInputValue = min;
         setTitle("New sorting");
-        setHeaderText("Please, specify data!");
-        
-        //dialog.initOwner(scene.getWindow()); //TODO: restyle
+        setHeaderText("Enter data");
         
         DialogPane dialogPane = getDialogPane();
         Scene scene = dialogPane.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        
         scene.getStylesheets().add("dialog.css");
         dialogPane.getStyleClass().add("dialog");
-        
-        Stage stage = (Stage) scene.getWindow();
-        stage.setOpacity(0.8);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         final Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
         
-        Font dialogFont = Font.font("Times", FontWeight.BOLD, 12);
+        //Font dialogFont = Font.font("Times", FontWeight.BOLD, 12);
         inputLbl = new Label("Enter the sequence: ");
-        inputLbl.setFont(dialogFont);
+        //inputLbl.setFont(dialogFont);
         choiseLbl = new Label("Choose an Algorithm: ");
-        choiseLbl.setFont(dialogFont);
+        //choiseLbl.setFont(dialogFont);
         errorLbl = new Label("");
         errorLbl.textFillProperty().setValue(Color.RED);
-        errorLbl.setFont(dialogFont);
+        //errorLbl.setFont(dialogFont);
         
         ObservableList<Algorithm> options =
             FXCollections.observableArrayList(Algorithm.values());
@@ -100,29 +97,18 @@ public class InputDialog extends Dialog<Results> {
                 isInputValid(inputTextField.getText(), minInputValue, maxInputValue);
             } catch(Exception e){
                 errorLbl.setText("Invalid input! " + e.getMessage());
-                event.consume(); //not valid
+                event.consume();
             }
-            /*if (!isInputValid(inputTextField.getText())) {
-                
-            }*/
         });
         
-        VBox leftColumn = new VBox(inputLbl,choiseLbl);
-        leftColumn.setSpacing(12);
-        leftColumn.setPadding(new Insets(4,4,4,4));
-        VBox rightColumn = new VBox(inputTextField, comboBox);
-        rightColumn.setSpacing(5);
-        VBox leftBottomBox = new VBox(errorLbl);
-        leftBottomBox.setPadding(new Insets(4,4,4,4));
-        
-        HBox selectionLine = new HBox(choiseLbl, comboBox);
-        
-        HBox inputLine = new HBox(inputLbl, inputTextField);
-        dialogPane.setContent(new VBox(selectionLine, inputLine, leftBottomBox));
-        /*dialogPane.setContent(new VBox(8, new HBox(
-                leftColumn, 
-                rightColumn), 
-                leftBottomBox));*/
+        GridPane grid = new GridPane();
+        grid.setVgap(5);
+        grid.add(choiseLbl, 1, 1);
+        grid.add(comboBox, 2, 1);
+        grid.add(inputLbl, 1, 2);
+        grid.add(inputTextField, 2, 2);
+        grid.add(errorLbl, 1, 3, 2, 1);
+        dialogPane.setContent(grid);
         
         setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
@@ -175,8 +161,8 @@ public class InputDialog extends Dialog<Results> {
         if(intStr.length <= 1){
             throw new Exception("Enter at least two numbers");
         } 
-        else if(intStr.length > 14){ //14 due to sidepanel & min size
-            throw new Exception("Too much data");
+        else if(intStr.length > MAX_INPUT_LENGTH){ //14 due to sidepanel & min size
+            throw new Exception("Maximum count of numbers is " + MAX_INPUT_LENGTH );
         }
         return true;
     }
