@@ -36,4 +36,9 @@ public enum Algorithm {
     
     public int getIndex(){return index;}
     public String getName(){return name;}
+    
+    @Override
+    public String toString(){
+        return this.getName();
+    }
 }

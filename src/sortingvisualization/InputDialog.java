@@ -23,8 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -139,9 +137,14 @@ public class InputDialog extends Dialog<Results> {
     }
     
     private boolean isInputValid(String inputText, int min, int max) throws Exception{
-        Algorithm instance = comboBox.getValue();
+        
+        if(inputText.isEmpty() || !inputText.matches(".*\\d.*")){
+            throw new RuntimeException("Input cannot be empty");
+        }
+        
         String[] intStr = inputText.split("(\\D+)");
         int [] input = new int[intStr.length];
+        
         for (int i = 0; i < intStr.length; i++) {
             try{
                 input[i] = Integer.parseInt(intStr[i]);
@@ -149,9 +152,10 @@ public class InputDialog extends Dialog<Results> {
                 throw new Exception("");
             }
         }
+        
         int minValue = ArrayUtils.getArrayMin(input);
         int maxValue = ArrayUtils.getArrayMax(input);
-        //return maxValue <= maxInputValue && minValue > 5 && intStr.length > 1;
+        
         if(maxValue > max){
             throw new Exception("Input value must be less than " + max);
         }
