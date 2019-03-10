@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
@@ -18,25 +19,24 @@ import sortingvisualization.ViewController;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
-public class RadixSort {
-    public static List<Animation> radixSort(List<BrickNode> list, Pane codePane){
+public class RadixSort extends Sorting implements AbstractAlgorithm {
+    
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public RadixSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    @Override
+    public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
-        
-        //TODO: move to parent class
-        // Determine minimum and maximum values
-        int minValue = list.get(0).getValue();
-        int maxValue = list.get(0).getValue();
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getValue() < minValue) {
-                minValue = list.get(i).getValue();
-            } else if (list.get(i).getValue() > maxValue) {
-                maxValue = list.get(i).getValue();
-            }
-        }
+        int maxValue = getMaxValue(list);
         
         for (int exp = 1, i = 0; maxValue/exp > 0; exp *= 10, i++){ 
             anim.add(AnimUtils.makeParallel(
@@ -50,12 +50,6 @@ public class RadixSort {
         return anim;
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code) {
-        code.addLines(codePane, 
-                "d is max number of digits",
-                "for i = 1 to d:",
-                "  do Counting(Stable) Sort for i-th digit");
-    }
     
     static void countSort(List<BrickNode> list, int n, int exp, List<Animation> anim){ 
         //int output[] = new int[n]; // output array 
@@ -102,5 +96,18 @@ public class RadixSort {
         // contains sorted numbers according to curent digit 
         for (i = 0; i < n; i++) 
             list.set(i, output[i]); 
+    }
+    
+    private void addPseudocode(Pseudocode code) {
+        code.addLines(
+                "d is max number of digits",
+                "for i = 1 to d:",
+                "  do Counting(Stable) Sort for i-th digit");
+    }
+    
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }

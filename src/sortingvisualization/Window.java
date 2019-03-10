@@ -6,14 +6,11 @@
 package sortingvisualization;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
 import javafx.application.Application;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,6 +24,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -37,7 +35,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -47,7 +44,7 @@ import javafx.stage.Stage;
 public class Window extends Application {
     
     private int max = 100;
-    private int min = (int)(max * 0.05);
+    private int min = 7;
     
     private MenuBar menuBar;
     Menu menuFile;
@@ -82,8 +79,9 @@ public class Window extends Application {
     VBox sidePanel;
     FlowPane codePane;
     
-    Data data; 
-    ViewController controller;
+    BindingData buttonBindings;
+    ViewController creator;
+    AnimationController controller;
     
     Scene scene;
     public Window(){}
@@ -93,8 +91,8 @@ public class Window extends Application {
         displayPane = new StackPane();
         codePane = new FlowPane();
         codePane.setPadding(new Insets(30, 10, 30, 10));
-        data = new Data();
-        controller = new ViewController(data, displayPane, codePane);
+        creator = new ViewController(displayPane, codePane);
+        controller = new AnimationController();
         //menu
         initializeMenu(primaryStage);
         
@@ -232,6 +230,7 @@ public class Window extends Application {
         
         menuItemNew = new MenuItem("Create sorting");
         menuItemNew.setOnAction(event->createNewSorting());
+        menuItemNew.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         menuFile.getItems().add(menuItemNew);
         
         menuBar = new MenuBar();
@@ -291,19 +290,22 @@ public class Window extends Application {
         algorithmButtonBox.setMinHeight(40);
     }
     
-    
-    //03.09: fixed play
     private void initialize(Algorithm type, int[] input){
-        controller.initialize(type, input);
-        initButtonBinding();
+        //TODO: create loading
         headerLbl.setText(type.getName());
+        Task<List<Animation>> sortingTask = creator.sort(type, input);
+        sortingTask.setOnSucceeded(e->{
+            BindingData bindings = controller.setupInstance(sortingTask.getValue());
+            initButtonBinding(bindings);
+        });
+        sortingTask.run();
     }
     
-    private void initButtonBinding(){
-        stepForthBtn.disableProperty().bind(controller.getStepForthBinding());
-        stepBackBtn.disableProperty().bind(controller.getStepBackBinding());
-        playBtn.disableProperty().bind(controller.getPlayBinding());
-        speedSlider.valueProperty().addListener(controller.getSpeedListener());
+    private void initButtonBinding(BindingData bindings){
+        stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
+        stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
+        playBtn.disableProperty().bind(bindings.getPlayBinding());
+        speedSlider.valueProperty().addListener(bindings.getSpeedListener());
     }
     
     /*
@@ -322,14 +324,7 @@ public class Window extends Application {
             for (int i = 0; i < intStr.length; i++) {
                 customInput[i] = Integer.parseInt(intStr[i]);
             }
-            switch(result.get().algoritm){
-                case Bubble: case CocktailShaker: case Insertion: case Selection:
-                case Quick: case Merge:
-                    initialize(result.get().algoritm, customInput);
-                    break;
-                default:
-                    initialize(Algorithm.Bubble, customInput);
-            } 
+            initialize(result.get().algoritm, customInput);
         }
     }
     

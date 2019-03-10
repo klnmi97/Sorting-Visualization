@@ -10,8 +10,8 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
@@ -22,18 +22,28 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class MergeSort {
+public class MergeSort extends Sorting implements AbstractAlgorithm {
 
-    public static List<Animation> mergeSort(List<BrickNode> list, Pane codePane) {
+    List<BrickNode> list;
+    Pseudocode pc;
+    
+    public MergeSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    @Override
+    public List<Animation> sort() {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
+        
         sortRange(0, number - 1, anim, list, pc, 150, -1);
         return anim;
     }
 
-    private static void sortRange(int low, int high, List<Animation> sq, 
+    private void sortRange(int low, int high, List<Animation> sq, 
             List<BrickNode> list, Pseudocode code, int newHue, int currentHue) {
         Color original;
         if(currentHue == -1){
@@ -62,11 +72,9 @@ public class MergeSort {
                 helperLow.add(list.get(i));
             }
             
-            
             // Sort the left side of the array
             addAnimToList(sq, code.selectLine(3));
             sortRange(low, middle, sq, list, code, newHue - (newHue / 2), newHue);
-            
             
             List<BrickNode> helperHigh = new ArrayList<>();
             Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
@@ -74,11 +82,9 @@ public class MergeSort {
                 helperHigh.add(list.get(i));
             }
             
-            
             // Sort the right side of the array
             addAnimToList(sq, code.selectLine(4));
             sortRange(middle + 1, high, sq, list, code, newHue + (newHue / 2), newHue);
-            
             
             // Combine them both
             addAnimToList(sq, code.selectLine(5));
@@ -100,7 +106,7 @@ public class MergeSort {
         }
     }
 
-    private static void merge(int low, int middle, int high, List<BrickNode> list, 
+    private void merge(int low, int middle, int high, List<BrickNode> list, 
             List<Animation> sq, Pseudocode code) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
         // Copy both parts into the helper array
@@ -168,9 +174,9 @@ public class MergeSort {
                 code.selectLine(16)));
     }
     
-    private static void addPseudocode(Pane codePane, Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, 
+        code.addLines(
                 "MergeSort(arr, left, right):",
                 "  if left < right",
                 "    mid = (left + right) / 2",
@@ -190,11 +196,9 @@ public class MergeSort {
                 "  copy elements back to original array");
     }
     
-    private static void addAnimToList(List<Animation> animList, Animation... anims){
-        for(Animation anim : anims){
-            if(anim != null){
-                animList.add(anim);
-            }
-        }
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }

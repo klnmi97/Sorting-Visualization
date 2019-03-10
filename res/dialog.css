@@ -1,0 +1,40 @@
+
+.dialog{
+    -fx-font-family: "Arial";
+    -fx-graphic:url(/graphics.png);
+}
+
+.dialog:header *.header-panel{
+    -fx-background-color: black;
+}
+
+.dialog:header *.header-panel *.label{
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px;
+}
+
+.button{
+    -fx-background-color: #000000;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 15px;
+}
+
+.button:pressed{
+    -fx-background-color: 
+        #ffffff;
+    -fx-text-fill: black;
+}
+
+.button:selected{
+    -fx-background-color: 
+        #ffffff;
+    -fx-text-fill: black;
+}
+
+.button:hover{
+    -fx-text-fill: red;
+}

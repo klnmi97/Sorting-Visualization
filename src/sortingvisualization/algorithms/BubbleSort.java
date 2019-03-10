@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import sortingvisualization.AnimUtils;
 import sortingvisualization.BrickNode;
 import sortingvisualization.Pseudocode;
@@ -20,17 +20,25 @@ import sortingvisualization.ViewController;
  *
  * @author Mykhailo Klunko
  */
-public class BubbleSort {
+public class BubbleSort extends Sorting implements AbstractAlgorithm{
 
+    List<BrickNode> list;
+    Pseudocode pc;
     
-    public static List<Animation> bubbleSort(List<BrickNode> list, Pane codePane) { 
+    public BubbleSort(List<BrickNode> list, Pane infoPane){
+        this.list = list;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    @Override
+    public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         ParallelTransition parallelTransition;
         int n = list.size();  
         BrickNode temp;
         
-        Pseudocode pc = new Pseudocode();
-        addPseudocode(codePane, pc);
         addAnimToList(anim, pc.selectLine(0));
         for(int i=0; i < n; i++){  
             parallelTransition = new ParallelTransition();
@@ -77,19 +85,17 @@ public class BubbleSort {
         return anim;
     } 
     
-    private static void addPseudocode(Pane codePane, Pseudocode code){
+    private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines(codePane, "for i = 0 to sizeOfArray-1",
+        code.addLines("for i = 0 to sizeOfArray-1",
                 "  for j = 1 to lastUnsortedElement-1",
                 "    if leftElement > rightElement",
                 "      swap(leftElement, rightElement)");
     }
     
-    private static void addAnimToList(List<Animation> animList, Animation... anims){
-        for(Animation anim : anims){
-            if(anim != null){
-                animList.add(anim);
-            }
-        }
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
     }
 }
