@@ -310,15 +310,17 @@ public class ViewController {
                         break;
                     case Bucket:
                         sorting = new BucketSort(list, infoPanel);
-                        int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) / 15 + 1;
-                        List<FlowPane> buckets = createBucketList(bucketCount, ArrayUtils.getMinValue(list), 15); //TODO: get rid of magic numbers (count, min, increment)
+                        int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
+                                / BucketSort.BUCKET_SIZE + 1;
+                        List<FlowPane> buckets = createBucketList(
+                                bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(buckets);
                         });
                         break;
                     case Radix:
                         sorting = new RadixSort(list, infoPanel);
-                        List<FlowPane> rbuckets = createBucketList(10, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
                         });

@@ -39,7 +39,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
         List<Animation> anim = new ArrayList<>();
         
          // array of 0's at indices 0...maxValue
-        int[] count = new int[10]; //change 10 to take max value for this type
+        int[] count = new int[ViewController.CNT_MAX];
         for(int i : count){
             count[i] = 0;
         }

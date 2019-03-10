@@ -19,7 +19,7 @@ import sortingvisualization.ViewController;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class RadixSort extends Sorting implements AbstractAlgorithm {
     
@@ -36,18 +36,7 @@ public class RadixSort extends Sorting implements AbstractAlgorithm {
     @Override
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
-        
-        //TODO: move to parent class
-        // Determine minimum and maximum values
-        int minValue = list.get(0).getValue();
-        int maxValue = list.get(0).getValue();
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getValue() < minValue) {
-                minValue = list.get(i).getValue();
-            } else if (list.get(i).getValue() > maxValue) {
-                maxValue = list.get(i).getValue();
-            }
-        }
+        int maxValue = getMaxValue(list);
         
         for (int exp = 1, i = 0; maxValue/exp > 0; exp *= 10, i++){ 
             anim.add(AnimUtils.makeParallel(

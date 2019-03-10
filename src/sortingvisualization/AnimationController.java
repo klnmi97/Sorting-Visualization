@@ -67,6 +67,10 @@ public class AnimationController {
             anim.play();}
     }
     
+    /**
+     * Stops current animation from list got by 
+     * {@link #setupInstance(List<Animation>)}
+     */
     public void pause(){
         transitions.stream()
                 .filter(anim -> anim.getStatus()==Animation.Status.RUNNING)
@@ -76,6 +80,10 @@ public class AnimationController {
                 }));
     }
     
+    /**
+     * Plays previous step from list got by 
+     * {@link #setupInstance(List<Animation>)}
+     */
     public void goStepBack() {
         if(!stepBackBinding.get()){
             int index = nextTransitionIndex.get()-1;
@@ -86,6 +94,10 @@ public class AnimationController {
         }
     }
     
+    /**
+     * Play next step from list got by 
+     * {@link #setupInstance(List<Animation>)}
+     */
     public void goStepForth() {
         if(!stepForthBinding.get()){
             int index = nextTransitionIndex.get();

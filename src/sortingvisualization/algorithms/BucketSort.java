@@ -18,12 +18,17 @@ import sortingvisualization.ViewController;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class BucketSort extends Sorting implements AbstractAlgorithm{
     
-    List<BrickNode> list;
-    Pseudocode pc;
+    /**
+     * Maximum capacity of one bucket
+     */
+    public static final int BUCKET_SIZE = 15;
+    
+    private List<BrickNode> list;
+    private Pseudocode pc;
     
     public BucketSort(List<BrickNode> list, Pane infoPane){
         this.list = list;
@@ -37,28 +42,20 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
         List<Animation> anim = new ArrayList<>();
         
         // Determine minimum and maximum values
-        int minValue = list.get(0).getValue();
-        int maxValue = list.get(0).getValue();
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getValue() < minValue) {
-                minValue = list.get(i).getValue();
-            } else if (list.get(i).getValue() > maxValue) {
-                maxValue = list.get(i).getValue();
-            }
-        }
+        int minValue = getMinValue(list);
+        int maxValue = getMaxValue(list);
         
         // Initialise buckets
-        int bucketSize = 15; //TODO: create global bucket size
-        int bucketCount = (maxValue - minValue) / bucketSize + 1;
-        List<List<BrickNode>> buckets = new ArrayList<List<BrickNode>>(bucketCount);
+        int bucketCount = (maxValue - minValue) / BUCKET_SIZE + 1;
+        List<List<BrickNode>> buckets = new ArrayList<>(bucketCount);
         for (int i = 0; i < bucketCount; i++) {
-            buckets.add(new ArrayList<BrickNode>());
+            buckets.add(new ArrayList<>());
         }
         int bucketsLIndent = (int)(((double)bucketCount / 2) * -ViewController.SPACING);
         
         // Distribute input array values into buckets
         for (int i = 0; i < list.size(); i++) {
-            int selectedBucket = (list.get(i).getValue() - minValue) / bucketSize;
+            int selectedBucket = (list.get(i).getValue() - minValue) / BUCKET_SIZE;
             buckets.get(selectedBucket).add(list.get(i));
             int nextBucketVal = buckets.get(selectedBucket).size() - 1;
             
