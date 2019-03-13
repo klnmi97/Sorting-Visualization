@@ -5,12 +5,90 @@
  */
 package sortingvisualization.algorithms;
 
+import java.util.List;
+import javafx.animation.Animation;
+import javafx.application.Platform;
+import javafx.scene.layout.Pane;
+import sortingvisualization.Pseudocode;
+import sortingvisualization.Tree;
+
 
 /**
  *
  * @author Mykhailo Klunko
  */
-public class HeapSort {
+public class HeapSort extends Sorting implements AbstractAlgorithm {
 
-    //TODO: implement new visualization
+    Tree binaryTree;
+    Pseudocode pc;
+    
+    public HeapSort(Tree binaryHeap, Pane infoPane){
+        this.binaryTree = binaryHeap;
+        pc = new Pseudocode();
+        addPseudocode(pc);
+        addCodeToUI(infoPane);
+    }
+    
+    public void sort(int arr[]) 
+    { 
+        int n = arr.length; 
+  
+        // Build heap (rearrange array) 
+        for (int i = n / 2 - 1; i >= 0; i--) 
+            heapify(arr, n, i); 
+  
+        // One by one extract an element from heap 
+        for (int i=n-1; i>=0; i--) 
+        { 
+            // Move current root to end 
+            int temp = arr[0]; 
+            arr[0] = arr[i]; 
+            arr[i] = temp; 
+  
+            // call max heapify on the reduced heap 
+            heapify(arr, i, 0); 
+        } 
+    }
+    
+    void heapify(int arr[], int n, int i) 
+    { 
+        int largest = i; // Initialize largest as root 
+        int l = 2*i + 1; // left = 2*i + 1 
+        int r = 2*i + 2; // right = 2*i + 2 
+  
+        // If left child is larger than root 
+        if (l < n && arr[l] > arr[largest]) 
+            largest = l; 
+  
+        // If right child is larger than largest so far 
+        if (r < n && arr[r] > arr[largest]) 
+            largest = r; 
+  
+        // If largest is not root 
+        if (largest != i) 
+        { 
+            int swap = arr[i]; 
+            arr[i] = arr[largest]; 
+            arr[largest] = swap; 
+  
+            // Recursively heapify the affected sub-tree 
+            heapify(arr, n, largest); 
+        } 
+    }
+
+    private void addPseudocode(Pseudocode code){
+        //TODO: improve pseudocode
+        code.addLines("some pseudocode here");
+    }
+    
+    @Override
+    public List<Animation> sort() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void addCodeToUI(Pane codePane){
+        Platform.runLater(() -> {
+            codePane.getChildren().addAll(pc.getCode());
+        });
+    }
 }
