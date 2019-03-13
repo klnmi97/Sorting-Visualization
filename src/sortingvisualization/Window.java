@@ -285,6 +285,11 @@ public class Window extends Application {
         alg8.getStyleClass().add("button");
         alg8.setOnAction(event->initialize(Algorithm.Radix, null));
         
+        alg8 = new Button("HP");
+        alg8.setTooltip(new Tooltip("Heap Sort"));
+        alg8.getStyleClass().add("button");
+        alg8.setOnAction(event->initialize(Algorithm.Heap, null));
+        
         algorithmButtonBox.getChildren().addAll(algLbl, alg0, alg1, alg2, alg3, alg4, alg5, alg6, alg7, alg8);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);

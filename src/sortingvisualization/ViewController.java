@@ -325,6 +325,8 @@ public class ViewController {
                             displayPane.getChildren().addAll(rbuckets);
                         });
                         break;
+                    case Heap:
+                        //create heap class
                     default:
                         sorting = new BubbleSort(list, infoPanel);
                         break;
