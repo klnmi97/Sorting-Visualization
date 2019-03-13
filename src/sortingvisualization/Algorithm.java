@@ -11,31 +11,34 @@ package sortingvisualization;
  */
 
 public enum Algorithm {
-    Bubble          (0, "Bubble Sort"), 
-    CocktailShaker  (1, "Cocktail-Shaker Sort"), 
-    Insertion       (2, "Insertion Sort"), 
-    Selection       (3, "Selection Sort"), 
-    Merge           (4, "Merge Sort"), 
-    Quick           (5, "Quick Sort"), 
-    Counting        (6, "Counting Sort"),
-    Bucket          (7, "Bucket Sort"),
-    Radix           (8, "Radix Sort");
+    Bubble          (0, "Bubble Sort", "BUBL"), 
+    CocktailShaker  (1, "Cocktail-Shaker Sort", "CSh"), 
+    Insertion       (2, "Insertion Sort", "INS"), 
+    Selection       (3, "Selection Sort", "SEL"), 
+    Merge           (4, "Merge Sort", "MRG"), 
+    Quick           (5, "Quick Sort", "QUI"), 
+    Counting        (6, "Counting Sort", "COU"),
+    Bucket          (7, "Bucket Sort", "BCKT"),
+    Radix           (8, "Radix Sort", "RDX");
     //Heap            (9);
     
     private int index;
     private String name;
+    private String shortName;
     
     Algorithm(int index){  
         this.index = index;
     }
     
-    Algorithm(int index, String name){
+    Algorithm(int index, String name, String shortName){
         this.index = index;
         this.name = name;
+        this.shortName = shortName;
     }
     
     public int getIndex(){return index;}
     public String getName(){return name;}
+    public String getShortName(){return shortName;}
     
     @Override
     public String toString(){

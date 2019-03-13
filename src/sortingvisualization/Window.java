@@ -58,16 +58,6 @@ public class Window extends Application {
     Label controlLbl;
     Label headerLbl;
     
-    Button alg0;
-    Button alg1;
-    Button alg2;
-    Button alg3;
-    Button alg4;
-    Button alg5;
-    Button alg6;
-    Button alg7;
-    Button alg8;
-    Button alg9;
     Button playBtn;
     Button pauseBtn;
     Button stepBackBtn;
@@ -238,54 +228,16 @@ public class Window extends Application {
     }
     
     private void initializeUpperPanel(){
-        algorithmButtonBox = new HBox();
+        algorithmButtonBox = new HBox(algLbl);
         
-        alg0 = new Button("BUBL");
-        alg0.setTooltip(new Tooltip("Bubble Sort"));
-        alg0.getStyleClass().add("button");
-        alg0.setOnAction(event->initialize(Algorithm.Bubble, null));
+        for(Algorithm type : Algorithm.values()){
+            Button aButton = new Button(type.getShortName());
+            aButton.setTooltip(new Tooltip(type.getName()));
+            aButton.getStyleClass().add("button");
+            aButton.setOnAction(action -> initialize(type, null));
+            algorithmButtonBox.getChildren().add(aButton);
+        }
         
-        alg1 = new Button("C-SH");
-        alg1.setTooltip(new Tooltip("CocktailShaker Sort"));
-        alg1.getStyleClass().add("button");
-        alg1.setOnAction(event->initialize(Algorithm.CocktailShaker, null));
-        
-        alg2 = new Button("INS");
-        alg2.setTooltip(new Tooltip("Insertion Sort"));
-        alg2.getStyleClass().add("button");
-        alg2.setOnAction(event->initialize(Algorithm.Insertion, null));
-        
-        alg3 = new Button("SEL");
-        alg3.setTooltip(new Tooltip("Selection Sort"));
-        alg3.getStyleClass().add("button");
-        alg3.setOnAction(event->initialize(Algorithm.Selection, null));
-        
-        alg4 = new Button("QUI");
-        alg4.setTooltip(new Tooltip("Quick Sort"));
-        alg4.getStyleClass().add("button");
-        alg4.setOnAction(event->initialize(Algorithm.Quick, null));
-        
-        alg5 = new Button("MRG");
-        alg5.setTooltip(new Tooltip("Merge Sort"));
-        alg5.getStyleClass().add("button");
-        alg5.setOnAction(event->initialize(Algorithm.Merge, null));
-        
-        alg6 = new Button("COU");
-        alg6.setTooltip(new Tooltip("Counting Sort"));
-        alg6.getStyleClass().add("button");
-        alg6.setOnAction(event->initialize(Algorithm.Counting, null));
-        
-        alg7 = new Button("BCKT");
-        alg7.setTooltip(new Tooltip("Bucket Sort"));
-        alg7.getStyleClass().add("button");
-        alg7.setOnAction(event->initialize(Algorithm.Bucket, null));
-        
-        alg8 = new Button("RDX");
-        alg8.setTooltip(new Tooltip("Radix Sort"));
-        alg8.getStyleClass().add("button");
-        alg8.setOnAction(event->initialize(Algorithm.Radix, null));
-        
-        algorithmButtonBox.getChildren().addAll(algLbl, alg0, alg1, alg2, alg3, alg4, alg5, alg6, alg7, alg8);
         algorithmButtonBox.setStyle("-fx-background-color: black");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -327,14 +279,4 @@ public class Window extends Application {
             initialize(result.get().algoritm, customInput);
         }
     }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    /*public static void main(String[] args) {
-        launch(args);
-    }*/
-    
-    
 }
