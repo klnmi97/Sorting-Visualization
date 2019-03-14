@@ -5,6 +5,7 @@
  */
 package sortingvisualization.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.application.Platform;
@@ -83,7 +84,7 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
     
     @Override
     public List<Animation> sort() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new ArrayList<Animation>() {};
     }
     
     private void addCodeToUI(Pane codePane){

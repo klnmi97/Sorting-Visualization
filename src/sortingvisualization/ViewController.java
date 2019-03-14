@@ -28,6 +28,7 @@ import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.BucketSort;
 import sortingvisualization.algorithms.CocktailShakerSort;
 import sortingvisualization.algorithms.CountingSort;
+import sortingvisualization.algorithms.HeapSort;
 import sortingvisualization.algorithms.InsertionSort;
 import sortingvisualization.algorithms.MergeSort;
 import sortingvisualization.algorithms.QuickSort;
@@ -326,7 +327,8 @@ public class ViewController {
                         });
                         break;
                     case Heap:
-                        //create heap class
+                        sorting = new HeapSort(new Tree(), infoPanel);
+                        break;
                     default:
                         sorting = new BubbleSort(list, infoPanel);
                         break;
