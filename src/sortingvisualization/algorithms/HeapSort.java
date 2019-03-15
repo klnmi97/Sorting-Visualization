@@ -11,7 +11,7 @@ import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import sortingvisualization.Pseudocode;
-import sortingvisualization.Tree;
+import NodeCreation.Tree;
 
 
 /**
@@ -24,7 +24,7 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
     Pseudocode pc;
     
     public HeapSort(Tree binaryHeap, Pane infoPane){
-        this.binaryTree = binaryHeap;
+        //this.binaryTree = binaryHeap;
         pc = new Pseudocode();
         addPseudocode(pc);
         addCodeToUI(infoPane);

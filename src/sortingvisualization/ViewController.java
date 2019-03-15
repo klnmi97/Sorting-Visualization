@@ -4,6 +4,9 @@
  */
 package sortingvisualization;
 
+import NodeCreation.Tree;
+import NodeCreation.DynamicNodes;
+import NodeCreation.FixedNodes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,6 +45,7 @@ import sortingvisualization.algorithms.SelectionSort;
 public class ViewController {
     
     //TODO: create new metrics
+    public static final int DEFAULT_ITEM_COUNT = 12;
     public static int N_VALUES = 12;
     public static final int SPACING = 60;
     //counting from center as 0; half of (spacing * number of elements)
@@ -49,7 +53,7 @@ public class ViewController {
     public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
     public static final int LEVEL1 = -350;
     public static final int LEVEL2 = 250 + LEVEL1;
-    private final Font font = Font.font("Helvetica", 20);
+    public static final Font font = Font.font("Helvetica", 20);
 
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
@@ -115,37 +119,6 @@ public class ViewController {
         }
     }
     
-    //TODO: refactor!
-    private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
-        Rectangle rectangle = new Rectangle(50, 30);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setFill(Color.WHITE);
-        //TODO: test on different screens!
-        //rectangle.widthProperty().set(Screen.getPrimary().getVisualBounds().getWidth() * 0.033);
-        Text text = new Text(String.valueOf(value));
-        text.setFont(font);
-        BrickNode node = new BrickNode(value);
-        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        HBox numberBox = new HBox();
-        String valueToSet = String.valueOf(value);
-        int index = valueToSet.toCharArray().length - 1;
-        for(char ch: valueToSet.toCharArray()){
-            Text digit = new Text(Character.toString(ch));
-            digit.setUserData(String.valueOf(index));
-            digit.setFont(font);
-            numberBox.getChildren().add(digit);
-            numberBox.setAlignment(Pos.BOTTOM_CENTER);
-            node.getDigits().add(digit);
-            index--;
-        }
-        node.getChildren().addAll(rectangle, numberBox);
-        node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(SPACING * i + leftIndent);
-        node.setTranslateY(topIndent);
-        node.setShape(rectangle);
-        return node;
-    }
-    
     private BrickNode createCustomNode(int i, int value, int currentMax, 
             Color color, double leftIndent, double topIndent) {
         int num = value;
@@ -166,10 +139,6 @@ public class ViewController {
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
-    }
-    
-    private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
-        return createCustomNode(i, value, currentMax, DEFAULT, leftIndent, LEVEL1);
     }
     
     private List<BrickNode> createGreyNodes(int count){
@@ -226,35 +195,40 @@ public class ViewController {
         return buckets;
     }
      
+    private int[] loadArray(Algorithm type, int[] input){
+        int[] outputArray;
+        int currentMin = getMinimum(type);
+        int currentMax = getMaximum(type);
+        
+        if(input != null){
+            N_VALUES = input.length;
+            outputArray = input;
+        } else {
+            N_VALUES = DEFAULT_ITEM_COUNT; //TODO: add dependency on screen size
+            outputArray = generateRandomArray(N_VALUES, currentMin, currentMax - 1);
+        }
+        
+        return outputArray;
+    }
+    
     private void initValues(){
         displayPane.getChildren().clear();
         infoPanel.getChildren().clear();
     }
     
-    private List<BrickNode> initialize(Algorithm instanceType, int[] input){
-        int[] generatedArray;
-        Random random = new Random();
-        List<BrickNode> list = new ArrayList<>();
-        currentInstance = instanceType;
+    private int[] initialize(Algorithm instanceType, int[] input){
+        this.currentInstance = instanceType;
         initValues();
         
-        int leftIndent;
-        int currentMin = getMinimum(instanceType);
-        int currentMax = getMaximum(instanceType);
+        //int currentMax = getMaximum(instanceType);
+        int[] generatedArray = loadArray(instanceType, input);
+        int size = generatedArray.length;
         
-        if(input != null){
-            N_VALUES = input.length;
-            generatedArray = input;
-        } else {
-            N_VALUES = 12; //TODO: add dependency on screen size
-            generatedArray = generateRandomArray(N_VALUES, currentMin, currentMax - 1);
-        }
+        this.LEFT_INDENT = countIndent(size);
+        //int leftIndent = countIndent(size);
         
-        this.currentArray = generatedArray;
-        LEFT_INDENT = countIndent(N_VALUES);
-        leftIndent = countIndent(N_VALUES);
-        
-        for(int i = 0; i < N_VALUES; i++){
+        /*List<BrickNode> list = new ArrayList<>();
+        for(int i = 0; i < size; i++){
             BrickNode node;
             switch (instanceType){
                 case Bucket:
@@ -265,43 +239,54 @@ public class ViewController {
                     node = createValueNode(i, generatedArray[i], currentMax, leftIndent);
             }
             list.add(node);
-        }
-        return list;
+        }*/
+        return generatedArray;
     }
     
     public Task<List<Animation>> sort(Algorithm instanceType, int[] input){
        
-        List<BrickNode> list = initialize(instanceType, input);
-        displayPane.getChildren().addAll(list);
+        int[] generatedArray = initialize(instanceType, input);
+        int currentMax = getMaximum(instanceType);
         
         return new Task<List<Animation>>() {
             @Override
             protected List<Animation> call() throws Exception {
+                DynamicNodes dNodes = new DynamicNodes();
+                FixedNodes fNodes = new FixedNodes();
+                Tree tNodes = new Tree();
                 AbstractAlgorithm sorting;
+                List<BrickNode> list;
                 List<Animation> anim;
                 switch(currentInstance){
                     case Bubble:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new BubbleSort(list, infoPanel);
                         break;
                     case CocktailShaker:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new CocktailShakerSort(list, infoPanel);
                         break;
                     case Insertion:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new InsertionSort(list, infoPanel);
                         break;
                     case Selection:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new SelectionSort(list, infoPanel);
                         break;
                     case Quick:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new QuickSort(list, infoPanel);
                         break;
                     case Merge:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new MergeSort(list, infoPanel);
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
                         List<Text> countLabels = createLabelsList(getMaximum(instanceType), 0, LEVEL2 + 30);
                         List<BrickNode> placeHolders = createGreyNodes(getMaximum(instanceType));
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new CountingSort(list, countLabels, infoPanel);
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(0, placeHolders);
@@ -310,6 +295,7 @@ public class ViewController {
                         });
                         break;
                     case Bucket:
+                        list = fNodes.createList(generatedArray, currentMax);
                         sorting = new BucketSort(list, infoPanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
                                 / BucketSort.BUCKET_SIZE + 1;
@@ -320,6 +306,7 @@ public class ViewController {
                         });
                         break;
                     case Radix:
+                        list = fNodes.createList(generatedArray, currentMax);
                         sorting = new RadixSort(list, infoPanel);
                         List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
@@ -327,16 +314,20 @@ public class ViewController {
                         });
                         break;
                     case Heap:
-                        sorting = new HeapSort(new Tree(), infoPanel);
+                        list = tNodes.createList(generatedArray, currentMax);
+                        sorting = new HeapSort(tNodes, infoPanel);
                         break;
                     default:
+                        list = dNodes.createList(generatedArray, currentMax);
                         sorting = new BubbleSort(list, infoPanel);
                         break;
                 }
                 anim = sorting.sort();
+                Platform.runLater(() -> {
+                            displayPane.getChildren().addAll(list);
+                        });
                 return anim;
             }
         };
     }
-    
 }

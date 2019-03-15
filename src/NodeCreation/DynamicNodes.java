@@ -3,40 +3,41 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sortingvisualization;
+package NodeCreation;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import sortingvisualization.BrickNode;
+import sortingvisualization.ViewController;
 
 /**
  *
- * @author Mykhailo Klunko
+ * @author mihae
  */
-public class Tree {
+public class DynamicNodes {
     
-    List<BrickNode> treeNodes;
+    List<BrickNode> list;
     
-    private int countSpacing(int nodeLevel){
-        return  (int) Math.pow(2, nodeLevel);
+    public DynamicNodes(){
+        list = new ArrayList<>();
     }
     
-    private int getLevel(int arrayPosition){
-        int position = arrayPosition;
-        int level = 0;
-        
-        while(position != 0){
-            if(position % 2 == 0){
-                position -= 2;
-            } else {
-                position -= 1;
-            }
-            position /= 2;
-            level++;
+    public List<BrickNode> createList(int[] inputArray, int currentMax){
+        list = new ArrayList<>();
+        for(int i = 0; i < inputArray.length; i++){
+            BrickNode node = createValueNode(i, inputArray[i], currentMax, ViewController.countIndent(inputArray.length));
+            
+            list.add(node);
         }
-        return level;
+        return list;
+    }
+    
+    private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
+        return createCustomNode(i, value, currentMax, ViewController.DEFAULT, leftIndent, ViewController.LEVEL1);
     }
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 
@@ -47,7 +48,7 @@ public class Tree {
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));
-        //text.setFont(font);
+        text.setFont(ViewController.font);
         BrickNode node = new BrickNode(num);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         //node.setId(String.valueOf(num));
@@ -55,7 +56,7 @@ public class Tree {
         node.getChildren().addAll(rectangle, text);
         BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(countSpacing(getLevel(i)) * i + leftIndent);
+        node.setTranslateX(ViewController.SPACING * i + leftIndent);
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
