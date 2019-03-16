@@ -22,6 +22,8 @@ import sortingvisualization.ViewController;
  */
 public class Tree {
     
+    private static final int RADIUS = 25;
+    private static final int LEVEL_HEIGHT = 100;
     private List<BrickNode> treeNodes;
     private int SPACING;
     private double SPACING_COEF;
@@ -31,17 +33,25 @@ public class Tree {
         this.SPACING_COEF = countSpacingCoefficient(inputArray);
         
         this.treeNodes = new ArrayList<>();
-        int levels = getNuberOfLevels(inputArray);
         for(int i = 0; i < inputArray.length; i++){
-            System.out.print(inputArray[i] + ",");
-            int currentLevel = getLevel(i);
-            int currentLvlReversed = levels - currentLevel;
-            int currentBottomIndent = (currentLvlReversed + 1) * -100;
-            BrickNode node = createCustomNode(i, inputArray[i], currentMax, Color.WHITE, getLevelIndent(currentLevel), currentBottomIndent);
-            
+            BrickNode node = createCustomNode(i, inputArray[i], currentMax, Color.BLACK, getNodeX(i), getNodeY(i, inputArray.length));
             treeNodes.add(node);
         }
         return treeNodes;
+    }
+    
+    public int getNodeX(int posInArray){
+        double x = countSpacing(getLevel(posInArray)) 
+                * getPositionInLevel(posInArray) 
+                + getLevelIndent(getLevel(posInArray));
+        return (int)x;
+    }
+    
+    public int getNodeY(int posInArray, int arraySize){
+        int y = (getNuberOfLevels(arraySize) 
+                - getLevel(posInArray) + 1) 
+                * -LEVEL_HEIGHT;
+        return y;
     }
     
     private double getLevelIndent(int level){
@@ -49,12 +59,12 @@ public class Tree {
     }
     
     private int countSecondLevelSpacing(int[] array){
-        int levels = getNuberOfLevels(array);
+        int levels = getNuberOfLevels(array.length);
         return 65 * levels;
     }
     
     private double countSpacingCoefficient(int[] array){
-        int levels = getNuberOfLevels(array);
+        int levels = getNuberOfLevels(array.length);
         return (double)1 / levels;
     }
     
@@ -84,8 +94,8 @@ public class Tree {
         return i - (int)Math.pow(2, level - 1) + 1;
     }
     
-    private int getNuberOfLevels(int[] treeArray){
-        return getLevel(treeArray.length - 1);
+    private int getNuberOfLevels(int treeArraySize){
+        return getLevel(treeArraySize - 1);
     }
     
     private int getLevelWidth(int level){
@@ -94,23 +104,21 @@ public class Tree {
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 
             Color color, double leftIndent, double bottomIndent) {
-        int num = value;
-        double percent = (double)num / currentMax;
-        Circle body = new Circle(25);
-        body.setFill(color);
-        body.setStroke(Color.BLACK);
+        Circle body = new Circle(RADIUS);
+        body.setFill(Color.WHITE);
+        body.setStroke(color);
         body.setStrokeWidth(3);
-        Text text = new Text(String.valueOf(num));
+        
+        Text text = new Text(String.valueOf(value));
         text.setFont(ViewController.font);
         text.setTranslateY(-10);
-        BrickNode node = new BrickNode(num);
+        
+        BrickNode node = new BrickNode(value);
         node.setPrefSize(body.getRadius() * 2, body.getRadius() * 2);
         //node.setId(String.valueOf(num));
-        //stackPane.setValue(num);
         node.getChildren().addAll(body, text);
-        //BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(countSpacing(getLevel(i)) * getPositionInLevel(i) + leftIndent);
+        node.setTranslateX(leftIndent);
         node.setTranslateY(bottomIndent);
         node.setShape(body);
         return node;
