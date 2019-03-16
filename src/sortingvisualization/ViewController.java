@@ -216,36 +216,26 @@ public class ViewController {
         infoPanel.getChildren().clear();
     }
     
-    private int[] initialize(Algorithm instanceType, int[] input){
+    private int[] preInit(Algorithm instanceType, int[] input){
         this.currentInstance = instanceType;
         initValues();
         
-        //int currentMax = getMaximum(instanceType);
         int[] generatedArray = loadArray(instanceType, input);
         int size = generatedArray.length;
         
         this.LEFT_INDENT = countIndent(size);
-        //int leftIndent = countIndent(size);
-        
-        /*List<BrickNode> list = new ArrayList<>();
-        for(int i = 0; i < size; i++){
-            BrickNode node;
-            switch (instanceType){
-                case Bucket:
-                case Radix:
-                    node = createFixedNode(i, generatedArray[i], leftIndent, LEVEL1);
-                    break;
-                default:
-                    node = createValueNode(i, generatedArray[i], currentMax, leftIndent);
-            }
-            list.add(node);
-        }*/
         return generatedArray;
     }
     
+    /**
+     * Creates task that will create sorting animation flow
+     * @param instanceType type of algorithm
+     * @param input array, may be null
+     * @return background task to create animation
+     */
     public Task<List<Animation>> sort(Algorithm instanceType, int[] input){
        
-        int[] generatedArray = initialize(instanceType, input);
+        int[] generatedArray = preInit(instanceType, input);
         int currentMax = getMaximum(instanceType);
         
         return new Task<List<Animation>>() {
@@ -253,7 +243,7 @@ public class ViewController {
             protected List<Animation> call() throws Exception {
                 DynamicNodes dNodes = new DynamicNodes();
                 FixedNodes fNodes = new FixedNodes();
-                Tree tNodes = new Tree();
+                Tree tNodes;
                 AbstractAlgorithm sorting;
                 List<BrickNode> list;
                 List<Animation> anim;
@@ -314,7 +304,8 @@ public class ViewController {
                         });
                         break;
                     case Heap:
-                        list = tNodes.createList(generatedArray, currentMax);
+                        tNodes = new Tree(generatedArray);
+                        list = tNodes.getNodesList();
                         sorting = new HeapSort(tNodes, infoPanel);
                         break;
                     default:
