@@ -10,8 +10,9 @@ import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextBoundsType;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
 
@@ -21,12 +22,18 @@ import sortingvisualization.ViewController;
  */
 public class Tree {
     
-    List<BrickNode> treeNodes;
+    private List<BrickNode> treeNodes;
+    private int SPACING;
+    private double SPACING_COEF;
     
     public List<BrickNode> createList(int[] inputArray, int currentMax){
-        treeNodes = new ArrayList<>();
+        this.SPACING = countSecondLevelSpacing(inputArray);
+        this.SPACING_COEF = countSpacingCoefficient(inputArray);
+        
+        this.treeNodes = new ArrayList<>();
         int levels = getNuberOfLevels(inputArray);
         for(int i = 0; i < inputArray.length; i++){
+            System.out.print(inputArray[i] + ",");
             int currentLevel = getLevel(i);
             int currentLvlReversed = levels - currentLevel;
             int currentBottomIndent = (currentLvlReversed + 1) * -100;
@@ -41,9 +48,19 @@ public class Tree {
         return ((double)(getLevelWidth(level) - 1) / 2) * -countSpacing(level);
     }
     
+    private int countSecondLevelSpacing(int[] array){
+        int levels = getNuberOfLevels(array);
+        return 65 * levels;
+    }
+    
+    private double countSpacingCoefficient(int[] array){
+        int levels = getNuberOfLevels(array);
+        return (double)1 / levels;
+    }
+    
     private int countSpacing(int nodeLevel){
-        int first = 190;
-        return  first - (int)((nodeLevel - 1) * (first * 0.25));
+        int sp = SPACING - (int)((nodeLevel - 1) * (SPACING * SPACING_COEF));
+        return  sp;
     }
     
     private int getLevel(int arrayPosition){
@@ -79,18 +96,19 @@ public class Tree {
             Color color, double leftIndent, double bottomIndent) {
         int num = value;
         double percent = (double)num / currentMax;
-        Circle body = new Circle(20);
+        Circle body = new Circle(25);
         body.setFill(color);
         body.setStroke(Color.BLACK);
-        
+        body.setStrokeWidth(3);
         Text text = new Text(String.valueOf(num));
         text.setFont(ViewController.font);
+        text.setTranslateY(-10);
         BrickNode node = new BrickNode(num);
         node.setPrefSize(body.getRadius() * 2, body.getRadius() * 2);
         //node.setId(String.valueOf(num));
         //stackPane.setValue(num);
         node.getChildren().addAll(body, text);
-        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
+        //BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
         node.setTranslateX(countSpacing(getLevel(i)) * getPositionInLevel(i) + leftIndent);
         node.setTranslateY(bottomIndent);
