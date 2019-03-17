@@ -8,13 +8,17 @@ package NodeCreation;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.StrokeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -28,6 +32,9 @@ public class Tree {
     private static final int RADIUS = 25;
     private static final int LEVEL_HEIGHT = 100;
     private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
+    private static final Color SELECTION = Color.AQUAMARINE;
+    private static final Color DEFAULT = Color.BLACK;
+    
     
     private final int SPACING;
     private final double SPACING_COEF;
@@ -242,5 +249,42 @@ public class Tree {
         
         swap.getChildren().addAll(lr, rl);
         return swap;
+    }
+    
+    public Animation compare(int firstNode, int secondNode) {
+        int size = treeNodes.size();
+        SequentialTransition compare = new SequentialTransition();
+        ParallelTransition select = new ParallelTransition();
+        ParallelTransition unselect = new ParallelTransition();
+        
+        Animation selectFirst = repaint(treeNodes.get(firstNode).getShape(), DEFAULT, SELECTION);
+        Animation selectSecond = repaint(treeNodes.get(secondNode).getShape(), DEFAULT, SELECTION);
+        select.getChildren().addAll(selectFirst, selectSecond);
+        
+        Animation unselectFirst = repaint(treeNodes.get(firstNode).getShape(), SELECTION, DEFAULT);
+        Animation unselectSecond = repaint(treeNodes.get(secondNode).getShape(), SELECTION, DEFAULT);
+        unselect.getChildren().addAll(unselectFirst, unselectSecond);
+        
+        compare.getChildren().addAll(select, unselect);
+        return compare;
+    }
+    
+    private Animation repaint(Shape shape, Color fromValue, Color toValue) {
+        StrokeTransition repainting = new StrokeTransition();
+        repainting.setShape(shape);
+        repainting.setDuration(ViewController.SPEED);
+        repainting.setFromValue(fromValue);
+        repainting.setToValue(toValue);
+        return repainting;
+    }
+    
+    public Animation hide(int nodePos){
+        FadeTransition hide = new FadeTransition();
+        hide.setNode(treeNodes.get(nodePos));
+        hide.setDuration(ViewController.SPEED);
+        hide.setFromValue(1);
+        hide.setToValue(0);
+        
+        return hide;
     }
 }
