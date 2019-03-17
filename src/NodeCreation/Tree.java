@@ -7,6 +7,9 @@ package NodeCreation;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -213,5 +216,31 @@ public class Tree {
         node.setTranslateY(y);
         node.setShape(body);
         return node;
+    }
+    
+    //Animations
+    
+    public Animation swap(int firstNode, int secondNode){
+        int size = treeNodes.size();
+        ParallelTransition swap = new ParallelTransition();
+        
+        TranslateTransition lr = new TranslateTransition();
+        lr.setNode(treeNodes.get(firstNode));
+        lr.setDuration(ViewController.SPEED);
+        lr.setFromX(getNodeX(firstNode));
+        lr.setFromY(getNodeY(firstNode, size));
+        lr.setToX(getNodeX(secondNode));
+        lr.setToY(getNodeY(secondNode, size));
+        
+        TranslateTransition rl = new TranslateTransition();
+        rl.setNode(treeNodes.get(secondNode));
+        rl.setDuration(ViewController.SPEED);
+        rl.setFromX(getNodeX(secondNode));
+        rl.setFromY(getNodeY(secondNode, size));
+        rl.setToX(getNodeX(firstNode));
+        rl.setToY(getNodeY(firstNode, size));
+        
+        swap.getChildren().addAll(lr, rl);
+        return swap;
     }
 }

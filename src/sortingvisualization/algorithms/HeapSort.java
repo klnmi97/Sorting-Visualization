@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import sortingvisualization.Pseudocode;
 import NodeCreation.Tree;
+import sortingvisualization.BrickNode;
 
 
 /**
@@ -20,61 +21,16 @@ import NodeCreation.Tree;
  */
 public class HeapSort extends Sorting implements AbstractAlgorithm {
 
-    Tree binaryTree;
-    Pseudocode pc;
+    private Tree binaryTree;
+    private Pseudocode pc;
+    private List<BrickNode> list;
     
     public HeapSort(Tree binaryHeap, Pane infoPane){
-        //this.binaryTree = binaryHeap;
-        pc = new Pseudocode();
+        this.binaryTree = binaryHeap;
+        this.list = binaryTree.getNodesList();
+        this.pc = new Pseudocode();
         addPseudocode(pc);
         addCodeToUI(infoPane);
-    }
-    
-    public void sort(int arr[]) 
-    { 
-        int n = arr.length; 
-  
-        // Build heap (rearrange array) 
-        for (int i = n / 2 - 1; i >= 0; i--) 
-            heapify(arr, n, i); 
-  
-        // One by one extract an element from heap 
-        for (int i=n-1; i>=0; i--) 
-        { 
-            // Move current root to end 
-            int temp = arr[0]; 
-            arr[0] = arr[i]; 
-            arr[i] = temp; 
-  
-            // call max heapify on the reduced heap 
-            heapify(arr, i, 0); 
-        } 
-    }
-    
-    void heapify(int arr[], int n, int i) 
-    { 
-        int largest = i; // Initialize largest as root 
-        int l = 2*i + 1; // left = 2*i + 1 
-        int r = 2*i + 2; // right = 2*i + 2 
-  
-        // If left child is larger than root 
-        if (l < n && arr[l] > arr[largest]) 
-            largest = l; 
-  
-        // If right child is larger than largest so far 
-        if (r < n && arr[r] > arr[largest]) 
-            largest = r; 
-  
-        // If largest is not root 
-        if (largest != i) 
-        { 
-            int swap = arr[i]; 
-            arr[i] = arr[largest]; 
-            arr[largest] = swap; 
-  
-            // Recursively heapify the affected sub-tree 
-            heapify(arr, n, largest); 
-        } 
     }
 
     private void addPseudocode(Pseudocode code){
@@ -84,7 +40,60 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
     
     @Override
     public List<Animation> sort() {
-        return new ArrayList<Animation>() {};
+        List<Animation> anim = new ArrayList<>();
+        
+        int n = list.size(); 
+  
+        // Build heap (rearrange array) 
+        for (int i = n / 2 - 1; i >= 0; i--) 
+            heapify(list, anim, n, i); 
+  
+        // One by one extract an element from heap 
+        for (int i = n - 1; i >= 0; i--) 
+        { 
+            anim.add(binaryTree.swap(0, i));
+            // Move current root to end 
+            BrickNode temp = list.get(0); 
+            list.set(0, list.get(i)); 
+            list.set(i, temp); 
+  
+            // call max heapify on the reduced heap 
+            heapify(list, anim, i, 0); 
+        }
+        
+        return anim;
+    }
+    
+    void heapify(List<BrickNode> list, List<Animation> anim, int n, int i) 
+    { 
+        int largest = i; // Initialize largest as root 
+        int l = 2*i + 1; // left = 2*i + 1 
+        int r = 2*i + 2; // right = 2*i + 2 
+  
+        // If left child is larger than root 
+        if (l < n && list.get(l).getValue() > list.get(largest).getValue()) {
+            largest = l; 
+        } 
+            
+  
+        // If right child is larger than largest so far 
+        if (r < n && list.get(r).getValue() > list.get(largest).getValue()) {
+            largest = r;
+        }
+            
+  
+        // If largest is not root 
+        if (largest != i) 
+        {
+            anim.add(binaryTree.swap(i, largest));
+            
+            BrickNode swap = list.get(i); 
+            list.set(i, list.get(largest)); 
+            list.set(largest, swap); 
+  
+            // Recursively heapify the affected sub-tree 
+            heapify(list, anim, n, largest); 
+        } 
     }
     
     private void addCodeToUI(Pane codePane){
