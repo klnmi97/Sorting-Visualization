@@ -8,8 +8,10 @@ package NodeCreation;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
 import sortingvisualization.ViewController;
@@ -22,16 +24,29 @@ public class Tree {
     
     private static final int RADIUS = 25;
     private static final int LEVEL_HEIGHT = 100;
+    private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
     
     private final int SPACING;
     private final double SPACING_COEF;
     
     private final List<BrickNode> treeNodes;
+    private final List<Line> childConnections;
+    private List<Circle> placeholders;
     
     public Tree(int[] inputArray){
         this.SPACING = countSecondLevelSpacing(inputArray);
         this.SPACING_COEF = countSpacingCoefficient(inputArray);
         this.treeNodes = createList(inputArray);
+        this.childConnections = createConnections();
+        this.placeholders = createPlaceholders();
+    }
+
+    public List<Circle> getPlaceholders() {
+        return placeholders;
+    }
+
+    public List<Line> getChildConnections() {
+        return childConnections;
     }
     
     /**
@@ -78,6 +93,57 @@ public class Tree {
             list.add(node);
         }
         return list;
+    }
+    
+    private List<Line> createConnections(){
+        if(treeNodes == null) return null;
+        
+        List<Line> connections = new ArrayList<>();
+        int size = treeNodes.size();
+        for(int i = 0; i < size; i++){
+            int l = 2 * i + 1;
+            int r = 2 * i + 2;
+            int startX = getNodeX(i);
+            int startY = getNodeY(i, size) + RADIUS;
+            if(l < size){
+                int endX = getNodeX(l);
+                int endY = getNodeY(l, size) + RADIUS;
+                Line left = new Line(startX, startY, endX, endY);
+                left.setStrokeWidth(3);
+                left.setTranslateX((startX + endX) / 2) ;
+                left.setTranslateY((startY + endY) / 2);
+                StackPane.setAlignment(left, Pos.BOTTOM_CENTER);
+                connections.add(left);
+            }
+            if(r < size){
+                int endX = getNodeX(r);
+                int endY = getNodeY(r, size) + RADIUS;
+                Line right = new Line(startX, startY, endX, endY);
+                right.setStrokeWidth(3);
+                right.setTranslateX((startX + endX) / 2) ;
+                right.setTranslateY((startY + endY) / 2);
+                StackPane.setAlignment(right, Pos.BOTTOM_CENTER);
+                connections.add(right);
+            }
+        }
+        return connections;
+    }
+    
+    private List<Circle> createPlaceholders(){
+        if(treeNodes == null) return null;
+        
+        List<Circle> placeholders = new ArrayList<>();
+        int size = treeNodes.size();
+        for (int i = 0; i < size; i++) {
+            Circle holder = new Circle(RADIUS);
+            holder.setFill(PLACEHOLDER_BKGRND);
+            holder.setTranslateX(getNodeX(i));
+            holder.setTranslateY(getNodeY(i, size));
+            StackPane.setAlignment(holder, Pos.BOTTOM_CENTER);
+            placeholders.add(holder);
+        }
+        
+        return placeholders;
     }
     
     private double getLevelIndent(int level){

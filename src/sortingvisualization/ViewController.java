@@ -17,7 +17,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -307,6 +306,10 @@ public class ViewController {
                         tNodes = new Tree(generatedArray);
                         list = tNodes.getNodesList();
                         sorting = new HeapSort(tNodes, infoPanel);
+                        Platform.runLater(() -> {
+                                    displayPane.getChildren().addAll(tNodes.getChildConnections());
+                                    displayPane.getChildren().addAll(tNodes.getPlaceholders());
+                        });
                         break;
                     default:
                         list = dNodes.createList(generatedArray, currentMax);
