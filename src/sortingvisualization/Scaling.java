@@ -14,9 +14,9 @@ import javafx.stage.Screen;
  */
 public class Scaling {
     
-    public static void computeScaling(){
+    public static double computeScaling(){
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-        double coef = visualBounds.getWidth() * 0.000625;
-        System.out.println(coef);
+        double coefficient = visualBounds.getWidth() * 0.000625;
+        return coefficient;
     }
 }
