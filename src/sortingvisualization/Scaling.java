@@ -14,9 +14,21 @@ import javafx.stage.Screen;
  */
 public class Scaling {
     
-    public static double computeScaling(){
-        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+    public static double computeResolutionScale(){
+        Screen screen = Screen.getPrimary();
+        Rectangle2D visualBounds = screen.getVisualBounds();
         double coefficient = visualBounds.getWidth() * 0.000625;
         return coefficient;
     }
+    
+    public static double computeDPIScale(){
+        Screen screen = Screen.getPrimary();
+        return screen.getDpi() * 0.0085;
+    }
+    
+    //JAVA 9 features
+    /*Screen screen = Screen.getPrimary();
+    double dpi = screen.getDpi();
+    double scaleX = screen.getOutputScaleX();
+    double scaleY = screen.getOutputScaleY();*/
 }

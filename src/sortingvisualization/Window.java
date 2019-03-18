@@ -199,8 +199,10 @@ public class Window extends Application {
         
         initialize(Algorithm.Bubble, null);
         
-        scene = new Scene(root, 1280, 720);
+        double windowSizeFactor = Scaling.computeDPIScale();
+        scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
+        
         primaryStage.setTitle("Sorting Alg Visualisation");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         primaryStage.setScene(scene);

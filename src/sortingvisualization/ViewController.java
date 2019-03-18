@@ -40,15 +40,17 @@ import sortingvisualization.algorithms.SelectionSort;
  */
 public class ViewController {
     
+    private static final double scaling = initScaling();
+    
     //TODO: create new metrics
     public static int N_VALUES = 12;
-    public static final int SPACING = 60;
+    public static final int SPACING = initSpacing();
     //counting from center as 0; half of (spacing * number of elements)
-    public static int TEN_LEFT_INDENT = (int)(((double)10 / 2) * -SPACING);
-    public static int LEFT_INDENT = (int)(((double)N_VALUES / 2) * -SPACING);
-    public static final int LEVEL1 = -350;
-    public static final int LEVEL2 = 250 + LEVEL1;
-    private final Font font = Font.font("Helvetica", 20);
+    public static int TEN_LEFT_INDENT = countIndent(10);
+    public static int LEFT_INDENT = countIndent(N_VALUES);
+    public static final int LEVEL1 = (int)(-350 * scaling);
+    public static final int LEVEL2 = (int)(250 * scaling) + LEVEL1;
+    private final Font font = Font.font("Helvetica", 20 * scaling);
 
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
@@ -77,6 +79,14 @@ public class ViewController {
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
         currentArray = generateRandomArray(N_VALUES, MIN, MAX);
+    }
+    
+    private static double initScaling() {
+        return Scaling.computeDPIScale();
+    }
+    
+    private static int initSpacing() {
+        return (int)(60 * scaling);
     }
     
     public static int countIndent(int number){
@@ -116,7 +126,7 @@ public class ViewController {
     
     //TODO: refactor!
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
-        Rectangle rectangle = new Rectangle(50, 30);
+        Rectangle rectangle = new Rectangle(50 * scaling, 30 * scaling);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
         //TODO: test on different screens!
@@ -149,7 +159,7 @@ public class ViewController {
             Color color, double leftIndent, double topIndent) {
         int num = value;
         double percent = (double)num / currentMax;
-        Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
+        Rectangle rectangle = new Rectangle(50 * scaling, (percent * 10 * 20 * scaling) + 5);
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));
@@ -201,19 +211,19 @@ public class ViewController {
         FlowPane base = new FlowPane(Orientation.VERTICAL);
         base.setColumnHalignment(HPos.CENTER);
         base.setAlignment(Pos.BOTTOM_CENTER);
-        Line baseLine = new Line(0, 0, 50, 0);
-        baseLine.setStrokeWidth(5);
+        Line baseLine = new Line(0, 0, 50 * scaling, 0);
+        baseLine.setStrokeWidth(5 * scaling);
         Text label = new Text(labelText);
         label.setFont(font);
         base.getChildren().addAll(baseLine, label);
         base.setTranslateX(x);
-        base.setTranslateY(y + 24); //TODO: smarter Y position. Problem with height of children because of FlowPane alignmen
+        base.setTranslateY(y + 24 * scaling); //TODO: smarter Y position. Problem with height of children because of FlowPane alignmen
         return base;
     }
     
     private List<FlowPane> createBucketList(int count, int startLabelCounter, int diff){
         List<FlowPane> buckets = new ArrayList<>();
-        int y = ViewController.LEVEL2 + 10;
+        int y = ViewController.LEVEL2 + (int)(10 * scaling);
         int currentLabel = startLabelCounter;
         int leftIndent = countIndent(count); 
         for(int i = 0; i < count; i++){
