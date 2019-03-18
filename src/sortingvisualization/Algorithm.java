@@ -19,8 +19,8 @@ public enum Algorithm {
     Quick           (5, "Quick Sort", "QUI"), 
     Counting        (6, "Counting Sort", "COU"),
     Bucket          (7, "Bucket Sort", "BCKT"),
-    Radix           (8, "Radix Sort", "RDX");
-    //Heap            (9);
+    Radix           (8, "Radix Sort", "RDX"),
+    Heap            (9, "Heap Sort", "HEAP");
     
     private int index;
     private String name;
