@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
@@ -18,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
@@ -29,28 +31,37 @@ import sortingvisualization.ViewController;
  */
 public class Tree {
     
-    private static final int RADIUS = 25;
+    private static final int NODE_SIZE = 25;
+    private static final int ARRAY_ITEM_SIZE = 40;
     private static final int LEVEL_HEIGHT = 100;
+    private static final Color FILL = Color.WHITE;
     private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
     private static final Color SELECTION = Color.AQUAMARINE;
     private static final Color DEFAULT = Color.BLACK;
+    private static final Color ARRAY_SORTED = Color.GAINSBORO;
+    private final int ARRAY_SPACING = initArraySpacing();
     
-    
-    private final int SPACING;
+    private final int TREE_SPACING;
     private final double SPACING_COEF;
     
     private final List<BrickNode> treeNodes;
+    private final List<BrickNode> arrayNodes;
     private final List<Line> childConnections;
     private List<Circle> placeholders;
     
     public Tree(int[] inputArray){
-        this.SPACING = countSecondLevelSpacing(inputArray);
+        this.TREE_SPACING = countSecondLevelSpacing(inputArray);
         this.SPACING_COEF = countSpacingCoefficient(inputArray);
         this.treeNodes = createList(inputArray);
         this.childConnections = createConnections();
         this.placeholders = createPlaceholders();
+        this.arrayNodes = createGraphicArray(inputArray);
     }
 
+    public List<BrickNode> getArrayNodes() {
+        return arrayNodes;
+    }
+    
     public List<Circle> getPlaceholders() {
         return placeholders;
     }
@@ -58,6 +69,8 @@ public class Tree {
     public List<Line> getChildConnections() {
         return childConnections;
     }
+    
+    //Graphic tree logic
     
     /**
      *
@@ -98,7 +111,7 @@ public class Tree {
     private List<BrickNode> createList(int[] inputArray){
         List<BrickNode> list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
-            BrickNode node = createNode(i, inputArray[i], Color.BLACK, 
+            BrickNode node = createNode(inputArray[i], Color.BLACK, 
                     getNodeX(i), getNodeY(i, inputArray.length));
             list.add(node);
         }
@@ -114,10 +127,10 @@ public class Tree {
             int l = 2 * i + 1;
             int r = 2 * i + 2;
             int startX = getNodeX(i);
-            int startY = getNodeY(i, size) + RADIUS;
+            int startY = getNodeY(i, size) + NODE_SIZE;
             if(l < size){
                 int endX = getNodeX(l);
-                int endY = getNodeY(l, size) + RADIUS;
+                int endY = getNodeY(l, size) + NODE_SIZE;
                 Line left = new Line(startX, startY, endX, endY);
                 left.setStrokeWidth(3);
                 left.setTranslateX((startX + endX) / 2) ;
@@ -127,7 +140,7 @@ public class Tree {
             }
             if(r < size){
                 int endX = getNodeX(r);
-                int endY = getNodeY(r, size) + RADIUS;
+                int endY = getNodeY(r, size) + NODE_SIZE;
                 Line right = new Line(startX, startY, endX, endY);
                 right.setStrokeWidth(3);
                 right.setTranslateX((startX + endX) / 2) ;
@@ -145,7 +158,7 @@ public class Tree {
         List<Circle> placeholders = new ArrayList<>();
         int size = treeNodes.size();
         for (int i = 0; i < size; i++) {
-            Circle holder = new Circle(RADIUS);
+            Circle holder = new Circle(NODE_SIZE);
             holder.setFill(PLACEHOLDER_BKGRND);
             holder.setTranslateX(getNodeX(i));
             holder.setTranslateY(getNodeY(i, size));
@@ -171,7 +184,7 @@ public class Tree {
     }
     
     private int countSpacing(int nodeLevel){
-        int sp = SPACING - (int)((nodeLevel - 1) * (SPACING * SPACING_COEF));
+        int sp = TREE_SPACING - (int)((nodeLevel - 1) * (TREE_SPACING * SPACING_COEF));
         return  sp;
     }
     
@@ -204,9 +217,9 @@ public class Tree {
         return (int)Math.pow(2, level - 1);
     }
     
-    private BrickNode createNode(int i, int value, Color color, double x, double y) {
-        Circle body = new Circle(RADIUS);
-        body.setFill(Color.WHITE);
+    private BrickNode createNode(int value, Color color, double x, double y) {
+        Circle body = new Circle(NODE_SIZE);
+        body.setFill(FILL);
         body.setStroke(color);
         body.setStrokeWidth(3);
         
@@ -225,9 +238,100 @@ public class Tree {
         return node;
     }
     
-    //Animations
+    private void swapInternalArray(int firstNode, int secondNode){
+        BrickNode swap = arrayNodes.get(firstNode); 
+        arrayNodes.set(firstNode, arrayNodes.get(secondNode)); 
+        arrayNodes.set(secondNode, swap);
+    }
     
-    public Animation swap(int firstNode, int secondNode){
+    //Graphic array logic
+    
+    private List<BrickNode> createGraphicArray(int[] inputArray){
+        List<BrickNode> list = new ArrayList<>();
+        
+        int size = inputArray.length;
+        for(int i = 0; i < size; i++){
+            BrickNode node = createArrayNode(inputArray[i], getArrayNodeX(i, size), 
+                    getArrayNodeY());
+            list.add(node);
+        }
+        return list;
+    }
+    
+    private static int initArraySpacing() {
+        return ARRAY_ITEM_SIZE;
+    }
+    
+    private int getArrayIndent(int size) {
+        return (int)(((double)size / 2) * -ARRAY_SPACING);
+    }
+    
+    private int getArrayNodeX(int position, int arraySize){
+        int x = position * ARRAY_SPACING + getArrayIndent(arraySize);
+        return x;
+    }
+    
+    private int getArrayNodeY(){
+        return 10;
+    }
+    
+    private BrickNode createArrayNode(int value, double x, double y){
+        Rectangle cell = new Rectangle(ARRAY_ITEM_SIZE, ARRAY_ITEM_SIZE);
+        cell.setFill(FILL);
+        cell.setStroke(DEFAULT);
+        
+        Text text = new Text(String.valueOf(value));
+        text.setFont(ViewController.font);
+        
+        BrickNode node = new BrickNode(value);
+        node.setPrefSize(cell.getWidth(), cell.getHeight());
+        //node.setId(String.valueOf(num));
+        node.getChildren().addAll(cell, text);
+        node.setAlignment(Pos.TOP_CENTER);
+        node.setTranslateX(x);
+        node.setTranslateY(y);
+        node.setShape(cell);
+        return node;
+    }
+    
+    //Animations
+
+    /**
+     * Creates graphic animation of swapping two nodes in the graphic array
+     * @param firstNode position of first node in array
+     * @param secondNode position of second node in array
+     * @return animation of swapping two nodes
+     */
+    public Animation swapInArray(int firstNode, int secondNode){
+        int size = arrayNodes.size();
+        ParallelTransition swap = new ParallelTransition();
+        
+        TranslateTransition lr = new TranslateTransition();
+        lr.setNode(arrayNodes.get(firstNode));
+        lr.setDuration(ViewController.SPEED);
+        lr.setFromX(getArrayNodeX(firstNode, size));
+        lr.setToX(getArrayNodeX(secondNode, size));
+        
+        TranslateTransition rl = new TranslateTransition();
+        rl.setNode(arrayNodes.get(secondNode));
+        rl.setDuration(ViewController.SPEED);
+        rl.setFromX(getArrayNodeX(secondNode, size));
+        rl.setToX(getArrayNodeX(firstNode, size));
+        
+        swap.getChildren().addAll(lr, rl);
+        //swap items during swap in treeNodes array to have right order of nodes 
+        //in the arrayNodes array
+        swapInternalArray(firstNode, secondNode);
+        return swap;
+    }
+    
+    /**
+     * Creates graphic animation of swapping two nodes in the created tree
+     * @param firstNode position of first node in array
+     * @param secondNode position of second node in array
+     * @return animation of swapping two nodes
+     */
+    public Animation swapInTree(int firstNode, int secondNode){
         int size = treeNodes.size();
         ParallelTransition swap = new ParallelTransition();
         
@@ -251,25 +355,85 @@ public class Tree {
         return swap;
     }
     
-    public Animation compare(int firstNode, int secondNode) {
+    /**
+     * Creates parallel animation of swapping nodes in the graphic tree and in
+     * the graphic array
+     * @param firstNode position of first node in array
+     * @param secondNode position of second node in array
+     * @return parallel animation of swapping two nodes(tree and array)
+     */
+    public Animation swap(int firstNode, int secondNode){
+        ParallelTransition swap = new ParallelTransition();
+        
+        Animation arraySwap = swapInArray(firstNode, secondNode);
+        Animation treeSwap = swapInTree(firstNode, secondNode);
+        swap.getChildren().addAll(arraySwap, treeSwap);
+        return swap;
+    }
+    
+    /**
+     * Creates animation of highlighting two nodes from the virtually 
+     * created tree. Its purpose is to show comparing or selection of two
+     * nodes.
+     * @param firstNode position of the first selected node in the initial array
+     * @param secondNode position of the second selected node in the initial array
+     * @return animation that temporary changes color of two nodes
+     */
+    public Animation compareInTree(int firstNode, int secondNode) {
         int size = treeNodes.size();
         SequentialTransition compare = new SequentialTransition();
         ParallelTransition select = new ParallelTransition();
         ParallelTransition unselect = new ParallelTransition();
         
-        Animation selectFirst = repaint(treeNodes.get(firstNode).getShape(), DEFAULT, SELECTION);
-        Animation selectSecond = repaint(treeNodes.get(secondNode).getShape(), DEFAULT, SELECTION);
+        Animation selectFirst = repaintStroke(treeNodes.get(firstNode).getShape(), DEFAULT, SELECTION);
+        Animation selectSecond = repaintStroke(treeNodes.get(secondNode).getShape(), DEFAULT, SELECTION);
         select.getChildren().addAll(selectFirst, selectSecond);
         
-        Animation unselectFirst = repaint(treeNodes.get(firstNode).getShape(), SELECTION, DEFAULT);
-        Animation unselectSecond = repaint(treeNodes.get(secondNode).getShape(), SELECTION, DEFAULT);
+        Animation unselectFirst = repaintStroke(treeNodes.get(firstNode).getShape(), SELECTION, DEFAULT);
+        Animation unselectSecond = repaintStroke(treeNodes.get(secondNode).getShape(), SELECTION, DEFAULT);
         unselect.getChildren().addAll(unselectFirst, unselectSecond);
         
         compare.getChildren().addAll(select, unselect);
         return compare;
     }
     
-    private Animation repaint(Shape shape, Color fromValue, Color toValue) {
+    /**
+     * Creates animation of highlighting two nodes from the
+     * created graphic array. Its purpose is to show comparing or selection of 
+     * two nodes.
+     * @param firstNode position of the first selected node in the initial array
+     * @param secondNode position of the second selected node in the initial array
+     * @return animation that temporary changes color of two nodes in the array 
+     * in the tree
+     */
+    public Animation compareInArray(int firstNode, int secondNode) {
+        int size = treeNodes.size();
+        SequentialTransition compare = new SequentialTransition();
+        ParallelTransition select = new ParallelTransition();
+        ParallelTransition unselect = new ParallelTransition();
+        
+        Animation selectFirst = repaint(arrayNodes.get(firstNode).getShape(), FILL, SELECTION);
+        Animation selectSecond = repaint(arrayNodes.get(secondNode).getShape(), FILL, SELECTION);
+        select.getChildren().addAll(selectFirst, selectSecond);
+        
+        Animation unselectFirst = repaint(arrayNodes.get(firstNode).getShape(), SELECTION, FILL);
+        Animation unselectSecond = repaint(arrayNodes.get(secondNode).getShape(), SELECTION, FILL);
+        unselect.getChildren().addAll(unselectFirst, unselectSecond);
+        
+        compare.getChildren().addAll(select, unselect);
+        return compare;
+    }
+    
+    public Animation compare(int firstNode, int secondNode){
+        ParallelTransition compare = new ParallelTransition();
+        
+        Animation arrayHighlight = compareInArray(firstNode, secondNode);
+        Animation treeHighlight = compareInTree(firstNode, secondNode);
+        compare.getChildren().addAll(arrayHighlight, treeHighlight);
+        return compare;
+    }
+    
+    private Animation repaintStroke(Shape shape, Color fromValue, Color toValue) {
         StrokeTransition repainting = new StrokeTransition();
         repainting.setShape(shape);
         repainting.setDuration(ViewController.SPEED);
@@ -278,7 +442,25 @@ public class Tree {
         return repainting;
     }
     
-    public Animation hide(int nodePos){
+    private Animation repaint(Shape shape, Color fromValue, Color toValue) {
+        FillTransition repaint = new FillTransition();
+        repaint.setShape(shape);
+        repaint.setDuration(ViewController.SPEED);
+        repaint.setFromValue(fromValue);
+        repaint.setToValue(toValue);
+        return repaint;
+    }
+    
+    public Animation setSorted(int nodePosition) {
+        ParallelTransition setSorted = new ParallelTransition();
+        
+        Animation array = repaint(arrayNodes.get(nodePosition).getShape(), FILL, ARRAY_SORTED);
+        Animation tree = hide(nodePosition);
+        setSorted.getChildren().addAll(array, tree);
+        return setSorted;
+    }
+    
+    public Animation hide(int nodePos) {
         FadeTransition hide = new FadeTransition();
         hide.setNode(treeNodes.get(nodePos));
         hide.setDuration(ViewController.SPEED);

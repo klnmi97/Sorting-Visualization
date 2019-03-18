@@ -52,7 +52,7 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
             list.set(0, list.get(i)); 
             list.set(i, temp); 
 
-            anim.add(binaryTree.hide(i));
+            anim.add(binaryTree.setSorted(i));
             // call max heapify on the reduced heap 
             heapify(list, anim, i, 0); 
         }
@@ -74,10 +74,7 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
                 largest = l; 
             }
         }
-            
-            
         
-            
         // If right child is larger than largest so far 
         if (r < n) { 
             anim.add(binaryTree.compare(r, largest));

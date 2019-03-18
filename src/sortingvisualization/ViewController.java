@@ -309,6 +309,7 @@ public class ViewController {
                         Platform.runLater(() -> {
                                     displayPane.getChildren().addAll(tNodes.getChildConnections());
                                     displayPane.getChildren().addAll(tNodes.getPlaceholders());
+                                    displayPane.getChildren().addAll(tNodes.getArrayNodes());
                         });
                         break;
                     default:
