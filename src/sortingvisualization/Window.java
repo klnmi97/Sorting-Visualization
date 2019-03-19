@@ -96,7 +96,7 @@ public class Window extends Application {
         speedSlider = new Slider();
         speedSlider.setMin(1);
         speedSlider.setMax(7);
-        speedSlider.setValue(3);
+        speedSlider.setValue(2);
         speedSlider.setMajorTickUnit(3);
         speedSlider.setMinorTickCount(1);
         speedSlider.setBlockIncrement(1);

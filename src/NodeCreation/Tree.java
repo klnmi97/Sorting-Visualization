@@ -34,12 +34,15 @@ public class Tree {
     private static final int NODE_SIZE = 25;
     private static final int ARRAY_ITEM_SIZE = 40;
     private static final int LEVEL_HEIGHT = 100;
+    
     private static final Color FILL = Color.WHITE;
     private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
     private static final Color SELECTION = Color.AQUAMARINE;
+    private static final Color LIGHT_SELECTION = Color.GRAY;
     private static final Color DEFAULT = Color.BLACK;
     private static final Color ARRAY_SORTED = Color.GAINSBORO;
-    private final int ARRAY_SPACING = initArraySpacing();
+    
+    private static final int ARRAY_SPACING = initArraySpacing();
     
     private final int TREE_SPACING;
     private final double SPACING_COEF;
@@ -385,13 +388,17 @@ public class Tree {
         ParallelTransition select = new ParallelTransition();
         ParallelTransition unselect = new ParallelTransition();
         
-        Animation selectFirst = repaintStroke(treeNodes.get(firstNode).getShape(), DEFAULT, SELECTION);
-        Animation selectSecond = repaintStroke(treeNodes.get(secondNode).getShape(), DEFAULT, SELECTION);
-        select.getChildren().addAll(selectFirst, selectSecond);
+        Animation changeStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), DEFAULT, LIGHT_SELECTION);
+        Animation repaintFirst = repaint(treeNodes.get(firstNode).getShape(), FILL, SELECTION);
+        Animation changeStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), DEFAULT, LIGHT_SELECTION);
+        Animation repaintSecond = repaint(treeNodes.get(secondNode).getShape(), FILL, SELECTION);
+        select.getChildren().addAll(changeStrokeFirst, repaintFirst, changeStrokeSecond, repaintSecond);
         
-        Animation unselectFirst = repaintStroke(treeNodes.get(firstNode).getShape(), SELECTION, DEFAULT);
-        Animation unselectSecond = repaintStroke(treeNodes.get(secondNode).getShape(), SELECTION, DEFAULT);
-        unselect.getChildren().addAll(unselectFirst, unselectSecond);
+        Animation backStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), LIGHT_SELECTION, DEFAULT);
+        Animation paintBackFirst = repaint(treeNodes.get(firstNode).getShape(), SELECTION, FILL);
+        Animation backStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), LIGHT_SELECTION, DEFAULT);
+        Animation paintBackSecond = repaint(treeNodes.get(secondNode).getShape(), SELECTION, FILL);
+        unselect.getChildren().addAll(backStrokeFirst, paintBackFirst, backStrokeSecond, paintBackSecond);
         
         compare.getChildren().addAll(select, unselect);
         return compare;
