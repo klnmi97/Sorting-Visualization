@@ -60,7 +60,7 @@ public class ViewController {
     
     public static final int MAX = 100;
     public static final int MIN = 6;
-    public static final int CNT_MAX = 10; //check if 10 or 9?
+    public static final int CNT_MAX = 10;
     public static final int CNT_MIN = 0;
     public static final int RDX_MAX = 9999;
     public static final int RDX_MIN = 0;
@@ -77,6 +77,11 @@ public class ViewController {
     private Pane infoPanel;
     private Algorithm currentInstance;
     
+    /**
+     * Animation creation controller
+     * @param displayPane main pane to show graphic items
+     * @param infoPanel side panel for code
+     */
     public ViewController(Pane displayPane, Pane infoPanel){
         this.displayPane = displayPane;
         this.infoPanel = infoPanel;
