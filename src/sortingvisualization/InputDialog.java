@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  */
 public class InputDialog extends Dialog<Results> {
     
-    private final int MAX_INPUT_LENGTH = 14;
+    private final int MAX_INPUT_LENGTH = 20;
     
     private Label inputLbl;
     private Label choiseLbl;

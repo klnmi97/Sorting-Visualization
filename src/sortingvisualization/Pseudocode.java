@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,21 +20,27 @@ import javafx.scene.text.Text;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class Pseudocode {
     
-    private List<StackPane> codeLines;
-    private List<Boolean> selection;
+    private static final double scaling = Scaling.computeDPIScale();
+    private static final Font font = Font.font("Courier new", FontWeight.BOLD, 12 * scaling);
+    private final List<StackPane> codeLines;
+    private final List<Boolean> selection;
     
-    /*public List<StackPane> getCodeLines() {
-        return codeLines;
-    }*/
+    /**
+     * Class that manages pseudocode creation and animation
+     */
     public Pseudocode(){
         codeLines = new ArrayList<>();
         selection = new ArrayList<>();
     }
     
+    /**
+     * Creates code lines from strings
+     * @param args code lines
+     */
     public void addLines(String... args){
         for(String arg : args){
             codeLines.add(createLine(arg));
@@ -43,18 +48,36 @@ public class Pseudocode {
         }
     }
     
+    /**
+     * Gets list of created code lines
+     * @return
+     */
     public List<StackPane> getCode(){
         return codeLines;
     }
     
+    /**
+     * Creates code line selection animation
+     * @param line number of line to highlight
+     * @return animation of line highlighting
+     */
     public Animation selectLine(int line){
         return selectLines(line);
     }
     
+    /**
+     * Creates animation of all lines deselection
+     * @return animation of lines deselection
+     */
     public Animation unselectAll(){
         return selectLine(-1);
     }
     
+    /**
+     * Creates selection animation of multiple lines stated in parameters
+     * @param lines lines of code to select
+     * @return animation of code line selection
+     */
     public Animation selectLines(int... lines){
         ParallelTransition pt = new ParallelTransition();
         
@@ -89,20 +112,15 @@ public class Pseudocode {
     }
     
     private StackPane createLine(String line) {
-        Rectangle rectangle = new Rectangle(390, 25);
+        Rectangle rectangle = new Rectangle(390 * scaling, 25 * scaling);
         rectangle.setFill(Color.AQUAMARINE);
         
         Text text = new Text(line);
-        text.setFont(Font.font("Courier new", FontWeight.BOLD, 12));
+        text.setFont(font);
         StackPane node = new StackPane();
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        //node.setId(String.valueOf(num));
-        //stackPane.setValue(num);
         node.getChildren().addAll(rectangle, text);
         StackPane.setAlignment(text, Pos.CENTER_LEFT);
-        //node.setAlignment(Pos.BOTTOM_CENTER);
-        //node.setTranslateX(ViewController.SPACING * i + ViewController.LEFT_INDENT);
-        //node.setTranslateY(ViewController.TOP_INDENT);
         node.setShape(rectangle);
         return node;
     }

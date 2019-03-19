@@ -26,6 +26,17 @@ public class Scaling {
         return screen.getDpi() * 0.0085;
     }
     
+    public static double computeCoeff(){
+        Screen screen = Screen.getPrimary();
+        Rectangle2D visualBounds = screen.getVisualBounds();
+        double width = visualBounds.getWidth();
+        double height = visualBounds.getHeight();
+        double dpi = screen.getDpi();
+        double diag = Math.sqrt(width * width + height * height);
+        double diagIn = diag / dpi;
+        return diagIn;
+    }
+    
     //JAVA 9 features
     /*Screen screen = Screen.getPrimary();
     double dpi = screen.getDpi();

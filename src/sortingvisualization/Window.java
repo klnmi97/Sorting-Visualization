@@ -78,6 +78,8 @@ public class Window extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        double windowSizeFactor = Scaling.computeDPIScale();
+        
         displayPane = new StackPane();
         codePane = new FlowPane();
         codePane.setPadding(new Insets(30, 10, 30, 10));
@@ -168,7 +170,7 @@ public class Window extends Application {
         BorderPane root = new BorderPane();
         
         sidePanel = new VBox();
-        sidePanel.setPrefWidth(400);
+        sidePanel.setPrefWidth(400 * windowSizeFactor);
         sidePanel.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
         sidePanel.getChildren().addAll(headerLbl, codePane);
         sidePanel.setAlignment(Pos.TOP_CENTER);
@@ -189,7 +191,7 @@ public class Window extends Application {
         
         initialize(Algorithm.Bubble, null);
         
-        double windowSizeFactor = Scaling.computeDPIScale();
+        
         scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
         

@@ -49,7 +49,6 @@ public class ViewController {
     public static final int DEFAULT_ITEM_COUNT = 12;
     public static int N_VALUES = 12;
     public static final int SPACING = initSpacing();
-    //counting from center as 0; half of (spacing * number of elements)
     public static int TEN_LEFT_INDENT = countIndent(10);
     public static int LEFT_INDENT = countIndent(N_VALUES);
     public static final int LEVEL1 = (int)(-350 * scaling);
