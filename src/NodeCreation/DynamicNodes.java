@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Scaling;
 import sortingvisualization.ViewController;
 
 /**
@@ -20,7 +21,8 @@ import sortingvisualization.ViewController;
  */
 public class DynamicNodes {
     
-    List<BrickNode> list;
+    private List<BrickNode> list;
+    private static double scalingFactor = Scaling.computeDPIScale();
     
     public DynamicNodes(){
         list = new ArrayList<>();
@@ -44,7 +46,7 @@ public class DynamicNodes {
             Color color, double leftIndent, double topIndent) {
         int num = value;
         double percent = (double)num / currentMax;
-        Rectangle rectangle = new Rectangle(50, (percent * 10 * 20) + 5);
+        Rectangle rectangle = new Rectangle(50 * scalingFactor, (percent * 10 * 20 * scalingFactor) + 5);
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));

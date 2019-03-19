@@ -23,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Scaling;
 import sortingvisualization.ViewController;
 
 /**
@@ -30,10 +31,11 @@ import sortingvisualization.ViewController;
  * @author Mykhailo Klunko
  */
 public class Tree {
+    private static final double scalingFactor = Scaling.computeDPIScale();
     
-    private static final int NODE_SIZE = 25;
-    private static final int ARRAY_ITEM_SIZE = 40;
-    private static final int LEVEL_HEIGHT = 100;
+    private static final int NODE_SIZE = initNodeSize();
+    private static final int ARRAY_ITEM_SIZE = initArrayItemSize();
+    private static final int LEVEL_HEIGHT = initLevelHeight();
     
     private static final Color FILL = Color.WHITE;
     private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
@@ -178,7 +180,7 @@ public class Tree {
     
     private int countSecondLevelSpacing(int[] array){
         int levels = getNuberOfLevels(array.length);
-        return 65 * levels;
+        return (int)(65 * levels * scalingFactor);
     }
     
     private double countSpacingCoefficient(int[] array){
@@ -475,5 +477,19 @@ public class Tree {
         hide.setToValue(0);
         
         return hide;
+    }
+    
+    //Utils
+    
+    private static int initNodeSize() {
+        return (int)(25 * scalingFactor);
+    }
+
+    private static int initArrayItemSize() {
+        return (int)(40 * scalingFactor);
+    }
+
+    private static int initLevelHeight() {
+        return (int)(100 * scalingFactor);
     }
 }

@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import sortingvisualization.BrickNode;
+import sortingvisualization.Scaling;
 import sortingvisualization.ViewController;
 
 /**
@@ -21,7 +22,8 @@ import sortingvisualization.ViewController;
  */
 public class FixedNodes {
     
-    List<BrickNode> list;
+    private static double scalingFactor = Scaling.computeDPIScale();
+    private List<BrickNode> list;
     
     public FixedNodes(){
         list = new ArrayList<>();
@@ -39,11 +41,10 @@ public class FixedNodes {
     }
     
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
-        Rectangle rectangle = new Rectangle(50, 30);
+        Rectangle rectangle = new Rectangle(50 * scalingFactor, 30 * scalingFactor);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
-        //TODO: test on different screens!
-        //rectangle.widthProperty().set(Screen.getPrimary().getVisualBounds().getWidth() * 0.033);
+        
         Text text = new Text(String.valueOf(value));
         text.setFont(ViewController.font);
         BrickNode node = new BrickNode(value);

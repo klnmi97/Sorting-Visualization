@@ -16,16 +16,13 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -195,7 +192,7 @@ public class AnimUtils {
             new KeyFrame(Duration.millis(1),
                 new KeyValue(label.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(ViewController.SPEED,
-                new KeyValue(label.fontProperty(), Font.font("Helvetica", 20))));
+                new KeyValue(label.fontProperty(), ViewController.font)));
     }
     
     public static Animation setNodeDigitColor(BrickNode fixedNode, int digitPlace, Color formerColor, Color newColor){
