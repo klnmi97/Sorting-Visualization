@@ -22,10 +22,16 @@ import sortingvisualization.ViewController;
  */
 public class CountingSort extends Sorting implements AbstractAlgorithm {
     
-    List<BrickNode> list;
-    Pseudocode pc;
-    List<Text> counters;
+    private List<BrickNode> list;
+    private Pseudocode pc;
+    private List<Text> counters;
     
+    /**
+     * Counting Sort animation manager
+     * @param list list with graphic elements to sort
+     * @param counters label counters for each value of item range
+     * @param infoPane pane to add code graphic representation to
+     */
     public CountingSort(List<BrickNode> list, List<Text> counters, Pane infoPane){
         this.list = list;
         this.pc = new Pseudocode();
@@ -34,13 +40,17 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
         addCodeToUI(infoPane);
     }
     
+    /**
+     * Creates a full list of sorting process animation
+     * @return list with animations
+     */
     @Override
     public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         
          // array of 0's at indices 0...maxValue
         int[] count = new int[ViewController.CNT_MAX];
-        for(int i : count){
+        for(int i : count) {
             count[i] = 0;
         }
         
@@ -48,22 +58,26 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             ++count[num.getValue()];
             //animation part
             int value = count[num.getValue()];
+            
             String oldValue = Integer.toString(value-1);
             String newValue = Integer.toString(value);
-            anim.add(AnimUtils.makeParallel(
+            addAnimations(anim, 
                     AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
                             ViewController.LEFT_INDENT, ViewController.TEN_LEFT_INDENT),
                     AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue),
-                    pc.selectLine(2)));
+                    pc.selectLine(2));
         }
         
-        for(int i = 1; i < count.length; i++){
+        for(int i = 1; i < count.length; i++) {
+            
             String oldVal = Integer.toString(count[i]);
+            
             count[i] += count[i - 1]; 
+            
             String newVal = Integer.toString(count[i]);
-            anim.add(AnimUtils.makeParallel(
+            addAnimations(anim, 
                     AnimUtils.setText(counters.get(i), oldVal, newVal),
-                    pc.selectLine(4)));
+                    pc.selectLine(4));
         }
         
         
@@ -71,17 +85,21 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
         // for each num in numCounts
         for(int i = list.size() - 1; i >= 0; i--){
             count[list.get(i).getValue()]--;
+            
             String oldVal = Integer.toString(count[list.get(i).getValue()] + 1);
             String newVal = Integer.toString(count[list.get(i).getValue()]);
-            anim.add(AnimUtils.makeParallel(
+            addAnimations(anim, 
                     AnimUtils.setText(counters.get(list.get(i).getValue()), oldVal, newVal),
-                    pc.selectLine(6)));
+                    pc.selectLine(6));
+            
             sorted[count[list.get(i).getValue()]] = list.get(i);
-            anim.add(AnimUtils.makeParallel(
+            
+            addAnimations(anim, 
                     AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
                     ViewController.TEN_LEFT_INDENT, ViewController.LEFT_INDENT),
-                    pc.selectLine(7)));
+                    pc.selectLine(7));
         }
+        addAnimations(anim, pc.unselectAll());
         return anim;
     }
 
