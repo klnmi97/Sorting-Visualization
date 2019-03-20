@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sortingvisualization;
+package sortingvisualization.UI;
 
+import sortingvisualization.Utilities.ArrayUtils;
 import java.util.Arrays;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +25,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sortingvisualization.Enums.Algorithm;
+import sortingvisualization.Data.Results;
+import sortingvisualization.Controllers.ViewController;
 
 /**
  *
@@ -172,13 +176,3 @@ public class InputDialog extends Dialog<Results> {
     }
 }
 
-class Results {
-
-    String input;
-    Algorithm algoritm;
-
-    public Results(String input, Algorithm algorithm) {
-        this.input = input;
-        this.algoritm = algorithm;
-    }
-}

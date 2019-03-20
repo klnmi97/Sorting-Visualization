@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package NodeCreation;
+package sortingvisualization.NodeControllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import sortingvisualization.BrickNode;
-import sortingvisualization.Scaling;
-import sortingvisualization.ViewController;
+import sortingvisualization.Utilities.Scaling;
+import sortingvisualization.Controllers.ViewController;
 
 /**
  *

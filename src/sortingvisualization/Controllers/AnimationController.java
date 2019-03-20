@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sortingvisualization;
+package sortingvisualization.Controllers;
 
+import sortingvisualization.Data.BindingData;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.beans.binding.BooleanBinding;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sortingvisualization;
+package sortingvisualization.Utilities;
 
 import java.util.List;
 import javafx.animation.Animation;
@@ -25,6 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.Controllers.ViewController;
 
 /**
  *

@@ -8,7 +8,7 @@ package sortingvisualization.algorithms;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
-import sortingvisualization.BrickNode;
+import sortingvisualization.NodeControllers.BrickNode;
 
 /**
  *

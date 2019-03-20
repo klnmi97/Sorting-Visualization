@@ -11,10 +11,10 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import sortingvisualization.AnimUtils;
-import sortingvisualization.BrickNode;
-import sortingvisualization.Pseudocode;
-import sortingvisualization.ViewController;
+import sortingvisualization.Utilities.AnimUtils;
+import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.Pseudocode;
+import sortingvisualization.Controllers.ViewController;
 
 /**
  *

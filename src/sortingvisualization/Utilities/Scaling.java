@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sortingvisualization;
+package sortingvisualization.Utilities;
 
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;

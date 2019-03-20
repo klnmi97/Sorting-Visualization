@@ -12,10 +12,10 @@ import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import sortingvisualization.AnimUtils;
-import sortingvisualization.BrickNode;
-import sortingvisualization.Pseudocode;
-import sortingvisualization.ViewController;
+import sortingvisualization.Utilities.AnimUtils;
+import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.Pseudocode;
+import sortingvisualization.Controllers.ViewController;
 
 /**
  *

@@ -10,9 +10,9 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import sortingvisualization.Pseudocode;
-import NodeCreation.Tree;
-import sortingvisualization.BrickNode;
+import sortingvisualization.NodeControllers.Pseudocode;
+import sortingvisualization.NodeControllers.Tree;
+import sortingvisualization.NodeControllers.BrickNode;
 
 
 /**

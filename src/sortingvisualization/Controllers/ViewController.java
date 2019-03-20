@@ -2,11 +2,13 @@
  * Created on: September, 2018
  *
  */
-package sortingvisualization;
+package sortingvisualization.Controllers;
 
-import NodeCreation.Tree;
-import NodeCreation.DynamicNodes;
-import NodeCreation.FixedNodes;
+import sortingvisualization.Utilities.Scaling;
+import sortingvisualization.Utilities.ArrayUtils;
+import sortingvisualization.NodeControllers.Tree;
+import sortingvisualization.NodeControllers.DynamicNodes;
+import sortingvisualization.NodeControllers.FixedNodes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +27,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sortingvisualization.Enums.Algorithm;
+import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.algorithms.AbstractAlgorithm;
 import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.BucketSort;

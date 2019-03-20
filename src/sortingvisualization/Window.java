@@ -6,6 +6,14 @@
 package sortingvisualization;
 
 
+import sortingvisualization.Enums.Algorithm;
+import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.Controllers.AnimationController;
+import sortingvisualization.Data.Results;
+import sortingvisualization.UI.InputDialog;
+import sortingvisualization.UI.Toast;
+import sortingvisualization.Data.BindingData;
+import sortingvisualization.Utilities.Scaling;
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -275,12 +283,12 @@ public class Window extends Application {
         Optional<Results> result = dialog.showAndWait();
         
         if (result.isPresent()){
-            String[] intStr = result.get().input.split("(\\D+)");
+            String[] intStr = result.get().getInput().split("(\\D+)");
             customInput = new int[intStr.length];
             for (int i = 0; i < intStr.length; i++) {
                 customInput[i] = Integer.parseInt(intStr[i]);
             }
-            initialize(result.get().algoritm, customInput);
+            initialize(result.get().getAlgoritm(), customInput);
         }
     }
 }
