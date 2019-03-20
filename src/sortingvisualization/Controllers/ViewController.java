@@ -29,6 +29,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.VariablesInfo;
 import sortingvisualization.algorithms.AbstractAlgorithm;
 import sortingvisualization.algorithms.BubbleSort;
 import sortingvisualization.algorithms.BucketSort;
@@ -77,17 +78,20 @@ public class ViewController {
     public static final Color LINE_SELECTION = Color.WHITE;
     
     private int[] currentArray;
-    private Pane displayPane;
+    private final Pane displayPane;
+    private final Pane codePanel;
     private Pane infoPanel;
     private Algorithm currentInstance;
     
     /**
-     * Animation creation controller
+     * Nodes and their animation creation controller
      * @param displayPane main pane to show graphic items
-     * @param infoPanel side panel for code
+     * @param codePanel panel for placing pseudocode
+     * @param infoPanel panel for placing variables state
      */
-    public ViewController(Pane displayPane, Pane infoPanel){
+    public ViewController(Pane displayPane, Pane codePanel, Pane infoPanel){
         this.displayPane = displayPane;
+        this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
         currentArray = generateRandomArray(N_VALUES, MIN, MAX);
@@ -230,6 +234,7 @@ public class ViewController {
     
     private void initValues(){
         displayPane.getChildren().clear();
+        codePanel.getChildren().clear();
         infoPanel.getChildren().clear();
     }
     
@@ -261,40 +266,41 @@ public class ViewController {
                 DynamicNodes dNodes = new DynamicNodes();
                 FixedNodes fNodes = new FixedNodes();
                 Tree tNodes;
+                VariablesInfo currentInfo = new VariablesInfo();
                 AbstractAlgorithm sorting;
                 List<BrickNode> list;
                 List<Animation> anim;
                 switch(currentInstance){
                     case Bubble:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new BubbleSort(list, infoPanel);
+                        sorting = new BubbleSort(list, codePanel);
                         break;
                     case CocktailShaker:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new CocktailShakerSort(list, infoPanel);
+                        sorting = new CocktailShakerSort(list, codePanel);
                         break;
                     case Insertion:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new InsertionSort(list, infoPanel);
+                        sorting = new InsertionSort(list, codePanel);
                         break;
                     case Selection:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new SelectionSort(list, infoPanel);
+                        sorting = new SelectionSort(list, codePanel);
                         break;
                     case Quick:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new QuickSort(list, infoPanel);
+                        sorting = new QuickSort(list, codePanel);
                         break;
                     case Merge:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new MergeSort(list, infoPanel);
+                        sorting = new MergeSort(list, codePanel);
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
                         List<Text> countLabels = createLabelsList(getMaximum(instanceType), 0, LEVEL2 + 30);
                         List<BrickNode> placeHolders = createGreyNodes(getMaximum(instanceType));
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new CountingSort(list, countLabels, infoPanel);
+                        sorting = new CountingSort(list, countLabels, currentInfo, codePanel);
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(0, placeHolders);
                             displayPane.getChildren().addAll(countLabels);
@@ -303,7 +309,7 @@ public class ViewController {
                         break;
                     case Bucket:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new BucketSort(list, infoPanel);
+                        sorting = new BucketSort(list, codePanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
                                 / BucketSort.BUCKET_SIZE + 1;
                         List<FlowPane> buckets = createBucketList(
@@ -314,7 +320,7 @@ public class ViewController {
                         break;
                     case Radix:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new RadixSort(list, infoPanel);
+                        sorting = new RadixSort(list, codePanel);
                         List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
@@ -323,7 +329,7 @@ public class ViewController {
                     case Heap:
                         tNodes = new Tree(generatedArray);
                         list = tNodes.getNodesList();
-                        sorting = new HeapSort(tNodes, infoPanel);
+                        sorting = new HeapSort(tNodes, codePanel);
                         Platform.runLater(() -> {
                                     displayPane.getChildren().addAll(tNodes.getChildConnections());
                                     displayPane.getChildren().addAll(tNodes.getPlaceholders());
@@ -332,12 +338,13 @@ public class ViewController {
                         break;
                     default:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new BubbleSort(list, infoPanel);
+                        sorting = new BubbleSort(list, codePanel);
                         break;
                 }
                 anim = sorting.sort();
                 Platform.runLater(() -> {
                             displayPane.getChildren().addAll(list);
+                            infoPanel.getChildren().add(currentInfo.getInfoField());
                         });
                 return anim;
             }

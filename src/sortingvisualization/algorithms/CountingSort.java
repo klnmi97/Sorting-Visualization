@@ -15,6 +15,7 @@ import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
  *
@@ -25,6 +26,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
     private List<BrickNode> list;
     private Pseudocode pc;
     private List<Text> counters;
+    private VariablesInfo varInfo;
     
     /**
      * Counting Sort animation manager
@@ -32,10 +34,11 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
      * @param counters label counters for each value of item range
      * @param infoPane pane to add code graphic representation to
      */
-    public CountingSort(List<BrickNode> list, List<Text> counters, Pane infoPane){
+    public CountingSort(List<BrickNode> list, List<Text> counters, VariablesInfo varInfo, Pane infoPane){
         this.list = list;
         this.pc = new Pseudocode();
         this.counters = counters;
+        this.varInfo = varInfo;
         addPseudocode(pc);
         addCodeToUI(infoPane);
     }

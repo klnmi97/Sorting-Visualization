@@ -14,6 +14,7 @@ import sortingvisualization.UI.InputDialog;
 import sortingvisualization.UI.Toast;
 import sortingvisualization.Data.BindingData;
 import sortingvisualization.Utilities.Scaling;
+
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -51,8 +52,8 @@ import javafx.stage.Stage;
  */
 public class Window extends Application {
     
-    private int max = 100;
-    private int min = 7;
+    private final int max = 100;
+    private final int min = 7;
     
     private MenuBar menuBar;
     Menu menuFile;
@@ -74,8 +75,10 @@ public class Window extends Application {
     Slider speedSlider;
     
     Pane displayPane;
-    VBox sidePanel;
+    StackPane sidePanel;
+    VBox topSidePanel;
     FlowPane codePane;
+    FlowPane infoPane;
     
     BindingData buttonBindings;
     ViewController creator;
@@ -89,10 +92,6 @@ public class Window extends Application {
         double windowSizeFactor = Scaling.computeDPIScale();
         
         displayPane = new StackPane();
-        codePane = new FlowPane();
-        codePane.setPadding(new Insets(30, 10, 30, 10));
-        creator = new ViewController(displayPane, codePane);
-        controller = new AnimationController();
         //menu
         initializeMenu(primaryStage);
         
@@ -177,19 +176,34 @@ public class Window extends Application {
         top.getChildren().addAll(menuBar, algorithmButtonBox);
         BorderPane root = new BorderPane();
         
-        sidePanel = new VBox();
+        sidePanel = new StackPane();
         sidePanel.setPrefWidth(400 * windowSizeFactor);
         sidePanel.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
-        sidePanel.getChildren().addAll(headerLbl, codePane);
-        sidePanel.setAlignment(Pos.TOP_CENTER);
         sidePanel.setOnMouseClicked(event->
-            {/*sidePanel.setVisible(false);
-            sidePanel.setManaged(false);*/
-            root.setRight(showSidePanelBtn);});
+            {root.setRight(showSidePanelBtn);});
         
+        codePane = new FlowPane();
+        codePane.setPadding(new Insets(30, 10, 30, 10));
+        
+        infoPane = new FlowPane();
+        infoPane.setPadding(new Insets(30, 10, 30, 10));
+        infoPane.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
+        
+        topSidePanel = new VBox();
+        topSidePanel.setAlignment(Pos.TOP_CENTER);
+        topSidePanel.getChildren().addAll(headerLbl, codePane);
+        
+        StackPane.setAlignment(topSidePanel, Pos.TOP_CENTER);
+        StackPane.setAlignment(infoPane, Pos.BOTTOM_CENTER);
+        sidePanel.getChildren().addAll(topSidePanel, infoPane);
+        infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         showSidePanelBtn.setOnAction(event->{
             root.setRight(sidePanel);
             Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);});
+        
+        creator = new ViewController(displayPane, codePane, infoPane);
+        controller = new AnimationController();
         
         root.setCenter(displayPane);
         root.setTop(top);
@@ -208,10 +222,6 @@ public class Window extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(1100);
-        //displayPane.setMaxSize(root.getWidth()/2, root.getHeight()/2);
-        
-        //primaryStage.setFullScreen(true); //left for menu
-        //primaryStage.setMaximized(true);
         primaryStage.show();
         Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);
     }
