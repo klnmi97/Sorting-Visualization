@@ -45,6 +45,9 @@ public class DynamicNodes {
             Color color, double leftIndent, double topIndent) {
         int num = value;
         double percent = (double)num / currentMax;
+        if(percent < 0.07){
+            percent = 0;
+        }
         Rectangle rectangle = new Rectangle(50 * scalingFactor, (percent * 10 * 20 * scalingFactor) + 5);
         rectangle.setFill(color);
         

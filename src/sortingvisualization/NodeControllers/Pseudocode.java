@@ -28,7 +28,7 @@ import javafx.scene.text.Text;
 public class Pseudocode {
     
     private static final double scaling = Scaling.computeDPIScale();
-    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 12 * scaling); //TODO: maybe better font
+    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 13 * scaling); //TODO: maybe better font
     private final List<StackPane> codeLines;
     private final List<Boolean> selection;
     

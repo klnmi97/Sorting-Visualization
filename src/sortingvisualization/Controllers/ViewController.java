@@ -64,7 +64,7 @@ public class ViewController {
     public  double currentSpeed = 3;
     
     public static final int MAX = 100;
-    public static final int MIN = 6;
+    public static final int MIN = 0;
     public static final int CNT_MAX = 10;
     public static final int CNT_MIN = 0;
     public static final int RDX_MAX = 9999;
@@ -266,14 +266,14 @@ public class ViewController {
                 DynamicNodes dNodes = new DynamicNodes();
                 FixedNodes fNodes = new FixedNodes();
                 Tree tNodes;
-                VariablesInfo currentInfo = new VariablesInfo();
+                VariablesInfo currentInfo = new VariablesInfo(infoPanel.getPrefWidth());
                 AbstractAlgorithm sorting;
                 List<BrickNode> list;
                 List<Animation> anim;
                 switch(currentInstance){
                     case Bubble:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new BubbleSort(list, codePanel);
+                        sorting = new BubbleSort(list, currentInfo, codePanel);
                         break;
                     case CocktailShaker:
                         list = dNodes.createList(generatedArray, currentMax);
@@ -338,7 +338,7 @@ public class ViewController {
                         break;
                     default:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new BubbleSort(list, codePanel);
+                        sorting = new BubbleSort(list, currentInfo, codePanel);
                         break;
                 }
                 anim = sorting.sort();

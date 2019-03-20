@@ -23,28 +23,36 @@ import sortingvisualization.Utilities.Scaling;
 public class VariablesInfo {
     
     private static final double scaling = Scaling.computeDPIScale();
-    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 12 * scaling); //TODO: maybe better font
-    private static final int DEFAULT_WIDTH = 400;
+    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 14 * scaling); //TODO: maybe better font
     
     private Label infoField;
     private String previousValue;
     
-    public VariablesInfo(){
+    /**
+     * Creates new instance of variable state information handler class
+     * @param preferredWidth width of side panel for correct text wrapping
+     */
+    public VariablesInfo(double preferredWidth){
         this.previousValue = "";
         this.infoField = new Label("");
         infoField.setFont(font);
         infoField.setWrapText(true);
-        infoField.setPrefWidth(DEFAULT_WIDTH);
+        infoField.setPrefWidth(preferredWidth);
     }
     
     /**
-     * Gets Label node for panel with information about state of variables
+     * Gets Label node for panel with information about the state of variables
      * @return label
      */
     public Label getInfoField() {
         return infoField;
     }
     
+    /**
+     * Creates animation of changing text at the information node
+     * @param value text to set
+     * @return animation of changing text
+     */
     public Animation setText(String value) {
         String oldVal = previousValue;
         previousValue = value;

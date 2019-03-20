@@ -52,9 +52,6 @@ import javafx.stage.Stage;
  */
 public class Window extends Application {
     
-    private final int max = 100;
-    private final int min = 7;
-    
     private MenuBar menuBar;
     Menu menuFile;
     Menu menuEdit;
@@ -186,8 +183,8 @@ public class Window extends Application {
         codePane.setPadding(new Insets(30, 10, 30, 10));
         
         infoPane = new FlowPane();
-        infoPane.setPadding(new Insets(30, 10, 30, 10));
-        infoPane.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        infoPane.setPadding(new Insets(20, 10, 20, 10));
+        infoPane.setBackground(new Background(new BackgroundFill(Color.CORAL, CornerRadii.EMPTY, Insets.EMPTY)));
         infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         
         topSidePanel = new VBox();
@@ -287,7 +284,7 @@ public class Window extends Application {
      */
     private void createNewSorting() {
         int[] customInput;
-        InputDialog dialog = new InputDialog(max, min);
+        InputDialog dialog = new InputDialog();
         scene.getRoot().setEffect(new GaussianBlur(5));
         dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
         Optional<Results> result = dialog.showAndWait();

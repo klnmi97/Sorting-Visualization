@@ -46,9 +46,9 @@ public class InputDialog extends Dialog<Results> {
     private int maxInputValue;
     private int minInputValue;
     
-    public InputDialog(int max, int min){
-        this.maxInputValue = max;
-        this.minInputValue = min;
+    public InputDialog(){
+        this.maxInputValue = ViewController.MAX;
+        this.minInputValue = ViewController.MIN;
         setTitle("New sorting");
         setHeaderText("Enter data");
         
