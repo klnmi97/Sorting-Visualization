@@ -11,6 +11,7 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -64,8 +65,8 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 } else {
                     
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(j), ViewController.DEFAULT, 
-                            ViewController.COMPARE));
+                            list.get(j), Constants.DEFAULT, 
+                            Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
                                         pc.selectLine(2),
                                         vars.setText("Checking if " + list.get(j-1).getValue() 
@@ -87,21 +88,21 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 //unselect (anim)
                 if(j == n - i - 1){
                     addAnimations(anim, AnimUtils.setColor(list.get(j-1), 
-                                ViewController.COMPARE, ViewController.DEFAULT),
+                                Constants.COMPARE, Constants.DEFAULT),
                                         AnimUtils.setColor(list.get(n-i-1), 
-                                ViewController.COMPARE, ViewController.SORTED),
+                                Constants.COMPARE, Constants.SORTED),
                                         vars.setText(list.get(n-i-1).getValue() + " is sorted"));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(j-1), ViewController.COMPARE, 
-                            ViewController.DEFAULT));
+                            list.get(j-1), Constants.COMPARE, 
+                            Constants.DEFAULT));
                 }
             }
         }
         
         addAnimations(anim, AnimUtils.setColor(list.get(0), 
-                                ViewController.DEFAULT, ViewController.SORTED),
+                                Constants.DEFAULT, Constants.SORTED),
                             pc.unselectAll(),
                             vars.setText("Array is sorted"));
         return anim;
@@ -109,8 +110,8 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
     
     private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines("for i = 0 to sizeOfArray-1",
-                "  for j = 1 to lastUnsortedElement-1",
+        code.addLines("for i = 0 to sizeOfArray - 1",
+                "  for j = 1 to (sizeOfArray - i) - 1",
                 "    if leftElement > rightElement",
                 "      swap(leftElement, rightElement)");
     }

@@ -13,6 +13,7 @@ import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -44,13 +45,13 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
         for (int i = 0; i < arrayLength - 1; i++){  
             int index = i;
             anim.add(AnimUtils.makeParallel(
-                    AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED),
+                    AnimUtils.setColor(list.get(i), Constants.DEFAULT, Color.RED),
                     pc.selectLines(0,1)));
             compareTransition = new ParallelTransition();
             
             for (int j = i + 1; j < arrayLength; j++) {
-                compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), ViewController.DEFAULT, 
-                        ViewController.COMPARE));
+                compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), Constants.DEFAULT, 
+                        Constants.COMPARE));
                 anim.add(AnimUtils.makeParallel(
                         compareTransition,
                         pc.selectLine(2)));
@@ -58,16 +59,16 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
                     
                     anim.add(AnimUtils.makeParallel(
                             AnimUtils.setColor(list.get(index), Color.RED, 
-                                    ViewController.DEFAULT),
+                                    Constants.DEFAULT),
                             AnimUtils.setColor(list.get(j), 
-                                    ViewController.COMPARE, Color.RED),
+                                    Constants.COMPARE, Color.RED),
                             pc.selectLine(3)));
                     index = j;  //searching for lowest index 
                     compareTransition = new ParallelTransition();
                 } else {
                     compareTransition = new ParallelTransition();
                     compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), 
-                            ViewController.COMPARE, ViewController.DEFAULT));
+                            Constants.COMPARE, Constants.DEFAULT));
                 }
             }
             
@@ -75,15 +76,15 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
             parallelTransition = new ParallelTransition();
             if(index != i){
                 anim.add(AnimUtils.makeParallel(new SequentialTransition(
-                        AnimUtils.setColor(list.get(i), ViewController.DEFAULT, Color.RED), 
+                        AnimUtils.setColor(list.get(i), Constants.DEFAULT, Color.RED), 
                         AnimUtils.swap(list.get(index), list.get(i), index, i)),
                         pc.selectLine(4)));
                 
                 parallelTransition.getChildren().add(AnimUtils.setColor(list.get(i), Color.RED, 
-                        ViewController.DEFAULT));
+                        Constants.DEFAULT));
             }
             parallelTransition.getChildren().add(AnimUtils.setColor(list.get(index), Color.RED, 
-                    ViewController.SORTED));
+                    Constants.SORTED));
             anim.add(AnimUtils.makeParallel(
                     parallelTransition,
                     pc.selectLine(4)));
@@ -95,8 +96,8 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
             
         }
         anim.add(AnimUtils.makeParallel(
-                AnimUtils.setColor(list.get(arrayLength - 1), ViewController.DEFAULT, 
-                        ViewController.SORTED),
+                AnimUtils.setColor(list.get(arrayLength - 1), Constants.DEFAULT, 
+                        Constants.SORTED),
                 pc.unselectAll()));
         return anim;
     }

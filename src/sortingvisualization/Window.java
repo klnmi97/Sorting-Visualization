@@ -45,6 +45,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sortingvisualization.Constants.Constants;
 
 /**
  *
@@ -175,7 +176,7 @@ public class Window extends Application {
         
         sidePanel = new StackPane();
         sidePanel.setPrefWidth(400 * windowSizeFactor);
-        sidePanel.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
+        sidePanel.setBackground(new Background(new BackgroundFill(Constants.PANEL_BGND, CornerRadii.EMPTY, Insets.EMPTY)));
         sidePanel.setOnMouseClicked(event->
             {root.setRight(showSidePanelBtn);});
         
@@ -184,7 +185,7 @@ public class Window extends Application {
         
         infoPane = new FlowPane();
         infoPane.setPadding(new Insets(20, 10, 20, 10));
-        infoPane.setBackground(new Background(new BackgroundFill(Color.CORAL, CornerRadii.EMPTY, Insets.EMPTY)));
+        infoPane.setBackground(new Background(new BackgroundFill(Constants.LOW_PAN_BGND, CornerRadii.EMPTY, Insets.EMPTY)));
         infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         
         topSidePanel = new VBox();

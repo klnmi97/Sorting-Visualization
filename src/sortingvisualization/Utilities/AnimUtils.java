@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.Controllers.ViewController;
 
@@ -169,16 +170,16 @@ public class AnimUtils {
     public static Animation selectNodes(BrickNode node1, BrickNode node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
-                setColor(node1, ViewController.DEFAULT, ViewController.COMPARE), 
-                setColor(node2, ViewController.DEFAULT, ViewController.COMPARE));
+                setColor(node1, Constants.DEFAULT, Constants.COMPARE), 
+                setColor(node2, Constants.DEFAULT, Constants.COMPARE));
         return parallelTransition;
     }
     
     public static Animation unselectNodes(BrickNode node1, BrickNode node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
-                setColor(node1, ViewController.COMPARE, ViewController.DEFAULT), 
-                setColor(node2, ViewController.COMPARE, ViewController.DEFAULT));
+                setColor(node1, Constants.COMPARE, Constants.DEFAULT), 
+                setColor(node2, Constants.COMPARE, Constants.DEFAULT));
         return parallelTransition;
     }
     

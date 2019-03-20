@@ -12,6 +12,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -62,7 +63,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                 } else {
                     parallelTransition.getChildren().add(
                             AnimUtils.setColor(list.get(k+1), 
-                                    ViewController.DEFAULT, ViewController.COMPARE));
+                                    Constants.DEFAULT, Constants.COMPARE));
                     sq.add(AnimUtils.makeParallel(
                                     pc.selectLine(4),
                                     parallelTransition));
@@ -83,13 +84,13 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                 if(k == j - 1){
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(k+1), ViewController.COMPARE, 
-                            ViewController.SORTED));
+                            list.get(k+1), Constants.COMPARE, 
+                            Constants.SORTED));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(k), ViewController.COMPARE, 
-                            ViewController.DEFAULT));
+                            list.get(k), Constants.COMPARE, 
+                            Constants.DEFAULT));
                 }
             }
             
@@ -105,8 +106,8 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                 {
                     
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(k-1), ViewController.DEFAULT, 
-                                ViewController.COMPARE));
+                            list.get(k-1), Constants.DEFAULT, 
+                                Constants.COMPARE));
                     sq.add(AnimUtils.makeParallel(
                             pc.selectLine(10),
                             parallelTransition));
@@ -127,13 +128,13 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                     if(k == i + 1){
                         parallelTransition = new ParallelTransition();
                         parallelTransition.getChildren().add(AnimUtils.setColor(
-                                list.get(k-1), ViewController.COMPARE, 
-                                ViewController.SORTED));
+                                list.get(k-1), Constants.COMPARE, 
+                                Constants.SORTED));
                     } else {
                         parallelTransition = new ParallelTransition();
                         parallelTransition.getChildren().add(AnimUtils.setColor(
-                                list.get(k), ViewController.COMPARE, 
-                                ViewController.DEFAULT));
+                                list.get(k), Constants.COMPARE, 
+                                Constants.DEFAULT));
                     }
                 }
                 lastStart = i;
@@ -146,7 +147,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
         parallelTransition = new ParallelTransition();
         for (int k = lastStart; k < lastFinish; k++) {
             parallelTransition.getChildren().add(AnimUtils
-                    .setColor(list.get(k), ViewController.DEFAULT, ViewController.SORTED));
+                    .setColor(list.get(k), Constants.DEFAULT, Constants.SORTED));
         }
         
         sq.add(AnimUtils.makeParallel(new SequentialTransition(

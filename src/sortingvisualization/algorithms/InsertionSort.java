@@ -13,6 +13,7 @@ import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -45,41 +46,41 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             BrickNode key = list.get(i);
             if(i == 1){
                 sq.add(AnimUtils.makeParallel(
-                        AnimUtils.setColor(list.get(i-1), ViewController.DEFAULT, ViewController.SORTED),
+                        AnimUtils.setColor(list.get(i-1), Constants.DEFAULT, Constants.SORTED),
                         pc.selectLines(0, 1)));
             }
             sq.add(AnimUtils.makeParallel(new SequentialTransition(
-                    AnimUtils.setColor(key, ViewController.DEFAULT, Color.RED),
+                    AnimUtils.setColor(key, Constants.DEFAULT, Color.RED),
                     AnimUtils.moveDownToX(key, i, i)),
                     pc.selectLine(2)));
             int j = i-1;
             while (j>=0 && list.get(j).compareTo(key) == 1) 
             {
-                sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
-                        ViewController.COMPARE),
+                sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), Constants.SORTED, 
+                        Constants.COMPARE),
                         pc.selectLines(4)));
                 sq.add(AnimUtils.makeParallel(new SequentialTransition(
                         AnimUtils.swap(key, list.get(j), j+1, j),
                         AnimUtils.setColor(list.get(j), 
-                                ViewController.COMPARE, ViewController.SORTED)),
+                                Constants.COMPARE, Constants.SORTED)),
                         pc.selectLine(5)));
                 list.set(j+1, list.get(j));
                 j = j-1;
             }
             if(j >= 0){
-                sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), ViewController.SORTED, 
-                        ViewController.COMPARE),
+                sq.add(AnimUtils.makeParallel(AnimUtils.setColor(list.get(j), Constants.SORTED, 
+                        Constants.COMPARE),
                         pc.selectLines(4)));
                 sq.add(AnimUtils.makeParallel(new ParallelTransition(
-                        AnimUtils.setColor(list.get(j), ViewController.COMPARE, 
-                                    ViewController.SORTED),
+                        AnimUtils.setColor(list.get(j), Constants.COMPARE, 
+                                    Constants.SORTED),
                         new SequentialTransition(
                                 AnimUtils.moveNodeUp(key),
-                                AnimUtils.setColor(key, Color.RED, ViewController.SORTED))),
+                                AnimUtils.setColor(key, Color.RED, Constants.SORTED))),
                         pc.selectLine(6)));
             } else{
                 sq.add(AnimUtils.makeParallel(new SequentialTransition(AnimUtils.moveNodeUp(key),
-                    AnimUtils.setColor(key, Color.RED, ViewController.SORTED)),
+                    AnimUtils.setColor(key, Color.RED, Constants.SORTED)),
                         pc.selectLines(4, 6)));
             }
             list.set(j+1, key);

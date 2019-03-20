@@ -20,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import sortingvisualization.Constants.Constants;
 
 /**
  *
@@ -29,6 +30,7 @@ public class Pseudocode {
     
     private static final double scaling = Scaling.computeDPIScale();
     private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 13 * scaling); //TODO: maybe better font
+    private static final Color BGND = Constants.PANEL_BGND;
     private final List<StackPane> codeLines;
     private final List<Boolean> selection;
     
@@ -88,7 +90,7 @@ public class Pseudocode {
             if(isLineSelected(i) && !isInArray(i, lines)){
                 pt.getChildren().add(
                         AnimUtils.setColor(codeLines.get(i), 
-                                ViewController.LINE_SELECTION, Color.AQUAMARINE));
+                                Constants.LINE_SELECTION, BGND));
                 selection.set(i, Boolean.FALSE);
             }
         }
@@ -96,7 +98,7 @@ public class Pseudocode {
             if(!(line > codeLines.size() || line < 0) && !isLineSelected(line)){
                 pt.getChildren().add(
                             AnimUtils.setColor(codeLines.get(line), 
-                                    Color.AQUAMARINE, ViewController.LINE_SELECTION));
+                                    BGND, Constants.LINE_SELECTION));
                 selection.set(line, Boolean.TRUE);
             }
         }
@@ -116,7 +118,7 @@ public class Pseudocode {
     
     private StackPane createLine(String line) {
         Rectangle rectangle = new Rectangle(390 * scaling, 25 * scaling);
-        rectangle.setFill(Color.AQUAMARINE);
+        rectangle.setFill(BGND);
         
         Text text = new Text(line);
         text.setFont(font);

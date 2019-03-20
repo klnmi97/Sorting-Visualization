@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
 import sortingvisualization.Controllers.ViewController;
 
@@ -38,7 +39,7 @@ public class DynamicNodes {
     }
     
     private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
-        return createCustomNode(i, value, currentMax, ViewController.DEFAULT, leftIndent, ViewController.LEVEL1);
+        return createCustomNode(i, value, currentMax, Constants.DEFAULT, leftIndent, ViewController.LEVEL1);
     }
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 

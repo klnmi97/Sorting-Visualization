@@ -12,6 +12,7 @@ import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -57,7 +58,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
             quickSort(list, partitionIndex+1, high, anim, code); 
         }
         else if(low == high){
-            anim.add(AnimUtils.setColor(list.get(high), ViewController.DEFAULT, ViewController.SORTED));
+            anim.add(AnimUtils.setColor(list.get(high), Constants.DEFAULT, Constants.SORTED));
         }
     } 
      
@@ -75,7 +76,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         BrickNode pivot = list.get(high);
         
         sq.add(AnimUtils.makeParallel(
-                AnimUtils.setColor(list.get(high), ViewController.DEFAULT, Color.RED),
+                AnimUtils.setColor(list.get(high), Constants.DEFAULT, Color.RED),
                 code.selectLines(7,8,9)));
         
         int i = (low-1); // index of smaller element
@@ -86,7 +87,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
             // If current element is smaller than or 
             // equal to pivot 
             sq.add(AnimUtils.makeParallel(
-                    AnimUtils.setColor(list.get(j), ViewController.DEFAULT, ViewController.COMPARE),
+                    AnimUtils.setColor(list.get(j), Constants.DEFAULT, Constants.COMPARE),
                     code.selectLine(10)));
             if (list.get(j).getValue() <= pivot.getValue()) 
             { 
@@ -103,11 +104,11 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
                 list.set(i, list.get(j)); 
                 list.set(j, temp);
                 sq.add(AnimUtils.makeParallel(
-                        AnimUtils.setColor(list.get(i), ViewController.COMPARE, ViewController.DEFAULT),
+                        AnimUtils.setColor(list.get(i), Constants.COMPARE, Constants.DEFAULT),
                         code.selectLine(12)));
                 
             } else{
-                sq.add(AnimUtils.setColor(list.get(j), ViewController.COMPARE, ViewController.DEFAULT));
+                sq.add(AnimUtils.setColor(list.get(j), Constants.COMPARE, Constants.DEFAULT));
             } 
             
         } 
@@ -119,7 +120,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         BrickNode temp = list.get(i+1); 
         list.set(i+1, list.get(high)); 
         list.set(high, temp);
-        sq.add(AnimUtils.setColor(pivot, Color.RED, ViewController.SORTED));
+        sq.add(AnimUtils.setColor(pivot, Color.RED, Constants.SORTED));
         
         parallelTransition = new ParallelTransition();
         for (int k = low; k <= high; k++) {

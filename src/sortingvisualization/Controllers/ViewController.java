@@ -70,12 +70,7 @@ public class ViewController {
     public static final int RDX_MAX = 9999;
     public static final int RDX_MIN = 0;
     //Style
-    //colours of bricks:
-    //COMPARE - selected, DEFAULT - main color
-    public static final Color COMPARE = Color.AQUAMARINE;
-    public static final Color DEFAULT = Color.DARKCYAN;
-    public static final Color SORTED = Color.ORANGE;
-    public static final Color LINE_SELECTION = Color.WHITE;
+    
     
     private int[] currentArray;
     private final Pane displayPane;
