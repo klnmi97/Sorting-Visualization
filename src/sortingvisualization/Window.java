@@ -284,11 +284,12 @@ public class Window extends Application {
     
     private void openNewSortingDialog() {
         
-        InputDialog dialog = new InputDialog();
-        Optional<Results> result = dialog.showAndWait();
-        
         scene.getRoot().setEffect(new GaussianBlur(5));
+        
+        InputDialog dialog = new InputDialog();
         dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
+        
+        Optional<Results> result = dialog.showAndWait();
         
         if (result.isPresent()){
             int[] customInput;
