@@ -53,6 +53,7 @@ import sortingvisualization.Constants.Constants;
  */
 public class Window extends Application {
     
+    private static final String toastMessage = "Click the side panel to hide it";
     private MenuBar menuBar;
     Menu menuFile;
     Menu menuEdit;
@@ -90,7 +91,7 @@ public class Window extends Application {
         double windowSizeFactor = Scaling.computeDPIScale();
         
         displayPane = new StackPane();
-        //menu
+        
         initializeMenu(primaryStage);
         
         algLbl = new Label("Algorithms: ");
@@ -161,14 +162,11 @@ public class Window extends Application {
         showSidePanelBtn.setMinHeight(70);
         showSidePanelBtn.getStyleClass().add("sideButton");
         
-        
         controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
-        
-        //algList.setSpacing(10);
         
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, algorithmButtonBox);
@@ -198,7 +196,7 @@ public class Window extends Application {
         infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         showSidePanelBtn.setOnAction(event->{
             root.setRight(sidePanel);
-            Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);});
+            showToastMessage(primaryStage, toastMessage);});
         
         creator = new ViewController(displayPane, codePane, infoPane);
         controller = new AnimationController();
@@ -221,7 +219,7 @@ public class Window extends Application {
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(1100);
         primaryStage.show();
-        Toast.makeText(primaryStage, "Click the side panel to hide it", 3500, 500, 500);
+        showToastMessage(primaryStage, toastMessage);
     }
     
     private void initializeMenu(Stage primaryStage){
@@ -239,7 +237,7 @@ public class Window extends Application {
         menuFile.getItems().add(menuItemExit);
         
         menuItemNew = new MenuItem("Create sorting");
-        menuItemNew.setOnAction(event->createNewSorting());
+        menuItemNew.setOnAction(event->openNewSortingDialog());
         menuItemNew.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         menuFile.getItems().add(menuItemNew);
         
@@ -280,17 +278,20 @@ public class Window extends Application {
         speedSlider.valueProperty().addListener(bindings.getSpeedListener());
     }
     
-    /*
-     * Custom input dialog call
-     */
-    private void createNewSorting() {
-        int[] customInput;
+    private void showToastMessage(Stage primaryStage, String toastMessage){
+        Toast.makeText(primaryStage, toastMessage, 3500, 500, 500);
+    }
+    
+    private void openNewSortingDialog() {
+        
         InputDialog dialog = new InputDialog();
-        scene.getRoot().setEffect(new GaussianBlur(5));
-        dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
         Optional<Results> result = dialog.showAndWait();
         
+        scene.getRoot().setEffect(new GaussianBlur(5));
+        dialog.setOnHidden(event->{scene.getRoot().setEffect(new GaussianBlur(0));});
+        
         if (result.isPresent()){
+            int[] customInput;
             String[] intStr = result.get().getInput().split("(\\D+)");
             customInput = new int[intStr.length];
             for (int i = 0; i < intStr.length; i++) {
