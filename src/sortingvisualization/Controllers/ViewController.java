@@ -261,7 +261,7 @@ public class ViewController {
                 DynamicNodes dNodes = new DynamicNodes();
                 FixedNodes fNodes = new FixedNodes();
                 Tree tNodes;
-                VariablesInfo currentInfo = new VariablesInfo(infoPanel.getPrefWidth());
+                VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
                 AbstractAlgorithm sorting;
                 List<BrickNode> list;
                 List<Animation> anim;
@@ -272,7 +272,7 @@ public class ViewController {
                         break;
                     case CocktailShaker:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new CocktailShakerSort(list, codePanel);
+                        sorting = new CocktailShakerSort(list, currentInfo, codePanel);
                         break;
                     case Insertion:
                         list = dNodes.createList(generatedArray, currentMax);
