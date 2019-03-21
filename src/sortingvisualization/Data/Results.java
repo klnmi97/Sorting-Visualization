@@ -13,15 +13,15 @@ import sortingvisualization.Enums.Algorithm;
  */
 public class Results {
 
-    private String input;
+    private int[] input;
     private Algorithm algoritm;
 
-    public Results(String input, Algorithm algorithm) {
+    public Results(int[] input, Algorithm algorithm) {
         this.input = input;
         this.algoritm = algorithm;
     }
 
-    public String getInput() {
+    public int[] getInput() {
         return input;
     }
 

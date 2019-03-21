@@ -36,6 +36,7 @@ import sortingvisualization.Controllers.ViewController;
 public class InputDialog extends Dialog<Results> {
     
     private final int MAX_INPUT_LENGTH = 20;
+    private final int MIN_INPUT_LENGTH = 3;
     
     private Label inputLbl;
     private Label choiseLbl;
@@ -71,6 +72,8 @@ public class InputDialog extends Dialog<Results> {
         errorLbl = new Label("");
         errorLbl.textFillProperty().setValue(Color.RED);
         //errorLbl.setFont(dialogFont);
+        
+        int[] parsedInput;
         
         ObservableList<Algorithm> options =
             FXCollections.observableArrayList(Algorithm.values());
@@ -114,7 +117,8 @@ public class InputDialog extends Dialog<Results> {
         
         setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
-                return new Results(inputTextField.getText(),
+                int[] result = parseArray(inputTextField.getText());
+                return new Results(result,
                     comboBox.getValue());
             }
             return null;
@@ -166,13 +170,23 @@ public class InputDialog extends Dialog<Results> {
         if(minValue < min){
             throw new Exception("Input value must be bigger than " + min);
         }
-        if(intStr.length <= 1){
-            throw new Exception("Enter at least two numbers");
+        if(intStr.length < MIN_INPUT_LENGTH){
+            throw new Exception("Enter at least " + MIN_INPUT_LENGTH + " numbers");
         } 
         else if(intStr.length > MAX_INPUT_LENGTH){ //14 due to sidepanel & min size
             throw new Exception("Maximum count of numbers is " + MAX_INPUT_LENGTH );
         }
         return true;
+    }
+    
+    //use only after checking if it is correct
+    private int[] parseArray(String inputText){
+        String[] intStr = inputText.split("(\\D+)");
+        int [] input = new int[intStr.length];
+        for (int i = 0; i < intStr.length; i++) {
+            input[i] = Integer.parseInt(intStr[i]);
+        }
+        return input;
     }
 }
 

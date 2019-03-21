@@ -292,12 +292,7 @@ public class Window extends Application {
         Optional<Results> result = dialog.showAndWait();
         
         if (result.isPresent()){
-            int[] customInput;
-            String[] intStr = result.get().getInput().split("(\\D+)");
-            customInput = new int[intStr.length];
-            for (int i = 0; i < intStr.length; i++) {
-                customInput[i] = Integer.parseInt(intStr[i]);
-            }
+            int[] customInput = result.get().getInput();
             initialize(result.get().getAlgoritm(), customInput);
         }
     }
