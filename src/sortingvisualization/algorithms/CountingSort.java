@@ -23,22 +23,23 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class CountingSort extends Sorting implements AbstractAlgorithm {
     
-    private List<BrickNode> list;
-    private Pseudocode pc;
-    private List<Text> counters;
-    private VariablesInfo varInfo;
+    private final List<BrickNode> list;
+    private final Pseudocode pc;
+    private final List<Text> counters;
+    private final VariablesInfo vars;
     
     /**
      * Counting Sort animation manager
      * @param list list with graphic elements to sort
      * @param counters label counters for each value of item range
+     * @param vars instance of variables information class
      * @param infoPane pane to add code graphic representation to
      */
-    public CountingSort(List<BrickNode> list, List<Text> counters, VariablesInfo varInfo, Pane infoPane){
+    public CountingSort(List<BrickNode> list, List<Text> counters, VariablesInfo vars, Pane infoPane){
         this.list = list;
         this.pc = new Pseudocode();
         this.counters = counters;
-        this.varInfo = varInfo;
+        this.vars = vars;
         addPseudocode(pc);
         addCodeToUI(infoPane);
     }
@@ -68,7 +69,9 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
                     AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
                             ViewController.LEFT_INDENT, ViewController.TEN_LEFT_INDENT),
                     AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue),
-                    pc.selectLine(2));
+                    pc.selectLine(2),
+                    vars.setText("Increase counter of " + num + " by one from " 
+                            + oldValue + " to " + newValue));
         }
         
         for(int i = 1; i < count.length; i++) {
@@ -80,7 +83,9 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String newVal = Integer.toString(count[i]);
             addAnimations(anim, 
                     AnimUtils.setText(counters.get(i), oldVal, newVal),
-                    pc.selectLine(4));
+                    pc.selectLine(4),
+                    vars.setText("Add counter of " + (i - 1) + " to the counter of " + i 
+                            + "\nCounter of " + i + " is " + oldVal + " + " + count[i - 1]));
         }
         
         
@@ -93,16 +98,21 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String newVal = Integer.toString(count[list.get(i).getValue()]);
             addAnimations(anim, 
                     AnimUtils.setText(counters.get(list.get(i).getValue()), oldVal, newVal),
-                    pc.selectLine(6));
+                    pc.selectLine(6),
+                    vars.setText("Iterating through the initial array, index = " + i
+                            + "\nCounter of " + list.get(i) + " was decreased by one and now is " + newVal));
             
             sorted[count[list.get(i).getValue()]] = list.get(i);
             
             addAnimations(anim, 
                     AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
                     ViewController.TEN_LEFT_INDENT, ViewController.LEFT_INDENT),
-                    pc.selectLine(7));
+                    pc.selectLine(7),
+                    vars.setText("Move " + list.get(i) + " to the " + count[list.get(i).getValue()] 
+                            + ". position"));
         }
-        addAnimations(anim, pc.unselectAll());
+        addAnimations(anim, pc.unselectAll(),
+                vars.setText("Array is sorted"));
         return anim;
     }
 

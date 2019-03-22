@@ -53,7 +53,7 @@ public class BrickNode extends StackPane implements Comparable<BrickNode>{
 
     @Override
     public String toString() {
-        return Integer.toString(getValue()); //To change body of generated methods, choose Tools | Templates.
+        return Integer.toString(getValue());
     }
     
     
