@@ -276,7 +276,7 @@ public class ViewController {
                         break;
                     case Insertion:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new InsertionSort(list, codePanel);
+                        sorting = new InsertionSort(list, currentInfo, codePanel);
                         break;
                     case Selection:
                         list = dNodes.createList(generatedArray, currentMax);

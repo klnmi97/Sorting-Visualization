@@ -45,7 +45,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
     }
     
     /**
-     * Creates animation flow for Cocktail - Shaker sorting algorithm
+     * Creates animation flow for the Cocktail - Shaker sorting algorithm
      * @return list of animation steps
      */
     @Override
