@@ -60,11 +60,11 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             BrickNode key = list.get(i);
             if(i == 1){
                 addAnimations(anim, code.selectLines(1, 2),
-                        vars.setText(list.get(i - 1).getValue() + " is sorted"),
+                        vars.setText(list.get(i - 1) + " is sorted"),
                         AnimUtils.setColor(list.get(i-1), Constants.DEFAULT, Constants.SORTED));
             }
             addAnimations(anim, code.selectLine(3), 
-                    vars.setText("Selecting " + list.get(i).getValue()),
+                    vars.setText("Selecting " + list.get(i)),
                     new SequentialTransition(
                     AnimUtils.setColor(key, Constants.DEFAULT, Color.RED),
                     AnimUtils.moveDownToX(key, i, i)));
@@ -73,10 +73,10 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             while (j>=0 && list.get(j).compareTo(key) == 1) 
             {
                 addAnimations(anim, code.selectLines(5),
-                        vars.setText("Check if " + list.get(j).getValue() + " > " + key.getValue()),
+                        vars.setText("Check if " + list.get(j) + " > " + key),
                         AnimUtils.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(6),
-                        vars.setText("Moving " + list.get(j).getValue() + " one position right"),
+                        vars.setText("Moving " + list.get(j) + " one position right"),
                         new SequentialTransition(
                         AnimUtils.swap(key, list.get(j), j+1, j),
                         AnimUtils.setColor(list.get(j), 
@@ -87,10 +87,10 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             }
             if(j >= 0){
                 addAnimations(anim, code.selectLines(5),
-                        vars.setText("Check if " + list.get(j).getValue() + " > " + key.getValue()),
+                        vars.setText("Check if " + list.get(j) + " > " + key),
                         AnimUtils.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(7),
-                        vars.setText("Insert " + key.getValue() + " at the " + (j + 1) + ". position"),
+                        vars.setText("Insert " + key + " at the " + (j + 1) + ". position"),
                         new ParallelTransition(
                         AnimUtils.setColor(list.get(j), Constants.COMPARE, 
                                     Constants.SORTED),
@@ -100,7 +100,7 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             } else{
                 addAnimations(anim, code.selectLines(5, 7),
                         vars.setText("No elements left to compare with. Insert " 
-                                + key.getValue() + " at the " + (j + 1) + ". position"),
+                                + key + " at the " + (j + 1) + ". position"),
                         new SequentialTransition(AnimUtils.moveNodeUp(key),
                     AnimUtils.setColor(key, Color.RED, Constants.SORTED)));
             }

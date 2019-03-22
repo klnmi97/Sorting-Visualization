@@ -15,11 +15,11 @@ import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
- *
+ * Class for creation animation flow(code, sorting, variables) for 
+ * the Bubble sorting algorithm.
  * @author Mykhailo Klunko
  */
 public class BubbleSort extends Sorting implements AbstractAlgorithm{
@@ -28,6 +28,13 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
     Pseudocode pc;
     VariablesInfo vars;
     
+    /**
+     * Creates a new instance of the Bubble Sort algorithm animation flow 
+     * creator class
+     * @param list list of nodes to animate
+     * @param vars instance of variables information class
+     * @param infoPane pane where the code will be placed
+     */
     public BubbleSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
         this.pc = new Pseudocode();
@@ -36,6 +43,10 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
         addCodeToUI(infoPane);
     }
     
+    /**
+     * Creates animation flow for the Bubble sorting algorithm
+     * @return list of animation steps
+     */
     @Override
     public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
@@ -58,8 +69,8 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 if(j == 1) {
                     
                     addAnimations(anim, pc.selectLine(3),
-                            vars.setText("Checking if " + list.get(j-1).getValue() 
-                                    + " > " + list.get(j).getValue()),
+                            vars.setText("Checking if " + list.get(j-1) 
+                                    + " > " + list.get(j)),
                             AnimUtils.selectNodes(list.get(j-1), list.get(j)));
                     
                 } else {
@@ -69,8 +80,8 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                             Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
                                         pc.selectLine(3),
-                                        vars.setText("Checking if " + list.get(j-1).getValue() 
-                                    + " > " + list.get(j).getValue()));
+                                        vars.setText("Checking if " 
+                                                + list.get(j-1) + " > " + list.get(j)));
                     
                 }
                 
@@ -78,8 +89,8 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                     
                     addAnimations(anim, AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
                                         pc.selectLine(4),
-                                        vars.setText("Swapping " + list.get(j-1).getValue() 
-                                    + " and " + list.get(j).getValue()));
+                                        vars.setText("Swapping " + list.get(j-1) 
+                                    + " and " + list.get(j)));
                     //swap elements
                     temp = list.get(j-1);  
                     list.set(j-1, list.get(j));  
@@ -91,7 +102,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                                 Constants.COMPARE, Constants.DEFAULT),
                                         AnimUtils.setColor(list.get(n-i-1), 
                                 Constants.COMPARE, Constants.SORTED),
-                                        vars.setText(list.get(n-i-1).getValue() + " is sorted"));
+                                        vars.setText(list.get(n-i-1) + " is sorted"));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
@@ -109,7 +120,6 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
     } 
     
     private void addPseudocode(Pseudocode code){
-        //TODO: improve pseudocode
         code.addLines("BubbleSort(A):",
                 "  for i = 0 to size(A) - 1",
                 "    for j = 1 to (size(A) - i) - 1",

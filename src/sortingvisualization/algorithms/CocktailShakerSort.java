@@ -74,8 +74,8 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
             {
                 if(k == 0){
                     addAnimations(anim, pc.selectLine(5),
-                            vars.setText("Check if " + list.get(k).getValue() 
-                                    + " > " + list.get(k + 1).getValue()),
+                            vars.setText("Check if " + list.get(k) 
+                                    + " > " + list.get(k + 1)),
                             AnimUtils.selectNodes(list.get(k), list.get(k+1)));
                     
                 } else {
@@ -83,15 +83,15 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                             AnimUtils.setColor(list.get(k+1), 
                                     Constants.DEFAULT, Constants.COMPARE));
                     addAnimations(anim, pc.selectLine(5),
-                            vars.setText("Check if " + list.get(k).getValue() 
-                                    + " > " + list.get(k + 1).getValue()),
+                            vars.setText("Check if " + list.get(k) 
+                                    + " > " + list.get(k + 1)),
                                     parallelTransition);
                 }
                 if(list.get(k).compareTo(list.get(k+1)) == 1) 
                 {
                     addAnimations(anim, pc.selectLines(6, 7),
-                            vars.setText("Swap " + list.get(k).getValue() 
-                                    + " and " + list.get(k + 1).getValue() 
+                            vars.setText("Swap " + list.get(k)
+                                    + " and " + list.get(k + 1)
                                     + ", set swapped to true"),
                             AnimUtils.swap(list.get(k), list.get(k + 1), k, k + 1));
                     //swap
@@ -138,14 +138,14 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                             list.get(k-1), Constants.DEFAULT, 
                                 Constants.COMPARE));
                     addAnimations(anim, pc.selectLine(11),
-                            vars.setText("Check if " + list.get(k - 1).getValue() 
-                                    + " > " + list.get(k).getValue()),
+                            vars.setText("Check if " + list.get(k - 1)
+                                    + " > " + list.get(k)),
                             parallelTransition);
                     
                     if(list.get(k).compareTo(list.get(k - 1)) == -1) 
                     {
                         addAnimations(anim, pc.selectLines(12, 13),
-                                vars.setText("Swap " + list.get(k - 1).getValue() + " and " + list.get(k).getValue()),
+                                vars.setText("Swap " + list.get(k - 1) + " and " + list.get(k)),
                                 AnimUtils.swap(list.get(k), list.get(k - 1), k, k - 1));
                         
                         BrickNode temp = list.get(k);
