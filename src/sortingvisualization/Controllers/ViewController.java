@@ -304,7 +304,7 @@ public class ViewController {
                         break;
                     case Bucket:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new BucketSort(list, codePanel);
+                        sorting = new BucketSort(list, currentInfo, codePanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
                                 / BucketSort.BUCKET_SIZE + 1;
                         List<FlowPane> buckets = createBucketList(

@@ -17,7 +17,8 @@ import sortingvisualization.NodeControllers.VariablesInfo;
 
 
 /**
- *
+ * Class for creation animation flow(code, sorting, variables) for 
+ * Heap sorting algorithm.
  * @author Mykhailo Klunko
  */
 public class HeapSort extends Sorting implements AbstractAlgorithm {
@@ -29,6 +30,13 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
     
     private int heapline = 2;
     
+    /**
+     * Creates a new instance of Heap Sort algorithm animation flow 
+     * creator class
+     * @param binaryHeap instance of heap graphic controller
+     * @param vars instance of variables information class
+     * @param infoPane pane where the code will be placed
+     */
     public HeapSort(Tree binaryHeap, VariablesInfo vars, Pane infoPane) {
         this.binaryTree = binaryHeap;
         this.list = binaryTree.getNodesList();
@@ -38,6 +46,10 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
         addCodeToUI(infoPane);
     }
 
+    /**
+     * Creates animation flow for the Heap sorting algorithm
+     * @return list of animation steps
+     */
     @Override
     public List<Animation> sort() {
         List<Animation> anim = new ArrayList<>();

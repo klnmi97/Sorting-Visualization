@@ -29,7 +29,7 @@ import sortingvisualization.Constants.Constants;
 public class Pseudocode {
     
     private static final double scaling = Scaling.computeDPIScale();
-    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 12 ); //TODO: maybe better font
+    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 13 * scaling); //TODO: maybe better font
     private static final Color BGND = Constants.PANEL_BGND;
     private final List<StackPane> codeLines;
     private final List<Boolean> selection;
