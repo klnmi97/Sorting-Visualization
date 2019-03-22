@@ -117,7 +117,7 @@ public class Pseudocode {
     }
     
     private StackPane createLine(String line) {
-        Rectangle rectangle = new Rectangle(400 * scaling, 27 * scaling);
+        Rectangle rectangle = new Rectangle(420 * scaling, 27 * scaling);
         rectangle.setFill(BGND);
         
         Text text = new Text(line);

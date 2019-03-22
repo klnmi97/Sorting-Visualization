@@ -43,13 +43,13 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
         int n = list.size();  
         BrickNode temp;
         
-        addAnimations(anim, pc.selectLine(0),
+        addAnimations(anim, pc.selectLine(1),
                             vars.setText("Iterate from 0 to " + (n - 1) ));
         
         for(int i=0; i < n; i++) {
             
             parallelTransition = new ParallelTransition();
-            addAnimations(anim, pc.selectLine(1),
+            addAnimations(anim, pc.selectLine(2),
                                 vars.setText("Iterate from 1 to " + (n - i - 1)));
             
             for(int j=1; j < (n-i); j++){ 
@@ -57,7 +57,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 //select elements to compare (anim)
                 if(j == 1) {
                     
-                    addAnimations(anim, pc.selectLine(2),
+                    addAnimations(anim, pc.selectLine(3),
                             vars.setText("Checking if " + list.get(j-1).getValue() 
                                     + " > " + list.get(j).getValue()),
                             AnimUtils.selectNodes(list.get(j-1), list.get(j)));
@@ -68,7 +68,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                             list.get(j), Constants.DEFAULT, 
                             Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
-                                        pc.selectLine(2),
+                                        pc.selectLine(3),
                                         vars.setText("Checking if " + list.get(j-1).getValue() 
                                     + " > " + list.get(j).getValue()));
                     
@@ -77,7 +77,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 if(list.get(j-1).getValue() > list.get(j).getValue()) {  
                     
                     addAnimations(anim, AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
-                                        pc.selectLine(3),
+                                        pc.selectLine(4),
                                         vars.setText("Swapping " + list.get(j-1).getValue() 
                                     + " and " + list.get(j).getValue()));
                     //swap elements
@@ -110,10 +110,11 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
     
     private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
-        code.addLines("for i = 0 to sizeOfArray - 1",
-                "  for j = 1 to (sizeOfArray - i) - 1",
-                "    if leftElement > rightElement",
-                "      swap(leftElement, rightElement)");
+        code.addLines("BubbleSort(A):",
+                "  for i = 0 to size(A) - 1",
+                "    for j = 1 to (size(A) - i) - 1",
+                "      if array[i] > array[j]",
+                "        swap(array[i], array[j])");
     }
     
     private void addCodeToUI(Pane codePane){
