@@ -324,7 +324,7 @@ public class ViewController {
                     case Heap:
                         tNodes = new Tree(generatedArray);
                         list = tNodes.getNodesList();
-                        sorting = new HeapSort(tNodes, codePanel);
+                        sorting = new HeapSort(tNodes, currentInfo, codePanel);
                         Platform.runLater(() -> {
                                     displayPane.getChildren().addAll(tNodes.getChildConnections());
                                     displayPane.getChildren().addAll(tNodes.getPlaceholders());

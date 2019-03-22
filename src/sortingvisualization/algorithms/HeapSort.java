@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.NodeControllers.Tree;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.VariablesInfo;
 
 
 /**
@@ -24,13 +25,15 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
     private Tree binaryTree;
     private Pseudocode pc;
     private List<BrickNode> list;
+    private VariablesInfo vars;
     
     private int heapline = 2;
     
-    public HeapSort(Tree binaryHeap, Pane infoPane) {
+    public HeapSort(Tree binaryHeap, VariablesInfo vars, Pane infoPane) {
         this.binaryTree = binaryHeap;
         this.list = binaryTree.getNodesList();
         this.pc = new Pseudocode();
+        this.vars = vars;
         addPseudocode(pc);
         addCodeToUI(infoPane);
     }
@@ -53,20 +56,24 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
         { 
             if(i != 0) {
                 addAnimations(anim, binaryTree.swap(0, i),
-                                    pc.selectLines(3, 4));
+                                    pc.selectLines(3, 4),
+                                    vars.setText("Swap root(" + list.get(0) 
+                                            + ") and " + list.get(i)));
             }
             // Move current root to end 
             BrickNode temp = list.get(0); 
             list.set(0, list.get(i)); 
             list.set(i, temp); 
 
-            addAnimations(anim, binaryTree.setSorted(i));
+            addAnimations(anim, binaryTree.setSorted(i),
+                    vars.setText(list.get(i) + " is sorted"));
             heapline = 5;
             
             // call max heapify on the reduced heap
             heapify(list, anim, i, 0); 
         }
-        addAnimations(anim, pc.unselectAll());
+        addAnimations(anim, pc.unselectAll(),
+                vars.setText("Array is sorted"));
         return anim;
     }
     
@@ -81,11 +88,16 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
             if (list.get(l).getValue() > list.get(largest).getValue()){
                 
                 addAnimations(anim, binaryTree.compare(l, largest),
-                                    pc.selectLines(heapline, 10, 11));
+                                    pc.selectLines(heapline, 10, 11),
+                                    vars.setText("Check if " + list.get(l) 
+                                            + " > " + list.get(largest) 
+                                            + "\nSet largest to " + list.get(l)));
                 largest = l; 
             } else {
                 addAnimations(anim, binaryTree.compare(l, largest),
-                                    pc.selectLines(heapline, 10, 12));
+                                    pc.selectLines(heapline, 10, 12),
+                                    vars.setText("Check if " + list.get(l) 
+                                            + " > " + list.get(largest)));
             }
         } /*else {
             addAnimations(anim, pc.selectLines(heapline, 10));
@@ -95,12 +107,17 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
         if (r < n) {
             if(list.get(r).getValue() > list.get(largest).getValue()) {
                 addAnimations(anim, binaryTree.compare(r, largest),
-                                    pc.selectLines(heapline, 13, 14));
+                                    pc.selectLines(heapline, 13, 14),
+                                    vars.setText("Check if " + list.get(r) 
+                                            + " > " + list.get(largest) 
+                                            + "\nSet largest to " + list.get(r)));
                 
                 largest = r;
             } else {
                 addAnimations(anim, binaryTree.compare(r, largest),
-                                    pc.selectLines(heapline, 13));
+                                    pc.selectLines(heapline, 13),
+                                    vars.setText("Check if " + list.get(r) 
+                                            + " > " + list.get(largest)));
             }
         } /*else {
             addAnimations(anim, pc.selectLines(heapline, 13));
@@ -110,7 +127,9 @@ public class HeapSort extends Sorting implements AbstractAlgorithm {
         // If largest is not root 
         if (largest != i) {
             addAnimations(anim, binaryTree.swap(i, largest),
-                                pc.selectLines(heapline, 15, 16, 17));
+                                pc.selectLines(heapline, 15, 16, 17),
+                                vars.setText("Swap " + list.get(i) + " and " 
+                                        + list.get(largest)));
             
             BrickNode swap = list.get(i); 
             list.set(i, list.get(largest)); 
