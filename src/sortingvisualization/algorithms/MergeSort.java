@@ -7,12 +7,14 @@ package sortingvisualization.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -25,6 +27,11 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class MergeSort extends Sorting implements AbstractAlgorithm {
 
+    
+    private static final int ROOT = 0;
+    private static final int LEFT = 1;
+    private static final int RIGHT = -1;
+    
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -42,69 +49,85 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
         
-        sortRange(0, number - 1, anim, list, 150, -1);
+        sortRange(0, number - 1, anim, list, Constants.DEFAULT, ROOT);
+        addAnimations(anim, code.unselectAll());
         return anim;
     }
 
     private void sortRange(int low, int high, List<Animation> anim, 
-            List<BrickNode> list, int newHue, int currentHue) {
-        Color original;
-        if(currentHue == -1){
-             original = Color.hsb(180, 1.0, 0.55);
-        } else {
-            original = Color.hsb(currentHue, 1.0, 1.0);
+            List<BrickNode> list, Color old, int child) {
+        
+        Color current;
+        int recursionLine;
+        switch (child) {
+            case LEFT:
+                current = getNodeColor(high);
+                recursionLine = 3;
+                break;
+            case ROOT:
+                current = old;
+                recursionLine = 0;
+                break;
+            default:
+                current = getNodeColor(list.size() - high);
+                recursionLine = 4;
+                break;
         }
-        //Color original = Color.hsb(currentHue, 1.0, 1.0);
-        Color current = Color.hsb(newHue, 1.0, 1.0);
         // check if low is smaller then high, if not then the array is sorted
         if (low < high) {
             // Get the index of the element which is in the middle
             int middle = low + (high - low) / 2;
             
+            Color cLeft = getNodeColor(middle);
+            Color cRight = getNodeColor(list.size() - high);
             ParallelTransition pt = new ParallelTransition();
             for(int i = low; i <= high; i++){
-                pt.getChildren().add(AnimUtils.setColor(list.get(i), original, current));
+                pt.getChildren().add(AnimUtils.setColor(list.get(i), old, current));
             }
-            addAnimations(anim, pt,
-                    code.selectLines(1,2));
-            
+            if(child != ROOT){
+                addAnimations(anim, pt,
+                    code.selectLines(recursionLine),
+                    vars.setText("Middle point mid = %d. "
+                            + "Recursively apply MergeSort to the array from %d to %d. ", 
+                            high, low, high));
+            } else {
+                addAnimations(anim, pt,
+                    code.selectLines(recursionLine),
+                    vars.setText("Apply MergeSort to the array from %d to %d.", low, high));
+            }
             List<BrickNode> helperLow = new ArrayList<>();
-            Color nextColorLow = Color.hsb(newHue - (newHue / 2), 1.0, 1.0);
             for(int i = low; i <=middle; i++){
                 helperLow.add(list.get(i));
             }
             
             // Sort the left side of the array
-            addAnimations(anim, code.selectLine(3));
-            
-            sortRange(low, middle, anim, list, newHue - (newHue / 2), newHue);
+            sortRange(low, middle, anim, list, current, LEFT);
             
             List<BrickNode> helperHigh = new ArrayList<>();
-            Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
             for(int i = middle + 1; i <=high; i++){
                 helperHigh.add(list.get(i));
             }
             
             // Sort the right side of the array
-            addAnimations(anim, code.selectLine(4));
-            sortRange(middle + 1, high, anim, list, newHue + (newHue / 2), newHue);
+            sortRange(middle + 1, high, anim, list, current, RIGHT);
             
             // Combine them both
-            addAnimations(anim, code.selectLine(5));
             merge(low, middle, high, list, anim);
             
             pt = new ParallelTransition();
             for(BrickNode node : helperLow){
-                pt.getChildren().add(AnimUtils.setColor(node, nextColorLow, current));
+                pt.getChildren().add(AnimUtils.setColor(node, cLeft, current));
             }
             for(BrickNode node : helperHigh){
-                pt.getChildren().add(AnimUtils.setColor(node, nextColorHi, current));
+                pt.getChildren().add(AnimUtils.setColor(node, cRight, current));
             }
             addAnimations(anim, pt);
         } else {
-            addAnimations(anim, code.selectLine(1),
-                    AnimUtils.setColor(list.get(low), original, current));
-            addAnimations(anim, code.selectLine(6));
+            if(child == LEFT || child == RIGHT){
+                addAnimations(anim, code.selectLine(recursionLine),
+                        vars.setText("Apply MergeSort to %s", list.get(low)),
+                    AnimUtils.setColor(list.get(low), old, current));
+            }
         }
     }
 
@@ -126,14 +149,17 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
-                addAnimations(anim, code.selectLines(10, 11, 12),
+                addAnimations(anim, code.selectLines(5, 9, 10, 11),
+                        vars.setText("Check if %s ⩽ %s \nMove %s to tempArray[%d]", 
+                                helperNodes[i], helperNodes[j], helperNodes[i], k - low),
                         AnimUtils.moveDownToX(helperNodes[i], k, i));
                 i++;
             } else {
                 list.set(k, helperNodes[j]);
-                anim.add(AnimUtils.makeParallel(
-                        AnimUtils.moveDownToX(helperNodes[j], k, j),
-                        code.selectLines(10, 11, 13)));
+                addAnimations(anim, code.selectLines(5, 9, 10, 12),
+                        vars.setText("Check if %s ⩽ %s \nMove %s to tempArray[%d]", 
+                                helperNodes[i], helperNodes[j], helperNodes[j], k - low),
+                        AnimUtils.moveDownToX(helperNodes[j], k, j));
                 j++;
             }
             k++;
@@ -141,7 +167,8 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         // Copy the rest of the left side of the array into the target array
         while (i <= middle) {
             list.set(k, helperNodes[i]);
-            addAnimations(anim, code.selectLines(14,15),
+            addAnimations(anim, code.selectLines(5, 13, 14),
+                    vars.setText("Move arrayL[%d] to tempArray[%d]", i, k - low),
                     AnimUtils.moveDownToX(helperNodes[i], k, i));
             k++;
             i++;
@@ -150,7 +177,8 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         // Even if we didn't move in the array because it was already ordered, 
         // move on screen for any remaining nodes in the target array.
         while (j <= high) {
-            addAnimations(anim, code.selectLines(14, 15),
+            addAnimations(anim, code.selectLines(5, 13, 14),
+                    vars.setText("Move arrayR[%d] to tempArray[%d]", j, k - low),
                     AnimUtils.moveDownToX(helperNodes[j], k, j));
             k++;
             j++;
@@ -162,14 +190,13 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             TranslateTransition moveNodeUp = new TranslateTransition();
             moveNodeUp.setNode(helperNodes[z]);
             moveNodeUp.setDuration(ViewController.SPEED);
-            //Set start Y position for reverse animation
             moveNodeUp.setFromY(ViewController.LEVEL2);
             moveNodeUp.setToY(ViewController.LEVEL1);
             moveUp.getChildren().add(moveNodeUp);
         }
 
         addAnimations(anim, moveUp,
-                code.selectLine(16));
+                code.selectLines(5, 15));
     }
     
     private void addPseudocode(Pseudocode code){
@@ -181,16 +208,15 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
                 "    MergeSort(arr, left, mid - 1)",
                 "    MergeSort(arr, mid + 1, right)",
                 "    Merge(arr, left, mid, right)",
-                "  else return",
                 "",
-                "Merge(array, left, mid, right):", //8
+                "Merge(array, left, mid, right):", //7
                 "  create array result[right - left]",
-                "  while arrayLIndex <= mid and arrayRIndex <= right",
-                "    if arrayLHeadValue < arrayRHeadValue", //11
-                "      copy arrayLHeadValue to result",
-                "    else: copy arrayRHeadValue",
-                "  while(arrayL or arrayR has elements)", //14
-                "    copy currentValue to result",
+                "  while arrayLIndex ⩽ mid and arrayRIndex ⩽ right",
+                "    if arrayLHeadValue < arrayRHeadValue", //10
+                "      copy arrayLHeadValue to tempArray",
+                "    else: copy arrayRHeadValue to tempArray",
+                "  while(arrayL or arrayR has elements)", //13
+                "    copy currentValue to tempArray",
                 "  copy elements back to original array");
     }
     
@@ -198,5 +224,11 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         Platform.runLater(() -> {
             codePane.getChildren().addAll(code.getCode());
         });
+    }
+    
+    private Color getNodeColor(int position){
+        int hue = (360 / list.size()) * position;
+        Color nodeColor = Color.hsb(hue, 1.0, 1.0);
+        return nodeColor;
     }
 }
