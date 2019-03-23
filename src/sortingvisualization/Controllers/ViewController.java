@@ -288,7 +288,7 @@ public class ViewController {
                         break;
                     case Merge:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new MergeSort(list, codePanel);
+                        sorting = new MergeSort(list, currentInfo, codePanel);
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
