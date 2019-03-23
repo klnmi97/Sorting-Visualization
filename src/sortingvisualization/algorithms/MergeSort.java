@@ -7,7 +7,6 @@ package sortingvisualization.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -50,7 +49,8 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         List<Animation> anim = new ArrayList<>();
         
         sortRange(0, number - 1, anim, list, Constants.DEFAULT, ROOT);
-        addAnimations(anim, code.unselectAll());
+        addAnimations(anim, code.unselectAll(),
+                vars.setText("Array is sorted"));
         return anim;
     }
 
@@ -84,17 +84,25 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             for(int i = low; i <= high; i++){
                 pt.getChildren().add(AnimUtils.setColor(list.get(i), old, current));
             }
-            if(child != ROOT){
-                addAnimations(anim, pt,
-                    code.selectLines(recursionLine),
-                    vars.setText("Middle point mid = %d. "
+            String msg;
+            switch(child){
+                case LEFT:
+                    msg = String.format("Middle point mid = %d. "
                             + "Recursively apply MergeSort to the array from %d to %d. ", 
-                            high, low, high));
-            } else {
-                addAnimations(anim, pt,
-                    code.selectLines(recursionLine),
-                    vars.setText("Apply MergeSort to the array from %d to %d.", low, high));
+                            high, low, high);
+                    break;
+                case RIGHT:
+                    msg = String.format("Middle point mid = %d. "
+                            + "Recursively apply MergeSort to the array from %d to %d. ", 
+                            low - 1, low, high);
+                    break;
+                default:
+                    msg = String.format("Apply MergeSort to the array from %d to %d.", low, high);
+                    
             }
+            addAnimations(anim, pt,
+                code.selectLines(recursionLine),
+                vars.setText(msg));
             List<BrickNode> helperLow = new ArrayList<>();
             for(int i = low; i <=middle; i++){
                 helperLow.add(list.get(i));
@@ -150,14 +158,14 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
                 addAnimations(anim, code.selectLines(5, 9, 10, 11),
-                        vars.setText("Check if %s ⩽ %s \nMove %s to tempArray[%d]", 
+                        vars.setText("Check if %s < %s \nMove %s to tempArray[%d]", 
                                 helperNodes[i], helperNodes[j], helperNodes[i], k - low),
                         AnimUtils.moveDownToX(helperNodes[i], k, i));
                 i++;
             } else {
                 list.set(k, helperNodes[j]);
                 addAnimations(anim, code.selectLines(5, 9, 10, 12),
-                        vars.setText("Check if %s ⩽ %s \nMove %s to tempArray[%d]", 
+                        vars.setText("Check if %s < %s \nMove %s to tempArray[%d]", 
                                 helperNodes[i], helperNodes[j], helperNodes[j], k - low),
                         AnimUtils.moveDownToX(helperNodes[j], k, j));
                 j++;
@@ -168,7 +176,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         while (i <= middle) {
             list.set(k, helperNodes[i]);
             addAnimations(anim, code.selectLines(5, 13, 14),
-                    vars.setText("Move arrayL[%d] to tempArray[%d]", i, k - low),
+                    vars.setText("arrayR is empty. Move %s from arrayL to tempArray[%d]", helperNodes[i], k - low),
                     AnimUtils.moveDownToX(helperNodes[i], k, i));
             k++;
             i++;
@@ -178,7 +186,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         // move on screen for any remaining nodes in the target array.
         while (j <= high) {
             addAnimations(anim, code.selectLines(5, 13, 14),
-                    vars.setText("Move arrayR[%d] to tempArray[%d]", j, k - low),
+                    vars.setText("arrayL is empty. Move %s from arrayR to tempArray[%d]", helperNodes[j], k - low),
                     AnimUtils.moveDownToX(helperNodes[j], k, j));
             k++;
             j++;
@@ -196,7 +204,8 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         }
 
         addAnimations(anim, moveUp,
-                code.selectLines(5, 15));
+                code.selectLines(5, 15),
+                vars.setText("Arrays are merged, move items back to the original array"));
     }
     
     private void addPseudocode(Pseudocode code){
