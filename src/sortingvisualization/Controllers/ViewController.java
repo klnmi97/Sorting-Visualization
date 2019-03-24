@@ -280,7 +280,7 @@ public class ViewController {
                         break;
                     case Selection:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new SelectionSort(list, codePanel);
+                        sorting = new SelectionSort(list, currentInfo, codePanel);
                         break;
                     case Quick:
                         list = dNodes.createList(generatedArray, currentMax);

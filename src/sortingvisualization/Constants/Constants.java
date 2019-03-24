@@ -20,5 +20,6 @@ public class Constants {
     public static final Color COMPARE = /*Color.valueOf("#F2355B");*/Color.AQUAMARINE;
     public static final Color DEFAULT = /*Color.valueOf("#02A694");*/Color.DARKCYAN;
     public static final Color SORTED = /*Color.valueOf("#F38902");//*/Color.ORANGE;
+    public static final Color SELECTED = Color.RED;
     public static final Color LINE_SELECTION = Color.WHITE;
 }
