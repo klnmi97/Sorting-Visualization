@@ -315,7 +315,7 @@ public class ViewController {
                         break;
                     case Radix:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new RadixSort(list, codePanel);
+                        sorting = new RadixSort(list, currentInfo, codePanel);
                         List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
