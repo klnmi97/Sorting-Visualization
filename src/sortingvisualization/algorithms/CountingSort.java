@@ -18,7 +18,8 @@ import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
- *
+ * Class for creation animation flow(code, sorting, variables) for 
+ * Counting sorting algorithm.
  * @author Mykhailo Klunko
  */
 public class CountingSort extends Sorting implements AbstractAlgorithm {

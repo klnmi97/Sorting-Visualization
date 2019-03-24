@@ -21,12 +21,12 @@ import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
- *
+ * Class for creation animation flow(code, sorting, variables) for 
+ * Merge sorting algorithm.
  * @author Mykhailo Klunko
  */
 public class MergeSort extends Sorting implements AbstractAlgorithm {
 
-    
     private static final int ROOT = 0;
     private static final int LEFT = 1;
     private static final int RIGHT = -1;
@@ -35,6 +35,13 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
     private final Pseudocode code;
     private final VariablesInfo vars;
     
+    /**
+     * Creates a new instance of Merge Sort algorithm animation flow 
+     * creator class
+     * @param list list of nodes to animate
+     * @param vars instance of variables information class
+     * @param infoPane pane where the code will be placed
+     */
     public MergeSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
         this.code = new Pseudocode();
@@ -43,6 +50,10 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         addCodeToUI(infoPane);
     }
     
+    /**
+     * Creates animation flow for the Merge sorting algorithm
+     * @return list of animation steps
+     */
     @Override
     public List<Animation> sort() {
         int number = list.size();
