@@ -173,7 +173,7 @@ public class Window extends Application {
         BorderPane root = new BorderPane();
         
         sidePanel = new StackPane();
-        sidePanel.setPrefWidth(400 * windowSizeFactor);
+        sidePanel.setPrefWidth(420 * windowSizeFactor);
         sidePanel.setBackground(new Background(new BackgroundFill(Constants.PANEL_BGND, CornerRadii.EMPTY, Insets.EMPTY)));
         sidePanel.setOnMouseClicked(event->
             {root.setRight(showSidePanelBtn);});

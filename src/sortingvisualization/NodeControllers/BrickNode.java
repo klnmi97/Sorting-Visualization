@@ -7,13 +7,9 @@ package sortingvisualization.NodeControllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 /**
@@ -22,7 +18,7 @@ import javafx.scene.text.Text;
  */
 public class BrickNode extends StackPane implements Comparable<BrickNode>{
     
-    private IntegerProperty value;
+    private final IntegerProperty value;
     private List<Text> digits;
 
     public List<Text> getDigits() {
@@ -54,4 +50,11 @@ public class BrickNode extends StackPane implements Comparable<BrickNode>{
     public int compareTo(BrickNode brick) {
         return Double.compare(valueProperty().get(), brick.getValue());
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(getValue());
+    }
+    
+    
 }

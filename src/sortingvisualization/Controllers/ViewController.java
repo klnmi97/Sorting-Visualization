@@ -276,19 +276,19 @@ public class ViewController {
                         break;
                     case Insertion:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new InsertionSort(list, codePanel);
+                        sorting = new InsertionSort(list, currentInfo, codePanel);
                         break;
                     case Selection:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new SelectionSort(list, codePanel);
+                        sorting = new SelectionSort(list, currentInfo, codePanel);
                         break;
                     case Quick:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new QuickSort(list, codePanel);
+                        sorting = new QuickSort(list, currentInfo, codePanel);
                         break;
                     case Merge:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new MergeSort(list, codePanel);
+                        sorting = new MergeSort(list, currentInfo, codePanel);
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
@@ -304,7 +304,7 @@ public class ViewController {
                         break;
                     case Bucket:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new BucketSort(list, codePanel);
+                        sorting = new BucketSort(list, currentInfo, codePanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
                                 / BucketSort.BUCKET_SIZE + 1;
                         List<FlowPane> buckets = createBucketList(
@@ -315,7 +315,7 @@ public class ViewController {
                         break;
                     case Radix:
                         list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new RadixSort(list, codePanel);
+                        sorting = new RadixSort(list, currentInfo, codePanel);
                         List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
@@ -324,7 +324,7 @@ public class ViewController {
                     case Heap:
                         tNodes = new Tree(generatedArray);
                         list = tNodes.getNodesList();
-                        sorting = new HeapSort(tNodes, codePanel);
+                        sorting = new HeapSort(tNodes, currentInfo, codePanel);
                         Platform.runLater(() -> {
                                     displayPane.getChildren().addAll(tNodes.getChildConnections());
                                     displayPane.getChildren().addAll(tNodes.getPlaceholders());

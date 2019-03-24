@@ -13,101 +13,145 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
- *
+ * Class for creation animation flow(code, sorting, variables) for 
+ * Merge sorting algorithm.
  * @author Mykhailo Klunko
  */
 public class MergeSort extends Sorting implements AbstractAlgorithm {
 
-    List<BrickNode> list;
-    Pseudocode pc;
+    private static final int ROOT = 0;
+    private static final int LEFT = 1;
+    private static final int RIGHT = -1;
     
-    public MergeSort(List<BrickNode> list, Pane infoPane){
+    private final List<BrickNode> list;
+    private final Pseudocode code;
+    private final VariablesInfo vars;
+    
+    /**
+     * Creates a new instance of Merge Sort algorithm animation flow 
+     * creator class
+     * @param list list of nodes to animate
+     * @param vars instance of variables information class
+     * @param infoPane pane where the code will be placed
+     */
+    public MergeSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
-        pc = new Pseudocode();
-        addPseudocode(pc);
+        this.code = new Pseudocode();
+        this.vars = vars;
+        addPseudocode(code);
         addCodeToUI(infoPane);
     }
     
+    /**
+     * Creates animation flow for the Merge sorting algorithm
+     * @return list of animation steps
+     */
     @Override
     public List<Animation> sort() {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
         
-        sortRange(0, number - 1, anim, list, pc, 150, -1);
+        sortRange(0, number - 1, anim, list, Constants.DEFAULT, ROOT);
+        addAnimations(anim, code.unselectAll(),
+                vars.setText("Array is sorted"));
         return anim;
     }
 
-    private void sortRange(int low, int high, List<Animation> sq, 
-            List<BrickNode> list, Pseudocode code, int newHue, int currentHue) {
-        Color original;
-        if(currentHue == -1){
-             original = Color.hsb(180, 1.0, 0.55);
-        } else {
-            original = Color.hsb(currentHue, 1.0, 1.0);
+    private void sortRange(int low, int high, List<Animation> anim, 
+            List<BrickNode> list, Color old, int child) {
+        
+        Color current;
+        int recursionLine;
+        switch (child) {
+            case LEFT:
+                current = getNodeColor(high);
+                recursionLine = 3;
+                break;
+            case ROOT:
+                current = old;
+                recursionLine = 0;
+                break;
+            default:
+                current = getNodeColor(list.size() - high);
+                recursionLine = 4;
+                break;
         }
-        //Color original = Color.hsb(currentHue, 1.0, 1.0);
-        Color current = Color.hsb(newHue, 1.0, 1.0);
         // check if low is smaller then high, if not then the array is sorted
         if (low < high) {
             // Get the index of the element which is in the middle
             int middle = low + (high - low) / 2;
             
+            Color cLeft = getNodeColor(middle);
+            Color cRight = getNodeColor(list.size() - high);
             ParallelTransition pt = new ParallelTransition();
             for(int i = low; i <= high; i++){
-                pt.getChildren().add(AnimUtils.setColor(list.get(i), original, current));
+                pt.getChildren().add(AnimUtils.setColor(list.get(i), old, current));
             }
-            sq.add(AnimUtils.makeParallel(
-                    pt,
-                    code.selectLines(1,2)));
-            
+            String msg;
+            switch(child){
+                case LEFT:
+                    msg = String.format("Middle point mid = %d. "
+                            + "Recursively apply MergeSort to the array from %d to %d. ", 
+                            high, low, high);
+                    break;
+                case RIGHT:
+                    msg = String.format("Middle point mid = %d. "
+                            + "Recursively apply MergeSort to the array from %d to %d. ", 
+                            low - 1, low, high);
+                    break;
+                default:
+                    msg = String.format("Apply MergeSort to the array from %d to %d.", low, high);
+                    
+            }
+            addAnimations(anim, pt,
+                code.selectLines(recursionLine),
+                vars.setText(msg));
             List<BrickNode> helperLow = new ArrayList<>();
-            Color nextColorLow = Color.hsb(newHue - (newHue / 2), 1.0, 1.0);
             for(int i = low; i <=middle; i++){
                 helperLow.add(list.get(i));
             }
             
             // Sort the left side of the array
-            addAnimToList(sq, code.selectLine(3));
-            sortRange(low, middle, sq, list, code, newHue - (newHue / 2), newHue);
+            sortRange(low, middle, anim, list, current, LEFT);
             
             List<BrickNode> helperHigh = new ArrayList<>();
-            Color nextColorHi = Color.hsb(newHue + (newHue / 2), 1.0, 1.0);
             for(int i = middle + 1; i <=high; i++){
                 helperHigh.add(list.get(i));
             }
             
             // Sort the right side of the array
-            addAnimToList(sq, code.selectLine(4));
-            sortRange(middle + 1, high, sq, list, code, newHue + (newHue / 2), newHue);
+            sortRange(middle + 1, high, anim, list, current, RIGHT);
             
             // Combine them both
-            addAnimToList(sq, code.selectLine(5));
-            merge(low, middle, high, list, sq, code);
+            merge(low, middle, high, list, anim);
             
             pt = new ParallelTransition();
             for(BrickNode node : helperLow){
-                pt.getChildren().add(AnimUtils.setColor(node, nextColorLow, current));
+                pt.getChildren().add(AnimUtils.setColor(node, cLeft, current));
             }
             for(BrickNode node : helperHigh){
-                pt.getChildren().add(AnimUtils.setColor(node, nextColorHi, current));
+                pt.getChildren().add(AnimUtils.setColor(node, cRight, current));
             }
-            sq.add(pt);
+            addAnimations(anim, pt);
         } else {
-            sq.add(AnimUtils.makeParallel(
-                    AnimUtils.setColor(list.get(low), original, current),
-                    code.selectLine(1)));
-            addAnimToList(sq, code.selectLine(6));
+            if(child == LEFT || child == RIGHT){
+                addAnimations(anim, code.selectLine(recursionLine),
+                        vars.setText("Apply MergeSort to %s", list.get(low)),
+                    AnimUtils.setColor(list.get(low), old, current));
+            }
         }
     }
 
     private void merge(int low, int middle, int high, List<BrickNode> list, 
-            List<Animation> sq, Pseudocode code) {
+            List<Animation> anim) {
         BrickNode[] helperNodes = new BrickNode[list.size()];
         // Copy both parts into the helper array
         for (int i = low; i <= high; i++) {
@@ -124,15 +168,17 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             
             if (helperNodes[i].getValue() <= helperNodes[j].getValue()) {
                 list.set(k, helperNodes[i]);
-                sq.add(AnimUtils.makeParallel(
-                        AnimUtils.moveDownToX(helperNodes[i], k, i),
-                        code.selectLines(10, 11, 12)));
+                addAnimations(anim, code.selectLines(5, 9, 10, 11),
+                        vars.setText("Check if %s < %s \nMove %s to tempArray[%d]", 
+                                helperNodes[i], helperNodes[j], helperNodes[i], k - low),
+                        AnimUtils.moveDownToX(helperNodes[i], k, i));
                 i++;
             } else {
                 list.set(k, helperNodes[j]);
-                sq.add(AnimUtils.makeParallel(
-                        AnimUtils.moveDownToX(helperNodes[j], k, j),
-                        code.selectLines(10, 11, 13)));
+                addAnimations(anim, code.selectLines(5, 9, 10, 12),
+                        vars.setText("Check if %s < %s \nMove %s to tempArray[%d]", 
+                                helperNodes[i], helperNodes[j], helperNodes[j], k - low),
+                        AnimUtils.moveDownToX(helperNodes[j], k, j));
                 j++;
             }
             k++;
@@ -140,9 +186,9 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         // Copy the rest of the left side of the array into the target array
         while (i <= middle) {
             list.set(k, helperNodes[i]);
-            sq.add(AnimUtils.makeParallel(
-                    AnimUtils.moveDownToX(helperNodes[i], k, i),
-                    code.selectLines(14,15)));
+            addAnimations(anim, code.selectLines(5, 13, 14),
+                    vars.setText("arrayR is empty. Move %s from arrayL to tempArray[%d]", helperNodes[i], k - low),
+                    AnimUtils.moveDownToX(helperNodes[i], k, i));
             k++;
             i++;
         }
@@ -150,9 +196,9 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         // Even if we didn't move in the array because it was already ordered, 
         // move on screen for any remaining nodes in the target array.
         while (j <= high) {
-            sq.add(AnimUtils.makeParallel(
-                    AnimUtils.moveDownToX(helperNodes[j], k, j),
-                    code.selectLines(14, 15)));
+            addAnimations(anim, code.selectLines(5, 13, 14),
+                    vars.setText("arrayL is empty. Move %s from arrayR to tempArray[%d]", helperNodes[j], k - low),
+                    AnimUtils.moveDownToX(helperNodes[j], k, j));
             k++;
             j++;
         }
@@ -163,15 +209,14 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             TranslateTransition moveNodeUp = new TranslateTransition();
             moveNodeUp.setNode(helperNodes[z]);
             moveNodeUp.setDuration(ViewController.SPEED);
-            //Set start Y position for reverse animation
             moveNodeUp.setFromY(ViewController.LEVEL2);
             moveNodeUp.setToY(ViewController.LEVEL1);
             moveUp.getChildren().add(moveNodeUp);
         }
 
-        sq.add(AnimUtils.makeParallel(
-                moveUp,
-                code.selectLine(16)));
+        addAnimations(anim, moveUp,
+                code.selectLines(5, 15),
+                vars.setText("Arrays are merged, move items back to the original array"));
     }
     
     private void addPseudocode(Pseudocode code){
@@ -183,22 +228,27 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
                 "    MergeSort(arr, left, mid - 1)",
                 "    MergeSort(arr, mid + 1, right)",
                 "    Merge(arr, left, mid, right)",
-                "  else return",
                 "",
-                "Merge(array, left, mid, right):", //8
+                "Merge(array, left, mid, right):", //7
                 "  create array result[right - left]",
-                "  while arrayLIndex <= mid and arrayRIndex <= right",
-                "    if arrayLHeadValue < arrayRHeadValue", //11
-                "      copy arrayLHeadValue to result",
-                "    else: copy arrayRHeadValue",
-                "  while(arrayL or arrayR has elements)", //14
-                "    copy currentValue to result",
+                "  while arrayLIndex ⩽ mid and arrayRIndex ⩽ right",
+                "    if arrayLHeadValue < arrayRHeadValue", //10
+                "      copy arrayLHeadValue to tempArray",
+                "    else: copy arrayRHeadValue to tempArray",
+                "  while(arrayL or arrayR has elements)", //13
+                "    copy currentValue to tempArray",
                 "  copy elements back to original array");
     }
     
     private void addCodeToUI(Pane codePane){
         Platform.runLater(() -> {
-            codePane.getChildren().addAll(pc.getCode());
+            codePane.getChildren().addAll(code.getCode());
         });
+    }
+    
+    private Color getNodeColor(int position){
+        int hue = (360 / list.size()) * position;
+        Color nodeColor = Color.hsb(hue, 1.0, 1.0);
+        return nodeColor;
     }
 }

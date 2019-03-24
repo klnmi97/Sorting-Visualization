@@ -63,4 +63,24 @@ public class VariablesInfo {
                 new KeyValue(infoField.textProperty(), value)));
     }
     
+    /**
+     * Creates animation of changing text at the information node
+     * @param formatString string with parameters
+     * @param args string parameters
+     * @return animation of changing text
+     */
+    public Animation setText(String formatString, Object... args){
+        String resultStr = String.format(formatString, args);
+        return setText(resultStr);
+    }
+    
+    /**
+     * Set default text which will be shown on the start
+     * @param text new default text
+     */
+    public void setDefaultText(String text){
+        this.previousValue = text;
+        this.infoField.setText(text);
+    }
+    
 }

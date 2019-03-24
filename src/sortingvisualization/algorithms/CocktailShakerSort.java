@@ -45,7 +45,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
     }
     
     /**
-     * Creates animation flow for Cocktail - Shaker sorting algorithm
+     * Creates animation flow for the Cocktail - Shaker sorting algorithm
      * @return list of animation steps
      */
     @Override
@@ -67,31 +67,31 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
         while(i < j && swapped) 
         {
             swapped = false;
-            addAnimations(anim, pc.selectLines(2, 3),
+            addAnimations(anim, pc.selectLines(3, 4),
                     vars.setText("Set swapped to " + swapped + "\n" 
                             + "Iterate from " + i + " to " + j));
             for(int k = i; k < j; k++) 
             {
                 if(k == 0){
-                    addAnimations(anim, pc.selectLine(4),
-                            vars.setText("Check if " + list.get(k).getValue() 
-                                    + " > " + list.get(k + 1).getValue()),
+                    addAnimations(anim, pc.selectLine(5),
+                            vars.setText("Check if " + list.get(k) 
+                                    + " > " + list.get(k + 1)),
                             AnimUtils.selectNodes(list.get(k), list.get(k+1)));
                     
                 } else {
                     parallelTransition.getChildren().add(
                             AnimUtils.setColor(list.get(k+1), 
                                     Constants.DEFAULT, Constants.COMPARE));
-                    addAnimations(anim, pc.selectLine(4),
-                            vars.setText("Check if " + list.get(k).getValue() 
-                                    + " > " + list.get(k + 1).getValue()),
+                    addAnimations(anim, pc.selectLine(5),
+                            vars.setText("Check if " + list.get(k) 
+                                    + " > " + list.get(k + 1)),
                                     parallelTransition);
                 }
                 if(list.get(k).compareTo(list.get(k+1)) == 1) 
                 {
-                    addAnimations(anim, pc.selectLines(5, 6),
-                            vars.setText("Swap " + list.get(k).getValue() 
-                                    + " and " + list.get(k + 1).getValue() 
+                    addAnimations(anim, pc.selectLines(6, 7),
+                            vars.setText("Swap " + list.get(k)
+                                    + " and " + list.get(k + 1)
                                     + ", set swapped to true"),
                             AnimUtils.swap(list.get(k), list.get(k + 1), k, k + 1));
                     //swap
@@ -120,14 +120,14 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
             lastStart = i;
             lastFinish = j + 2;
             
-            addAnimations(anim, pc.selectLine(7),
+            addAnimations(anim, pc.selectLine(8),
                     vars.setText("Check if there was at least one swap, swapped is " + swapped));
             
             if(swapped) 
             {
                 swapped = false;
                 
-                addAnimations(anim, pc.selectLines(8,9),
+                addAnimations(anim, pc.selectLines(9, 10),
                         vars.setText("Set swapped to " + swapped + "\n" 
                             + "Iterate from " + j + " downto " + i));
                 
@@ -137,15 +137,15 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                     parallelTransition.getChildren().add(AnimUtils.setColor(
                             list.get(k-1), Constants.DEFAULT, 
                                 Constants.COMPARE));
-                    addAnimations(anim, pc.selectLine(10),
-                            vars.setText("Check if " + list.get(k - 1).getValue() 
-                                    + " > " + list.get(k).getValue()),
+                    addAnimations(anim, pc.selectLine(11),
+                            vars.setText("Check if " + list.get(k - 1)
+                                    + " > " + list.get(k)),
                             parallelTransition);
                     
                     if(list.get(k).compareTo(list.get(k - 1)) == -1) 
                     {
-                        addAnimations(anim, pc.selectLines(11, 12),
-                                vars.setText("Swap " + list.get(k - 1).getValue() + " and " + list.get(k).getValue()),
+                        addAnimations(anim, pc.selectLines(12, 13),
+                                vars.setText("Swap " + list.get(k - 1) + " and " + list.get(k)),
                                 AnimUtils.swap(list.get(k), list.get(k - 1), k, k - 1));
                         
                         BrickNode temp = list.get(k);
@@ -173,7 +173,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
             }
             i++;
             
-            addAnimations(anim, pc.selectLine(13), 
+            addAnimations(anim, pc.selectLine(14), 
                     vars.setText("Variable swapped is " + swapped));
         }
         
@@ -195,20 +195,21 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
     private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines(
-                "swapped = true",
-                "do",
-                "  swapped = false",
-                "  for i = 0 to lastUnsortedRight - 1",
-                "    if leftElement > rightElement",
-                "      swap(leftElement, rightElement)",
-                "      swapped = true",
-                "  if swapped",
+                "ShakerSort(A):",
+                "  swapped = true",
+                "  do",
                 "    swapped = false",
-                "    for j = lastUnsortedR - 1 to lastUnsortedL - 1",
-                "     if leftElement > rightElement",
-                "       swap(leftElement, rightElement)",
-                "       swapped = true",
-                "while swapped");
+                "    for i = 0 to lastUnsortedRight - 1",
+                "      if leftElement > rightElement",
+                "        swap(leftElement, rightElement)",
+                "        swapped = true",
+                "    if swapped",
+                "      swapped = false",
+                "      for j = lastUnsortedR - 1 to lastUnsortedL - 1",
+                "        if leftElement > rightElement",
+                "          swap(leftElement, rightElement)",
+                "          swapped = true",
+                "  while swapped");
     }
     
     private void addCodeToUI(Pane codePane){
