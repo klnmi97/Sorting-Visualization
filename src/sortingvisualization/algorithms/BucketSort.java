@@ -30,7 +30,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     public static final int BUCKET_SIZE = 15;
     
     private final List<BrickNode> list;
-    private final Pseudocode pc;
+    private final Pseudocode code;
     private final VariablesInfo vars;
     
     /**
@@ -42,9 +42,9 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
      */
     public BucketSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
-        this.pc = new Pseudocode();
+        this.code = new Pseudocode();
         this.vars = vars;
-        addPseudocode(pc);
+        addPseudocode(code);
         addCodeToUI(infoPane);
     }
     
@@ -80,7 +80,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             int bucketMin = minValue + selectedBucket * BUCKET_SIZE;
             int bucketMax = minValue + selectedBucket * BUCKET_SIZE + BUCKET_SIZE;
             
-            addAnimations(anim, pc.selectLine(1),
+            addAnimations(anim, code.selectLine(2),
                     vars.setText("Move %d. item of value %s to the bucket of range %d-%d", 
                             i, list.get(i), bucketMin, bucketMax),
                     AnimUtils.moveTo(list.get(i), i, selectedBucket, 
@@ -96,14 +96,14 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             for (int j = 0; j < bucketArray.length; j++) {
                 list.set(currentIndex++, bucketArray[j]);
                 
-                addAnimations(anim, pc.selectLines(4, 5),
+                addAnimations(anim, code.selectLines(5, 6),
                         vars.setText("Move %d. item in bucket of value %s to the position %d", 
                                 j, bucketArray[j], currentIndex-1),
                         AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, 
                                 bucketsLIndent, ViewController.LEFT_INDENT));
             }
         }
-        addAnimations(anim, pc.unselectAll(),
+        addAnimations(anim, code.unselectAll(),
                 vars.setText("Array is sorted"));
         return anim;
     }
@@ -114,7 +114,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     private void sortStable(BrickNode[] bucketArray, int bucket, List<Animation> anim) {
         int n = bucketArray.length;
         
-        addAnimations(anim, pc.selectLines(2, 3),
+        addAnimations(anim, code.selectLines(3, 4),
                 vars.setText("Sort %d. bucket with insertion sort", bucket));
         
         for (int i = 1; i < n; ++i)
@@ -138,10 +138,10 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
                 if(parallel.getChildren().size() > 0){
                     
                     addAnimations(anim, parallel,
-                                pc.selectLines(2, 3),
+                                code.selectLines(3, 4),
                                 vars.setText("Sort %d. bucket with insertion sort", bucket));
                 } else{
-                    addAnimations(anim, pc.selectLines(2, 3),
+                    addAnimations(anim, code.selectLines(3, 4),
                             vars.setText("Sort %d. bucket with insertion sort", bucket));
                 }
             } 
@@ -149,19 +149,20 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     }
     
     private void addPseudocode(Pseudocode code) {
-        code.addLines( 
-                "create buckets",
-                "distribute array into buckets",
-                "for each bucket:",
-                "  sort bucket with insertion sort",
-                "  for each element in bucket:",
-                "    place element back into input array");
+        code.addLines(
+                "BucketSort(A):",
+                "  create buckets",
+                "  distribute array into buckets",
+                "  for each bucket:",
+                "    sort bucket with insertion sort",
+                "    for each element in bucket:",
+                "      place element back into input array");
     }
 
 
     private void addCodeToUI(Pane codePane){
         Platform.runLater(() -> {
-            codePane.getChildren().addAll(pc.getCode());
+            codePane.getChildren().addAll(code.getCode());
         });
     }
     

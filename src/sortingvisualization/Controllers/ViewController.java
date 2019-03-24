@@ -284,7 +284,7 @@ public class ViewController {
                         break;
                     case Quick:
                         list = dNodes.createList(generatedArray, currentMax);
-                        sorting = new QuickSort(list, codePanel);
+                        sorting = new QuickSort(list, currentInfo, codePanel);
                         break;
                     case Merge:
                         list = dNodes.createList(generatedArray, currentMax);

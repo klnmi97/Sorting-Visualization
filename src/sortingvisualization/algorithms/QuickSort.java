@@ -16,21 +16,31 @@ import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
- *
+ * Class for creation an animation flow(code, sorting, variables) for 
+ * the Quick sort algorithm.
  * @author Mykhailo Klunko
  */
 public class QuickSort extends Sorting implements AbstractAlgorithm {
 
-    List<BrickNode> list;
-    Pseudocode pc;
+    private final List<BrickNode> list;
+    private final Pseudocode code;
+    private final VariablesInfo vars;
     
-    public QuickSort(List<BrickNode> list, Pane infoPane){
+    /**
+     * Creates a new instance of the Quick Sort algorithm animation flow 
+     * creator class
+     * @param list list of nodes to animate
+     * @param vars instance of variables information class
+     * @param infoPane pane where the code will be placed
+     */
+    public QuickSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
-        pc = new Pseudocode();
-        addPseudocode(pc);
+        this.code = new Pseudocode();
+        this.vars = vars;
+        addPseudocode(code);
         addCodeToUI(infoPane);
     }
     
@@ -38,98 +48,106 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
     public List<Animation> sort(){
         List<Animation> anim = new ArrayList<>();
         
-        quickSort(list, 0, list.size()-1, anim, pc);
-        addAnimToList(anim, pc.unselectAll());
+        quickSort(list, 0, list.size() - 1, anim, code);
+        addAnimations(anim, code.unselectAll(),
+                vars.setText("Array is sorted"));
+        
         return anim;
     } 
      
     private void quickSort(List<BrickNode> list, int low, int high, List<Animation> anim, Pseudocode code) 
     { 
-        addAnimToList(anim, code.selectLine(1));
+        //addAnimToList(anim, code.selectLine(1));
+        
         if (low < high) 
         { 
             /* pi is partitioning index, arr[pi] is  
               now at right place */
             int partitionIndex = partition(list, low, high, anim, code);
-            
-            addAnimToList(anim, code.selectLine(3));
-            quickSort(list, low, partitionIndex-1, anim, code); 
-            addAnimToList(anim, code.selectLine(4));
+            if(low < partitionIndex - 1) {
+                addAnimations(anim, code.selectLine(3),
+                        vars.setText("Recursively apply QuickSort to array from %d to %d", 
+                                low, partitionIndex - 1));
+            }
+            quickSort(list, low, partitionIndex - 1, anim, code); 
+            if(partitionIndex + 1 < high) {
+                addAnimations(anim, code.selectLine(4),
+                        vars.setText("Recursively apply QuickSort to array from %d to %d", 
+                                partitionIndex + 1, high));
+            }
             quickSort(list, partitionIndex+1, high, anim, code); 
         }
         else if(low == high){
-            anim.add(AnimUtils.setColor(list.get(high), Constants.DEFAULT, Constants.SORTED));
+            addAnimations(anim, vars.setText("%s is sorted", list.get(high)),
+                    AnimUtils.setColor(list.get(high), Constants.DEFAULT, Constants.SORTED));
         }
     } 
      
-    private static int partition(List<BrickNode> list, int low, int high, 
-            List<Animation> sq, Pseudocode code) 
+    private int partition(List<BrickNode> list, int low, int high, 
+            List<Animation> anim, Pseudocode code) 
     { 
         ParallelTransition parallelTransition = new ParallelTransition();
         for (int k = low; k <= high; k++) {
             parallelTransition.getChildren().add(AnimUtils.moveDownToX(list.get(k), k, k));            
         }
-        sq.add(AnimUtils.makeParallel(
-                parallelTransition, 
-                code.selectLine(2)));
+        addAnimations(anim, code.selectLine(2),
+                parallelTransition);
         
         BrickNode pivot = list.get(high);
+        int index = low; // index of smaller element
         
-        sq.add(AnimUtils.makeParallel(
-                AnimUtils.setColor(list.get(high), Constants.DEFAULT, Color.RED),
-                code.selectLines(7,8,9)));
+        addAnimations(anim, code.selectLines(2,7,8,9),
+                vars.setText("Select %s as a pivot\nindex is %s", pivot, list.get(index)),
+                AnimUtils.setColor(list.get(high), Constants.DEFAULT, Constants.SELECTED));
         
-        int i = (low-1); // index of smaller element
+        
         //sq.add(setColor(list.get(i+1), Color.LIGHTSKYBLUE, Color.YELLOW));
         
         for (int j=low; j<high; j++) 
         { 
+            addAnimations(anim, code.selectLines(2, 10),
+                    vars.setText("Check if %s < %s, index is %s", list.get(j), pivot, list.get(index)),
+                    AnimUtils.setColor(list.get(j), Constants.DEFAULT, Constants.COMPARE));
             // If current element is smaller than or 
-            // equal to pivot 
-            sq.add(AnimUtils.makeParallel(
-                    AnimUtils.setColor(list.get(j), Constants.DEFAULT, Constants.COMPARE),
-                    code.selectLine(10)));
-            if (list.get(j).getValue() <= pivot.getValue()) 
-            { 
+            // equal to pivot
+            if (list.get(j).getValue() <= pivot.getValue()) {
+                addAnimations(anim, code.selectLines(2, 11),
+                        vars.setText("Swap %s and %s", list.get(j), list.get(index)),
+                        AnimUtils.swap(list.get(index), list.get(j), index, j));
                 
-                i++;
-                //if(i != j){
-                    sq.add(AnimUtils.makeParallel(AnimUtils.swap(list.get(i), list.get(j), i, j),
-                            code.selectLine(11)));
-                //} else{
-                //    addAnimToList(sq, code.selectLine(11));
-                //}
-                //sq.add(setColor(list.get(i), Color.YELLOW, Color.LIGHTSKYBLUE));
-                BrickNode temp = list.get(i); 
-                list.set(i, list.get(j)); 
+                BrickNode temp = list.get(index); 
+                list.set(index, list.get(j)); 
                 list.set(j, temp);
-                sq.add(AnimUtils.makeParallel(
-                        AnimUtils.setColor(list.get(i), Constants.COMPARE, Constants.DEFAULT),
-                        code.selectLine(12)));
                 
-            } else{
-                sq.add(AnimUtils.setColor(list.get(j), Constants.COMPARE, Constants.DEFAULT));
+                addAnimations(anim, code.selectLines(2, 12),
+                        vars.setText("index is now %s", list.get(index + 1)),
+                        AnimUtils.setColor(list.get(index), Constants.COMPARE, Constants.DEFAULT));
+                index++;
+                
+            } else {
+                addAnimations(anim, AnimUtils.setColor(list.get(j), Constants.COMPARE, Constants.DEFAULT));
             } 
             
         } 
   
+        addAnimations(anim, code.selectLines(2, 13),
+                vars.setText("Swap %s and %s", list.get(index), pivot),
+                AnimUtils.swap(list.get(index), list.get(high), index, high));
         // swap arr[i+1] and arr[high] (or pivot)
-        sq.add(AnimUtils.makeParallel(
-                AnimUtils.swap(list.get(i+1), list.get(high), i+1, high),
-                code.selectLine(13)));
-        BrickNode temp = list.get(i+1); 
-        list.set(i+1, list.get(high)); 
+        BrickNode temp = list.get(index); 
+        list.set(index, list.get(high)); 
         list.set(high, temp);
-        sq.add(AnimUtils.setColor(pivot, Color.RED, Constants.SORTED));
+        
+        addAnimations(anim, vars.setText("%s is now sorted", list.get(index)),
+                AnimUtils.setColor(pivot, Constants.SELECTED, Constants.SORTED));
         
         parallelTransition = new ParallelTransition();
         for (int k = low; k <= high; k++) {
             parallelTransition.getChildren().add(AnimUtils.moveNodeUp(list.get(k)));            
         }
-        sq.add(AnimUtils.makeParallel(
-                parallelTransition,
-                code.selectLine(14)));
-        return i+1; 
+        addAnimations(anim, code.selectLines(2, 14),
+                parallelTransition);
+        return index; 
     }
     
     private void addPseudocode(Pseudocode code){
@@ -143,18 +161,18 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
                 "",
                 "Partition(arr, low, high):",
                 "  pivot = arr[high]",
-                "  index = (low - 1)",
+                "  index = low",
                 "  for j = low to high - 1",
                 "    if arr[j] ≤ pivot",
                 "      swap(arr[j], arr[index])",
                 "      index++",
-                "  swap(arr[index + 1], pivot)",
+                "  swap(arr[index], pivot)",
                 "  return index + 1");
     }
     
     private void addCodeToUI(Pane codePane){
         Platform.runLater(() -> {
-            codePane.getChildren().addAll(pc.getCode());
+            codePane.getChildren().addAll(code.getCode());
         });
     }
 }
