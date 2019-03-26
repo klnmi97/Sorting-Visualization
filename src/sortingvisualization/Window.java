@@ -41,9 +41,10 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
 
@@ -70,6 +71,7 @@ public class Window extends Application {
     Button pauseBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Button infoButton;
     Button showSidePanelBtn;
     Slider speedSlider;
     
@@ -162,7 +164,16 @@ public class Window extends Application {
         showSidePanelBtn.setMinHeight(70);
         showSidePanelBtn.getStyleClass().add("sideButton");
         
-        controlBox.getChildren().addAll(speedSlider, stepBackBtn, playBtn, pauseBtn, stepForthBtn);
+        infoButton = new Button("INFO");
+        infoButton.getStyleClass().add("button");
+        
+        Region leftRegion = new Region();
+        Region rightRegion = new Region();
+        HBox.setHgrow(rightRegion, Priority.ALWAYS);
+        HBox.setHgrow(leftRegion, Priority.ALWAYS);
+        
+        controlBox.getChildren().addAll(leftRegion, speedSlider, stepBackBtn, 
+                playBtn, pauseBtn, stepForthBtn, rightRegion/*, infoButton*/);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.setStyle("-fx-background-color: black");
@@ -182,7 +193,7 @@ public class Window extends Application {
         codePane.setPadding(new Insets(30, 10, 30, 10));
         
         infoPane = new FlowPane();
-        infoPane.setPadding(new Insets(20, 10, 20, 10));
+        infoPane.setPadding(new Insets(15, 10, 15, 10));
         infoPane.setBackground(new Background(new BackgroundFill(Constants.LOW_PAN_BGND, CornerRadii.EMPTY, Insets.EMPTY)));
         infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         
@@ -213,7 +224,7 @@ public class Window extends Application {
         scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
         
-        primaryStage.setTitle("Sorting Alg Visualisation");
+        primaryStage.setTitle("Algorithm Tutor");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(720);
