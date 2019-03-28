@@ -33,6 +33,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -47,6 +48,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
+import sortingvisualization.UI.InfoDialog;
 
 /**
  *
@@ -166,6 +168,7 @@ public class Window extends Application {
         
         infoButton = new Button("INFO");
         infoButton.getStyleClass().add("button");
+        infoButton.setOnAction(event -> showDescription(primaryStage));
         
         Region leftRegion = new Region();
         Region rightRegion = new Region();
@@ -173,7 +176,7 @@ public class Window extends Application {
         HBox.setHgrow(leftRegion, Priority.ALWAYS);
         
         controlBox.getChildren().addAll(leftRegion, speedSlider, stepBackBtn, 
-                playBtn, pauseBtn, stepForthBtn, rightRegion/*, infoButton*/);
+                playBtn, pauseBtn, stepForthBtn, rightRegion, infoButton);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.setStyle("-fx-background-color: black");
@@ -220,9 +223,10 @@ public class Window extends Application {
         
         initialize(Algorithm.Bubble, null);
         
-        
         scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
+        
+        setupKeyShortcuts(primaryStage);
         
         primaryStage.setTitle("Algorithm Tutor");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
@@ -289,6 +293,14 @@ public class Window extends Application {
         speedSlider.valueProperty().addListener(bindings.getSpeedListener());
     }
     
+    private void setupKeyShortcuts(Stage stage){
+        scene.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.ESCAPE) {
+                stage.close();
+            }
+        });
+    }
+    
     private void showToastMessage(Stage primaryStage, String toastMessage){
         Toast.makeText(primaryStage, toastMessage, 3500, 500, 500);
     }
@@ -306,5 +318,10 @@ public class Window extends Application {
             int[] customInput = result.get().getInput();
             initialize(result.get().getAlgoritm(), customInput);
         }
+    }
+
+    private void showDescription(Stage primaryStage) {
+        InfoDialog info = new InfoDialog();
+        info.showDescription(primaryStage);
     }
 }

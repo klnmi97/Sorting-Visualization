@@ -5,7 +5,6 @@
  */
 package sortingvisualization.NodeControllers;
 
-import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.Utilities.Scaling;
 import sortingvisualization.Utilities.AnimUtils;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import javafx.scene.text.Text;
 import sortingvisualization.Constants.Constants;
 
 /**
- *
+ * Pseudocode manager
  * @author Mykhailo Klunko
  */
 public class Pseudocode {
@@ -35,7 +34,7 @@ public class Pseudocode {
     private final List<Boolean> selection;
     
     /**
-     * Class that manages pseudocode creation and animation
+     * Instantiates pseudocode manager class
      */
     public Pseudocode(){
         codeLines = new ArrayList<>();
@@ -81,7 +80,7 @@ public class Pseudocode {
     /**
      * Creates selection animation of multiple lines stated in parameters
      * @param lines lines of code to select
-     * @return animation of code line selection
+     * @return Animation of code line selection
      */
     public Animation selectLines(int... lines){
         ParallelTransition pt = new ParallelTransition();
