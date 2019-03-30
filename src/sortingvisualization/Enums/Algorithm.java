@@ -11,10 +11,10 @@ package sortingvisualization.Enums;
  */
 
 public enum Algorithm {
-    Bubble          (0, "Bubble Sort", "BUBL"), 
-    CocktailShaker  (1, "Cocktail-Shaker Sort", "CSh"), 
-    Insertion       (2, "Insertion Sort", "INS"), 
-    Selection       (3, "Selection Sort", "SEL"), 
+    Insertion       (0, "Insertion Sort", "INS"), 
+    Selection       (1, "Selection Sort", "SEL"), 
+    Bubble          (2, "Bubble Sort", "BUBL"), 
+    CocktailShaker  (3, "Cocktail-Shaker Sort", "CSh"),
     Merge           (4, "Merge Sort", "MRG"), 
     Quick           (5, "Quick Sort", "QUI"), 
     Heap            (9, "Heap Sort", "HEAP"),

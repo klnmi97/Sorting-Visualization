@@ -19,11 +19,14 @@ import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -57,12 +60,14 @@ import sortingvisualization.UI.InfoDialog;
 public class Window extends Application {
     
     private static final String toastMessage = "Click the side panel to hide it";
+    private static final Algorithm DEFAULT_TYPE = Algorithm.Bubble;
     private MenuBar menuBar;
     Menu menuFile;
-    Menu menuEdit;
+    Menu menuAction;
     Menu menuView;
     MenuItem menuItemExit;
-    MenuItem menuItemNew;
+    MenuItem menuItemCreate;
+    CheckMenuItem showSideBar;
     
     HBox algorithmButtonBox;
     Label algLbl;
@@ -87,8 +92,15 @@ public class Window extends Application {
     ViewController creator;
     AnimationController controller;
     
+    BorderPane root;
     Scene scene;
-    public Window(){}
+    
+    ObjectProperty<Algorithm> current;
+    
+    public Window(){
+        this.current = new SimpleObjectProperty<>();
+        this.current.setValue(DEFAULT_TYPE);
+    }
     
     @Override
     public void start(Stage primaryStage) {
@@ -167,8 +179,13 @@ public class Window extends Application {
         showSidePanelBtn.getStyleClass().add("sideButton");
         
         infoButton = new Button("INFO");
+        infoButton.setTooltip(new Tooltip("About " + DEFAULT_TYPE.getName()));
         infoButton.getStyleClass().add("button");
         infoButton.setOnAction(event -> showDescription(primaryStage));
+        
+        current.addListener((obs, oldValue, newValue) -> {
+            infoButton.setTooltip(new Tooltip("About " + newValue.getName()));
+        });
         
         Region leftRegion = new Region();
         Region rightRegion = new Region();
@@ -184,7 +201,7 @@ public class Window extends Application {
         
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, algorithmButtonBox);
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         
         sidePanel = new StackPane();
         sidePanel.setPrefWidth(420 * windowSizeFactor);
@@ -221,7 +238,7 @@ public class Window extends Application {
         root.setRight(sidePanel);
         BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
-        initialize(Algorithm.Bubble, null);
+        initialize(DEFAULT_TYPE, null);
         
         scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
@@ -241,23 +258,40 @@ public class Window extends Application {
         menuFile = new Menu("_File");
         menuFile.setMnemonicParsing(true);
         
-        menuEdit = new Menu("_Edit");
-        menuEdit.setMnemonicParsing(true);
+        menuAction = new Menu("_Actions");
+        menuAction.setMnemonicParsing(true);
         
         menuView = new Menu("_View");
         menuView.setMnemonicParsing(true);
         
         menuItemExit = new MenuItem("Exit");
         menuItemExit.setOnAction(a -> primaryStage.close());
+        menuItemExit.setAccelerator(KeyCombination.keyCombination("Esc"));
         menuFile.getItems().add(menuItemExit);
         
-        menuItemNew = new MenuItem("Create sorting");
-        menuItemNew.setOnAction(event->openNewSortingDialog());
-        menuItemNew.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-        menuFile.getItems().add(menuItemNew);
+        menuItemCreate = new MenuItem("Create sorting");
+        menuItemCreate.setOnAction(event -> openNewSortingDialog());
+        menuItemCreate.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+        menuAction.getItems().add(menuItemCreate);
+        
+        MenuItem menuItemReset = new MenuItem("Reset");
+        menuItemReset.setOnAction(event -> resetCurrent());
+        menuItemReset.setAccelerator(KeyCombination.keyCombination("F5"));
+        menuAction.getItems().add(menuItemReset);
+        
+        showSideBar = new CheckMenuItem("Sidebar");
+        showSideBar.selectedProperty().set(true);
+        showSideBar.setOnAction(event -> {
+            if(showSideBar.isSelected()) {
+                root.setRight(sidePanel);
+            } else {
+                root.setRight(showSidePanelBtn);
+            }
+        });
+        menuView.getItems().add(showSideBar);
         
         menuBar = new MenuBar();
-	menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
+	menuBar.getMenus().addAll(menuFile, menuAction, menuView);
     }
     
     private void initializeUpperPanel(){
@@ -277,6 +311,7 @@ public class Window extends Application {
     
     private void initialize(Algorithm type, int[] input){
         //TODO: create loading
+        current.setValue(type);
         headerLbl.setText(type.getName());
         Task<List<Animation>> sortingTask = creator.sort(type, input);
         sortingTask.setOnSucceeded(e->{
@@ -295,8 +330,12 @@ public class Window extends Application {
     
     private void setupKeyShortcuts(Stage stage){
         scene.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.ESCAPE) {
-                stage.close();
+            if(event.getCode() == KeyCode.ENTER) {
+                if(playBtn.isDisabled()){
+                    controller.pause();
+                } else {
+                    controller.play();
+                }
             }
         });
     }
@@ -323,5 +362,9 @@ public class Window extends Application {
     private void showDescription(Stage primaryStage) {
         InfoDialog info = new InfoDialog();
         info.showDescription(primaryStage);
+    }
+
+    private void resetCurrent() {
+        initialize(current.getValue(), null);
     }
 }

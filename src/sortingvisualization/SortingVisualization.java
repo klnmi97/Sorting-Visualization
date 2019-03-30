@@ -7,14 +7,6 @@ package sortingvisualization;
 
 import javafx.application.Application;
 
-import sortingvisualization.algorithms.BubbleSort;
-import sortingvisualization.algorithms.CocktailShakerSort;
-import sortingvisualization.algorithms.HeapSort;
-import sortingvisualization.algorithms.InsertionSort;
-import sortingvisualization.algorithms.MergeSort;
-import sortingvisualization.algorithms.QuickSort;
-import sortingvisualization.algorithms.SelectionSort;
-
 /**
  *
  * @author Mykhailo Klunko
