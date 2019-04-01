@@ -54,7 +54,7 @@ import sortingvisualization.UI.InfoDialog;
  *
  * @author Mykhailo Klunko
  */
-public class Window extends Application {
+public class MainUI extends Application {
     
     private static final String toastMessage = "Click the side panel to hide it";
     private static final Algorithm DEFAULT_TYPE = Algorithm.Bubble;
@@ -89,7 +89,7 @@ public class Window extends Application {
     
     ObjectProperty<Algorithm> current;
     
-    public Window(){
+    public MainUI(){
         this.current = new SimpleObjectProperty<>();
         this.current.setValue(DEFAULT_TYPE);
     }
@@ -338,5 +338,9 @@ public class Window extends Application {
 
     private void resetCurrent() {
         initialize(current.getValue(), null);
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
+        launch(args);
     }
 }
