@@ -24,7 +24,7 @@
     -fx-text-fill: red;
 }
 
-.playButton{
+.controllButton{
     -fx-background-color: #000000;
 }
 
@@ -44,4 +44,59 @@
     -fx-font-family: "Arial";
     -fx-font-size: 20px;
     -fx-font-weight: bold;
+}
+
+/*** CONTEXT MENU WITH ALGORITHMS ***/
+
+.context-menu {
+    -fx-background-color: black;
+    -fx-background-insets: 0, 1, 2;
+    /*-fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;*/
+    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em;
+}
+
+/* context menu button */
+
+.menu-button > .arrow-button {
+    -fx-background-color: #000000;
+}
+
+.menu-button {
+    -fx-background-color: #000000;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0,1,2,0;
+}
+
+.menu-button .label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/** menu items style **/
+
+.menu-item .label {
+    -fx-background-color: #000000;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-padding: 10 20 10 10;
+}
+
+.menu-item:focused {
+     -fx-background-color: black;
+}
+
+.menu-item:focused .label {
+     -fx-text-fill: red;
+}
+
+.menu-item:hover {
+    -fx-background-color: black;
+}
+
+.default_background {
+    -fx-background-color: black;
 }

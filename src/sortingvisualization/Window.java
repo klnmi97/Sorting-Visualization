@@ -26,10 +26,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
@@ -37,7 +35,6 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -61,16 +58,9 @@ public class Window extends Application {
     
     private static final String toastMessage = "Click the side panel to hide it";
     private static final Algorithm DEFAULT_TYPE = Algorithm.Bubble;
-    private MenuBar menuBar;
-    Menu menuFile;
-    Menu menuAction;
-    Menu menuView;
-    MenuItem menuItemExit;
-    MenuItem menuItemCreate;
-    CheckMenuItem showSideBar;
     
     HBox algorithmButtonBox;
-    Label algLbl;
+    MenuButton algorithmMenu;
     Label controlLbl;
     Label headerLbl;
     
@@ -78,7 +68,9 @@ public class Window extends Application {
     Button pauseBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Button resetCurrent;
     Button infoButton;
+    Button newButton;
     Button showSidePanelBtn;
     Slider speedSlider;
     
@@ -108,10 +100,6 @@ public class Window extends Application {
         
         displayPane = new StackPane();
         
-        initializeMenu(primaryStage);
-        
-        algLbl = new Label("Algorithms: ");
-        algLbl.getStyleClass().add("blcklabel");    
         headerLbl = new Label();
         headerLbl.getStyleClass().add("headerlabel");
         controlLbl = new Label();
@@ -149,34 +137,50 @@ public class Window extends Application {
         rfImgView.setFitHeight(25);
         rfImgView.setFitWidth(25);
         
+        Image refreshImg = new Image(getClass().getResourceAsStream("/refresh.png"));
+        ImageView refreshIV = new ImageView(refreshImg);
+        refreshIV.setFitHeight(25);
+        refreshIV.setFitWidth(25);
+        
         playBtn = new Button();
         playBtn.setTooltip(new Tooltip("Play!"));
         playBtn.setGraphic(playImgV);
-        playBtn.getStyleClass().add("playButton");
+        playBtn.getStyleClass().add("controllButton");
         playBtn.setOnAction(event->controller.play());
         
         pauseBtn = new Button();
         pauseBtn.setTooltip(new Tooltip("Pause"));
         pauseBtn.setGraphic(pauseImgV);
-        pauseBtn.getStyleClass().add("playButton");
+        pauseBtn.getStyleClass().add("controllButton");
         pauseBtn.setOnAction(event->controller.pause());
         
         stepBackBtn = new Button();
         stepBackBtn.setTooltip(new Tooltip("Step Back"));
         stepBackBtn.setGraphic(rbImgView);
-        stepBackBtn.getStyleClass().add("playButton");
+        stepBackBtn.getStyleClass().add("controllButton");
         stepBackBtn.setOnAction(event->controller.goStepBack());
         
         stepForthBtn = new Button();
         stepForthBtn.setTooltip(new Tooltip("Step Forth"));
         stepForthBtn.setGraphic(rfImgView);
-        stepForthBtn.getStyleClass().add("playButton");
+        stepForthBtn.getStyleClass().add("controllButton");
         stepForthBtn.setOnAction(event->controller.goStepForth());
         
         showSidePanelBtn = new Button("<");
         showSidePanelBtn.setMaxWidth(10);
         showSidePanelBtn.setMinHeight(70);
         showSidePanelBtn.getStyleClass().add("sideButton");
+        
+        resetCurrent = new Button();
+        resetCurrent.setTooltip(new Tooltip("New random"));
+        resetCurrent.setGraphic(refreshIV);
+        resetCurrent.getStyleClass().add("controllButton");
+        resetCurrent.setOnAction(event->resetCurrent());
+
+        newButton = new Button("NEW");
+        newButton.setTooltip(new Tooltip("Create sorting"));
+        newButton.getStyleClass().add("button");
+        newButton.setOnAction(event -> openNewSortingDialog());
         
         infoButton = new Button("INFO");
         infoButton.setTooltip(new Tooltip("About " + DEFAULT_TYPE.getName()));
@@ -192,15 +196,15 @@ public class Window extends Application {
         HBox.setHgrow(rightRegion, Priority.ALWAYS);
         HBox.setHgrow(leftRegion, Priority.ALWAYS);
         
-        controlBox.getChildren().addAll(leftRegion, speedSlider, stepBackBtn, 
-                playBtn, pauseBtn, stepForthBtn, rightRegion, infoButton);
+        controlBox.getChildren().addAll(resetCurrent, leftRegion, speedSlider, stepBackBtn, 
+                playBtn, pauseBtn, stepForthBtn, rightRegion, newButton, infoButton);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.setStyle("-fx-background-color: black");
         controlBox.setMinHeight(40);
         
         VBox top = new VBox();
-        top.getChildren().addAll(menuBar, algorithmButtonBox);
+        top.getChildren().addAll(algorithmButtonBox);
         root = new BorderPane();
         
         sidePanel = new StackPane();
@@ -254,69 +258,30 @@ public class Window extends Application {
         showToastMessage(primaryStage, toastMessage);
     }
     
-    private void initializeMenu(Stage primaryStage){
-        menuFile = new Menu("_File");
-        menuFile.setMnemonicParsing(true);
-        
-        menuAction = new Menu("_Actions");
-        menuAction.setMnemonicParsing(true);
-        
-        menuView = new Menu("_View");
-        menuView.setMnemonicParsing(true);
-        
-        menuItemExit = new MenuItem("Exit");
-        menuItemExit.setOnAction(a -> primaryStage.close());
-        menuItemExit.setAccelerator(KeyCombination.keyCombination("Esc"));
-        menuFile.getItems().add(menuItemExit);
-        
-        menuItemCreate = new MenuItem("Create sorting");
-        menuItemCreate.setOnAction(event -> openNewSortingDialog());
-        menuItemCreate.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-        menuAction.getItems().add(menuItemCreate);
-        
-        MenuItem menuItemReset = new MenuItem("Reset");
-        menuItemReset.setOnAction(event -> resetCurrent());
-        menuItemReset.setAccelerator(KeyCombination.keyCombination("F5"));
-        menuAction.getItems().add(menuItemReset);
-        
-        showSideBar = new CheckMenuItem("Sidebar");
-        showSideBar.selectedProperty().set(true);
-        showSideBar.setOnAction(event -> {
-            if(showSideBar.isSelected()) {
-                root.setRight(sidePanel);
-            } else {
-                root.setRight(showSidePanelBtn);
-            }
-        });
-        menuView.getItems().add(showSideBar);
-        
-        menuBar = new MenuBar();
-	menuBar.getMenus().addAll(menuFile, menuAction, menuView);
-    }
-    
     private void initializeUpperPanel(){
-        algorithmButtonBox = new HBox(algLbl);
+        algorithmButtonBox = new HBox();
+        algorithmMenu = new MenuButton("Algorithms");
         
         for(Algorithm type : Algorithm.values()){
-            Button aButton = new Button(type.getShortName());
-            aButton.setTooltip(new Tooltip(type.getName()));
-            aButton.getStyleClass().add("button");
-            aButton.setOnAction(action -> initialize(type, null));
-            algorithmButtonBox.getChildren().add(aButton);
+            MenuItem aItem = new MenuItem(type.getName());
+            aItem.setOnAction(action -> initialize(type, null));
+            algorithmMenu.getItems().add(aItem);
         }
         
-        algorithmButtonBox.setStyle("-fx-background-color: black");
+        algorithmButtonBox.getChildren().add(algorithmMenu);
+        algorithmButtonBox.getStyleClass().add("default_background");
         algorithmButtonBox.setMinHeight(40);
     }
     
     private void initialize(Algorithm type, int[] input){
-        //TODO: create loading
+        resetCurrent.setDisable(true);
         current.setValue(type);
         headerLbl.setText(type.getName());
         Task<List<Animation>> sortingTask = creator.sort(type, input);
         sortingTask.setOnSucceeded(e->{
             BindingData bindings = controller.setupInstance(sortingTask.getValue());
             initButtonBinding(bindings);
+            resetCurrent.setDisable(false);
         });
         sortingTask.run();
     }
@@ -330,12 +295,19 @@ public class Window extends Application {
     
     private void setupKeyShortcuts(Stage stage){
         scene.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.ENTER) {
+            if(event.getCode() == KeyCode.R) {
+                event.consume();
                 if(playBtn.isDisabled()){
                     controller.pause();
                 } else {
                     controller.play();
                 }
+            } else if(event.getCode() == KeyCode.F1) { 
+                showDescription(stage);
+            } else if(event.getCode() == KeyCode.F4) {
+                openNewSortingDialog();
+            } else if(event.getCode() == KeyCode.F5) {
+                resetCurrent();
             }
         });
     }
