@@ -15,6 +15,7 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.StrokeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -33,7 +34,8 @@ public class Tree {
     private static final double scalingFactor = Scaling.computeDPIScale();
     
     private static final int NODE_SIZE = initNodeSize();
-    private static final int ARRAY_ITEM_SIZE = initArrayItemSize();
+    private static final int ARRAY_ITEM_HEIGHT = initArrayItemHeight();
+    private static final int ARRAY_ITEM_WIDTH = initArrayItemWidth();
     private static final int LEVEL_HEIGHT = initLevelHeight();
     
     private static final Color FILL = Color.WHITE;
@@ -44,14 +46,14 @@ public class Tree {
     private static final Color ARRAY_SORTED = Color.GAINSBORO;
     
     private static final int ARRAY_SPACING = initArraySpacing();
-    
+
     private final int TREE_SPACING;
     private final double SPACING_COEF;
     
     private final List<BrickNode> treeNodes;
     private final List<BrickNode> arrayNodes;
     private final List<Line> childConnections;
-    private List<Circle> placeholders;
+    private final List<Circle> placeholders;
     
     public Tree(int[] inputArray){
         this.TREE_SPACING = countSecondLevelSpacing(inputArray);
@@ -62,14 +64,26 @@ public class Tree {
         this.arrayNodes = createGraphicArray(inputArray);
     }
 
+    /**
+     * Get nodes of array graphic representation
+     * @return list of nodes
+     */
     public List<BrickNode> getArrayNodes() {
         return arrayNodes;
     }
     
+    /**
+     * Get graphic tree placeholders (node background circles)
+     * @return list of circles for tree nodes background
+     */
     public List<Circle> getPlaceholders() {
         return placeholders;
     }
 
+    /**
+     * Get node connection lines
+     * @return list of lines
+     */
     public List<Line> getChildConnections() {
         return childConnections;
     }
@@ -111,7 +125,7 @@ public class Tree {
         return y;
     }
     
-    
+    //creates tree nodes
     private List<BrickNode> createList(int[] inputArray){
         List<BrickNode> list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
@@ -122,6 +136,7 @@ public class Tree {
         return list;
     }
     
+    //creates tree children connections
     private List<Line> createConnections(){
         if(treeNodes == null) return null;
         
@@ -156,6 +171,7 @@ public class Tree {
         return connections;
     }
     
+    //creates tree nodes background placeholders
     private List<Circle> createPlaceholders(){
         if(treeNodes == null) return null;
         
@@ -173,25 +189,30 @@ public class Tree {
         return placeholders;
     }
     
+    //left indent for each level of tree
     private double getLevelIndent(int level){
         return ((double)(getLevelWidth(level) - 1) / 2) * -countSpacing(level);
     }
     
+    //count first spacing between nodes, depends on size of array
     private int countSecondLevelSpacing(int[] array){
         int levels = getNuberOfLevels(array.length);
         return (int)(65 * levels * scalingFactor);
     }
     
+    //coefficient to change spacing for tree levels
     private double countSpacingCoefficient(int[] array){
         int levels = getNuberOfLevels(array.length);
         return (double)1 / levels;
     }
     
+    //count spacicng between tree nodes for each level of tree
     private int countSpacing(int nodeLevel){
         int sp = TREE_SPACING - (int)((nodeLevel - 1) * (TREE_SPACING * SPACING_COEF));
         return  sp;
     }
     
+    //get node's tree level, is computed from position in array
     private int getLevel(int arrayPosition){
         int position = arrayPosition;
         int level = 1;
@@ -208,11 +229,13 @@ public class Tree {
         return level;
     }
     
+    //count position in tree level
     private int getPositionInLevel(int i){
         int level = getLevel(i);
         return i - (int)Math.pow(2, level - 1) + 1;
     }
     
+    //hight of tree
     private int getNuberOfLevels(int treeArraySize){
         return getLevel(treeArraySize - 1);
     }
@@ -262,25 +285,25 @@ public class Tree {
         return list;
     }
     
-    private static int initArraySpacing() {
-        return ARRAY_ITEM_SIZE;
-    }
-    
+    //left indent for centering of array (center alignment)
     private int getArrayIndent(int size) {
         return (int)(((double)size / 2) * -ARRAY_SPACING);
     }
     
+    //counts array node's X position on stackpane with TOP_CENTER alignment
     private int getArrayNodeX(int position, int arraySize){
         int x = position * ARRAY_SPACING + getArrayIndent(arraySize);
         return x;
     }
     
+    //counts array node's Y position on stackpane with TOP_CENTER alignment
     private int getArrayNodeY(){
         return 10;
     }
     
+    //creates node of the array
     private BrickNode createArrayNode(int value, double x, double y){
-        Rectangle cell = new Rectangle(ARRAY_ITEM_SIZE, ARRAY_ITEM_SIZE);
+        Rectangle cell = new Rectangle(ARRAY_ITEM_WIDTH, ARRAY_ITEM_HEIGHT);
         cell.setFill(FILL);
         cell.setStroke(DEFAULT);
         
@@ -298,7 +321,7 @@ public class Tree {
         return node;
     }
     
-    //Animations
+    /*** Animations ***/
 
     /**
      * Creates graphic animation of swapping two nodes in the graphic array
@@ -432,6 +455,12 @@ public class Tree {
         return compare;
     }
     
+    /**
+     * Creates animation of selection(comparing) two nodes in tree and array
+     * @param firstNode position of first node
+     * @param secondNode position of second node
+     * @return animation of back and forth color change
+     */
     public Animation compare(int firstNode, int secondNode){
         ParallelTransition compare = new ParallelTransition();
         
@@ -441,6 +470,7 @@ public class Tree {
         return compare;
     }
     
+    //changes stroke color of the shape
     private Animation repaintStroke(Shape shape, Color fromValue, Color toValue) {
         StrokeTransition repainting = new StrokeTransition();
         repainting.setShape(shape);
@@ -450,6 +480,7 @@ public class Tree {
         return repainting;
     }
     
+    //changes background color of shape
     private Animation repaint(Shape shape, Color fromValue, Color toValue) {
         FillTransition repaint = new FillTransition();
         repaint.setShape(shape);
@@ -459,18 +490,30 @@ public class Tree {
         return repaint;
     }
     
+    /**
+     * Animation that shows that node is sorted. Node in the array becomes gray
+     * and node in the tree fades 
+     * @param nodePosition position of node
+     * @return animation of node that is sorted
+     */
     public Animation setSorted(int nodePosition) {
         ParallelTransition setSorted = new ParallelTransition();
         
         Animation array = repaint(arrayNodes.get(nodePosition).getShape(), FILL, ARRAY_SORTED);
-        Animation tree = hide(nodePosition);
-        setSorted.getChildren().addAll(array, tree);
+        Animation tree = hideNode(treeNodes.get(nodePosition));
+        Animation circle = hideNode(placeholders.get(nodePosition));
+        if(nodePosition > 0){
+            Animation connection = hideNode(childConnections.get(nodePosition - 1));
+            setSorted.getChildren().add(connection);
+        }
+        
+        setSorted.getChildren().addAll(array, tree, circle);
         return setSorted;
     }
     
-    public Animation hide(int nodePos) {
+    private Animation hideNode(Node node) {
         FadeTransition hide = new FadeTransition();
-        hide.setNode(treeNodes.get(nodePos));
+        hide.setNode(node);
         hide.setDuration(ViewController.SPEED);
         hide.setFromValue(1);
         hide.setToValue(0);
@@ -478,16 +521,24 @@ public class Tree {
         return hide;
     }
     
-    //Utils
+    /*** Init utils ***/
     
     private static int initNodeSize() {
         return (int)(25 * scalingFactor);
     }
-
-    private static int initArrayItemSize() {
-        return (int)(40 * scalingFactor);
+    
+    private static int initArraySpacing() {
+        return ARRAY_ITEM_WIDTH + 10;
     }
 
+    private static int initArrayItemHeight() {
+        return (int)(30 * scalingFactor);
+    }
+    
+    private static int initArrayItemWidth() {
+        return (int)(50 * scalingFactor);
+    }
+    
     private static int initLevelHeight() {
         return (int)(100 * scalingFactor);
     }
