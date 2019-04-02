@@ -52,7 +52,7 @@ import sortingvisualization.Constants.Constants;
 import sortingvisualization.UI.InfoDialog;
 
 /**
- *
+ * Main GUI application class
  * @author Mykhailo Klunko
  */
 public class MainUI extends Application {
@@ -216,11 +216,17 @@ public class MainUI extends Application {
         sidePanel = new StackPane();
         sidePanel.setPrefWidth(420 * windowSizeFactor);
         sidePanel.setBackground(new Background(new BackgroundFill(Constants.PANEL_BGND, CornerRadii.EMPTY, Insets.EMPTY)));
-        sidePanel.setOnMouseClicked(event->
-            {root.setRight(showSidePanelBtn);});
+        sidePanel.setOnMouseClicked(event-> {
+            root.setRight(showSidePanelBtn);
+        });
+        
+        ScrollPane sideScroll = new ScrollPane();
+        sideScroll.setContent(sidePanel);
+        sideScroll.setFitToHeight(true);
+        sideScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
         codePane = new FlowPane();
-        codePane.setPadding(new Insets(30, 10, 30, 10));
+        codePane.setPadding(new Insets(30, 10, 50, 10));
         
         infoPane = new FlowPane();
         infoPane.setPadding(new Insets(15, 10, 15, 10));
@@ -230,13 +236,13 @@ public class MainUI extends Application {
         topSidePanel = new VBox();
         topSidePanel.setAlignment(Pos.TOP_CENTER);
         topSidePanel.getChildren().addAll(headerLbl, codePane);
+        topSidePanel.setPadding(new Insets(0, 0, 50, 0));
         
-        StackPane.setAlignment(topSidePanel, Pos.TOP_CENTER);
+        //StackPane.setAlignment(topSidePanel, Pos.TOP_CENTER);
         StackPane.setAlignment(infoPane, Pos.BOTTOM_CENTER);
         sidePanel.getChildren().addAll(topSidePanel, infoPane);
-        infoPane.setMaxHeight(sidePanel.getPrefHeight() * 0.2);
         showSidePanelBtn.setOnAction(event->{
-            root.setRight(sidePanel);
+            root.setRight(sideScroll);
             showToastMessage(primaryStage, toastMessage);});
         
         creator = new ViewController(displayPane, codePane, infoPane);
@@ -245,7 +251,8 @@ public class MainUI extends Application {
         root.setCenter(scroll);
         root.setTop(top);
         root.setBottom(controlBox);
-        root.setRight(sidePanel);
+        root.setRight(sideScroll);
+        
         BorderPane.setAlignment(showSidePanelBtn, Pos.CENTER_RIGHT);
         
         initialize(DEFAULT_TYPE, null);
