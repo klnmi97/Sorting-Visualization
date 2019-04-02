@@ -78,6 +78,8 @@ public class ViewController {
     private Pane infoPanel;
     private Algorithm currentInstance;
     
+    private int childrenWidth;
+    
     /**
      * Nodes and their animation creation controller
      * @param displayPane main pane to show graphic items
@@ -89,7 +91,16 @@ public class ViewController {
         this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        currentArray = generateRandomArray(N_VALUES, MIN, MAX);
+        this.currentArray = generateRandomArray(N_VALUES, MIN, MAX);
+        this.childrenWidth = DEFAULT_ITEM_COUNT * SPACING;
+    }
+    
+    /**
+     * Get width of graphic nodes on screen
+     * @return width of children nodes for displayPane in px
+     */
+    public int getChildrenWidth() {
+        return childrenWidth;
     }
     
     private static double initScaling() {
@@ -337,6 +348,9 @@ public class ViewController {
                         break;
                 }
                 anim = sorting.sort();
+                
+                childrenWidth = (list.size() + 1) * SPACING;
+                
                 Platform.runLater(() -> {
                             displayPane.getChildren().addAll(list);
                             infoPanel.getChildren().add(currentInfo.getInfoField());

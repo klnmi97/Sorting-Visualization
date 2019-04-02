@@ -100,3 +100,8 @@
 .default_background {
     -fx-background-color: black;
 }
+
+.scroll-pane {
+    -fx-focus-color: transparent; 
+    -fx-background-color:transparent;
+}

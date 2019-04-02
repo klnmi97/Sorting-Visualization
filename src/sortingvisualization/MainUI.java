@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.GaussianBlur;
@@ -74,6 +75,7 @@ public class MainUI extends Application {
     Button showSidePanelBtn;
     Slider speedSlider;
     
+    ScrollPane scroll;
     Pane displayPane;
     StackPane sidePanel;
     VBox topSidePanel;
@@ -87,18 +89,23 @@ public class MainUI extends Application {
     BorderPane root;
     Scene scene;
     
-    ObjectProperty<Algorithm> current;
+    ObjectProperty<Algorithm> currentAlgorithm;
     
     public MainUI(){
-        this.current = new SimpleObjectProperty<>();
-        this.current.setValue(DEFAULT_TYPE);
+        this.currentAlgorithm = new SimpleObjectProperty<>();
+        this.currentAlgorithm.setValue(DEFAULT_TYPE);
     }
     
     @Override
     public void start(Stage primaryStage) {
         double windowSizeFactor = Scaling.computeDPIScale();
         
+        
         displayPane = new StackPane();
+        scroll = new ScrollPane();
+        scroll.setContent(displayPane);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
         
         headerLbl = new Label();
         headerLbl.getStyleClass().add("headerlabel");
@@ -187,7 +194,7 @@ public class MainUI extends Application {
         infoButton.getStyleClass().add("button");
         infoButton.setOnAction(event -> showDescription(primaryStage));
         
-        current.addListener((obs, oldValue, newValue) -> {
+        currentAlgorithm.addListener((obs, oldValue, newValue) -> {
             infoButton.setTooltip(new Tooltip("About " + newValue.getName()));
         });
         
@@ -236,7 +243,7 @@ public class MainUI extends Application {
         creator = new ViewController(displayPane, codePane, infoPane);
         controller = new AnimationController();
         
-        root.setCenter(displayPane);
+        root.setCenter(scroll);
         root.setTop(top);
         root.setBottom(controlBox);
         root.setRight(sidePanel);
@@ -275,13 +282,16 @@ public class MainUI extends Application {
     
     private void initialize(Algorithm type, int[] input){
         resetCurrent.setDisable(true);
-        current.setValue(type);
+        currentAlgorithm.setValue(type);
         headerLbl.setText(type.getName());
         Task<List<Animation>> sortingTask = creator.sort(type, input);
         sortingTask.setOnSucceeded(e->{
             BindingData bindings = controller.setupInstance(sortingTask.getValue());
             initButtonBinding(bindings);
             resetCurrent.setDisable(false);
+            displayPane.minWidthProperty().setValue(creator.getChildrenWidth());
+            displayPane.minHeightProperty().setValue(500); //TODO: find out min width
+            
         });
         sortingTask.run();
     }
@@ -337,7 +347,7 @@ public class MainUI extends Application {
     }
 
     private void resetCurrent() {
-        initialize(current.getValue(), null);
+        initialize(currentAlgorithm.getValue(), null);
     }
     
     public static void main(String[] args) throws InterruptedException {
