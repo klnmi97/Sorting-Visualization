@@ -46,7 +46,7 @@ public class Tree {
     private static final Color ARRAY_SORTED = Color.GAINSBORO;
     
     private static final int ARRAY_SPACING = initArraySpacing();
-
+    
     private final int TREE_SPACING;
     private final double SPACING_COEF;
     
@@ -55,6 +55,8 @@ public class Tree {
     private final List<Line> childConnections;
     private final List<Circle> placeholders;
     
+    public final double childNodesHeight;
+    
     public Tree(int[] inputArray){
         this.TREE_SPACING = countSecondLevelSpacing(inputArray);
         this.SPACING_COEF = countSpacingCoefficient(inputArray);
@@ -62,6 +64,7 @@ public class Tree {
         this.childConnections = createConnections();
         this.placeholders = createPlaceholders();
         this.arrayNodes = createGraphicArray(inputArray);
+        this.childNodesHeight = computeChildrenHeight(inputArray);
     }
 
     /**
@@ -94,8 +97,16 @@ public class Tree {
      *
      * @return List of created in constructor graphic tree nodes
      */
-    public List<BrickNode> getNodesList(){
+    public List<BrickNode> getNodesList() {
         return this.treeNodes;
+    }
+    
+    /**
+     * Get minimal height of needed space
+     * @return minimal height of viewport in px
+     */
+    public double getMinViewPortHeight() {
+        return childNodesHeight;
     }
     
     /**
@@ -298,7 +309,8 @@ public class Tree {
     
     //counts array node's Y position on stackpane with TOP_CENTER alignment
     private int getArrayNodeY(){
-        return 10;
+        int topMargin = 10;
+        return topMargin;
     }
     
     //creates node of the array
@@ -541,5 +553,10 @@ public class Tree {
     
     private static int initLevelHeight() {
         return (int)(100 * scalingFactor);
+    }
+
+    private double computeChildrenHeight(int[] array) {
+        int minimumArrayTreeSpace = 100;
+        return getNodeY(0, array.length) * -1 + ARRAY_ITEM_HEIGHT + minimumArrayTreeSpace;
     }
 }

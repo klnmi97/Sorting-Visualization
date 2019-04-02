@@ -21,7 +21,9 @@ import sortingvisualization.Controllers.ViewController;
  */
 public class FixedNodes {
     
-    private static double scalingFactor = Scaling.computeDPIScale();
+    private static final double scalingFactor = Scaling.computeDPIScale();
+    public static final double NODE_HEIGHT = 30 * scalingFactor;
+    public static final double NODE_WIDTH = 50 * scalingFactor;
     private List<BrickNode> list;
     
     public FixedNodes(){
@@ -40,7 +42,7 @@ public class FixedNodes {
     }
     
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
-        Rectangle rectangle = new Rectangle(50 * scalingFactor, 30 * scalingFactor);
+        Rectangle rectangle = new Rectangle(NODE_WIDTH, NODE_HEIGHT);
         rectangle.setStroke(Color.BLACK);
         rectangle.setFill(Color.WHITE);
         

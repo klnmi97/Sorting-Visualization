@@ -21,8 +21,11 @@ import sortingvisualization.Controllers.ViewController;
  */
 public class DynamicNodes {
     
-    private List<BrickNode> list;
     private static double scalingFactor = Scaling.computeDPIScale();
+    public static final double NODE_HEIGHT = 200 * scalingFactor;
+    public static final double NODE_WIDTH = 50 * scalingFactor;
+
+    private List<BrickNode> list;
     
     public DynamicNodes(){
         list = new ArrayList<>();
@@ -49,7 +52,7 @@ public class DynamicNodes {
         if(percent < 0.07){
             percent = 0;
         }
-        Rectangle rectangle = new Rectangle(50 * scalingFactor, (percent * 10 * 20 * scalingFactor) + 5);
+        Rectangle rectangle = new Rectangle(NODE_WIDTH, (percent * NODE_HEIGHT) + 5);
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));

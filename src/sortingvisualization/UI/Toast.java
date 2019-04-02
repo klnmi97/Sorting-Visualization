@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 /**
- * Message above the main window in Android toast style
+ * Message over the main window in Android toast style
  * @author Mykhailo Klunko
  */
 public final class Toast {

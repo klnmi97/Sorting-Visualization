@@ -105,3 +105,8 @@
     -fx-focus-color: transparent; 
     -fx-background-color:transparent;
 }
+
+.control-box {
+    -fx-background-color: black;
+    
+}

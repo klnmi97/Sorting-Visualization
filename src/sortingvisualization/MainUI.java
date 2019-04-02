@@ -100,7 +100,6 @@ public class MainUI extends Application {
     public void start(Stage primaryStage) {
         double windowSizeFactor = Scaling.computeDPIScale();
         
-        
         displayPane = new StackPane();
         scroll = new ScrollPane();
         scroll.setContent(displayPane);
@@ -207,7 +206,7 @@ public class MainUI extends Application {
                 playBtn, pauseBtn, stepForthBtn, rightRegion, newButton, infoButton);
         controlBox.setAlignment(Pos.CENTER);
         
-        controlBox.setStyle("-fx-background-color: black");
+        controlBox.getStyleClass().add("control-box");
         controlBox.setMinHeight(40);
         
         VBox top = new VBox();
@@ -289,8 +288,9 @@ public class MainUI extends Application {
             BindingData bindings = controller.setupInstance(sortingTask.getValue());
             initButtonBinding(bindings);
             resetCurrent.setDisable(false);
+            //refresh bounds for new instance
             displayPane.minWidthProperty().setValue(creator.getChildrenWidth());
-            displayPane.minHeightProperty().setValue(500); //TODO: find out min width
+            displayPane.minHeightProperty().setValue(creator.getChildrenHeight());
             
         });
         sortingTask.run();

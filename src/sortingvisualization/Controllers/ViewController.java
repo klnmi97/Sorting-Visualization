@@ -79,6 +79,7 @@ public class ViewController {
     private Algorithm currentInstance;
     
     private int childrenWidth;
+    private int childrenHeight;
     
     /**
      * Nodes and their animation creation controller
@@ -101,6 +102,14 @@ public class ViewController {
      */
     public int getChildrenWidth() {
         return childrenWidth;
+    }
+    
+    /**
+     * Get min height needed for graphic nodes on screen
+     * @return width of children nodes for displayPane in px
+     */
+    public int getChildrenHeight() {
+        return childrenHeight;
     }
     
     private static double initScaling() {
@@ -280,26 +289,32 @@ public class ViewController {
                     case Bubble:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new BubbleSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case CocktailShaker:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new CocktailShakerSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Insertion:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new InsertionSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Selection:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new SelectionSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Quick:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new QuickSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Merge:
                         list = dNodes.createList(generatedArray, currentMax);
                         sorting = new MergeSort(list, currentInfo, codePanel);
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Counting:
                         List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
@@ -312,6 +327,7 @@ public class ViewController {
                             displayPane.getChildren().addAll(countLabels);
                             displayPane.getChildren().addAll(0, positionLabels);
                         });
+                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
                         break;
                     case Bucket:
                         list = fNodes.createList(generatedArray, currentMax);
@@ -323,6 +339,7 @@ public class ViewController {
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(buckets);
                         });
+                        childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
                         break;
                     case Radix:
                         list = fNodes.createList(generatedArray, currentMax);
@@ -331,6 +348,7 @@ public class ViewController {
                         Platform.runLater(() -> {
                             displayPane.getChildren().addAll(rbuckets);
                         });
+                        childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
                         break;
                     case Heap:
                         tNodes = new Tree(generatedArray);
@@ -341,6 +359,7 @@ public class ViewController {
                                     displayPane.getChildren().addAll(tNodes.getPlaceholders());
                                     displayPane.getChildren().addAll(tNodes.getArrayNodes());
                         });
+                        childrenHeight = (int) tNodes.getMinViewPortHeight();
                         break;
                     default:
                         list = dNodes.createList(generatedArray, currentMax);
