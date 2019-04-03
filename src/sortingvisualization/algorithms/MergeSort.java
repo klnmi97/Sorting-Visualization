@@ -225,7 +225,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
                 "MergeSort(arr, left, right):",
                 "  if left < right",
                 "    mid = (left + right) / 2",
-                "    MergeSort(arr, left, mid - 1)",
+                "    MergeSort(arr, left, mid)",
                 "    MergeSort(arr, mid + 1, right)",
                 "    Merge(arr, left, mid, right)",
                 "",
