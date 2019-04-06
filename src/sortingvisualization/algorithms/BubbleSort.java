@@ -24,9 +24,9 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class BubbleSort extends Sorting implements AbstractAlgorithm{
 
-    List<BrickNode> list;
-    Pseudocode pc;
-    VariablesInfo vars;
+    private final List<BrickNode> list;
+    private final Pseudocode code;
+    private final VariablesInfo vars;
     
     /**
      * Creates a new instance of the Bubble Sort algorithm animation flow 
@@ -37,9 +37,9 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
      */
     public BubbleSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
         this.list = list;
-        this.pc = new Pseudocode();
+        this.code = new Pseudocode();
         this.vars = vars;
-        addPseudocode(pc);
+        addPseudocode(code);
         addCodeToUI(infoPane);
     }
     
@@ -54,24 +54,26 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
         int n = list.size();  
         BrickNode temp;
         
-        addAnimations(anim, pc.selectLine(1),
-                            vars.setText("Iterate from 0 to " + (n - 1) ));
+        addAnimations(anim, code.selectLine(1),
+                            vars.setText("Iterate from %d to %d", 0, (n - 1)));
         
         for(int i=0; i < n; i++) {
             
             parallelTransition = new ParallelTransition();
-            addAnimations(anim, pc.selectLine(2),
-                                vars.setText("Iterate from 1 to " + (n - i - 1)));
-            
-            for(int j=1; j < (n-i); j++){ 
+            if((n - i - 1) != 0){
+                addAnimations(anim, code.selectLine(2),
+                                    vars.setText("Iterate from %d to %d, i = %d", 
+                                            1, (n - i - 1), i));
+            }
+            for(int j = 1; j < (n - i); j++){ 
                 
                 //select elements to compare (anim)
                 if(j == 1) {
                     
-                    addAnimations(anim, pc.selectLine(3),
-                            vars.setText("Checking if " + list.get(j-1) 
-                                    + " > " + list.get(j)),
-                            AnimUtils.selectNodes(list.get(j-1), list.get(j)));
+                    addAnimations(anim, code.selectLine(3),
+                            vars.setText("Checking if %s > %s, j = %d", 
+                                    list.get(j - 1), list.get(j), j),
+                            AnimUtils.selectNodes(list.get(j - 1), list.get(j)));
                     
                 } else {
                     
@@ -79,34 +81,31 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                             list.get(j), Constants.DEFAULT, 
                             Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
-                                        pc.selectLine(3),
-                                        vars.setText("Checking if " 
-                                                + list.get(j-1) + " > " + list.get(j)));
-                    
+                                        code.selectLine(3),
+                                        vars.setText("Checking if %s > %s, j = %d", 
+                                                list.get(j - 1), list.get(j), j)); 
                 }
                 
-                if(list.get(j-1).getValue() > list.get(j).getValue()) {  
-                    
+                if(list.get(j-1).getValue() > list.get(j).getValue()) {
                     addAnimations(anim, AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
-                                        pc.selectLine(4),
-                                        vars.setText("Swapping " + list.get(j-1) 
-                                    + " and " + list.get(j)));
+                                        code.selectLine(4),
+                                        vars.setText("Swapping %s and %s, j = %d", 
+                                                list.get(j - 1), list.get(j), j));
                     //swap elements
                     temp = list.get(j-1);  
                     list.set(j-1, list.get(j));  
                     list.set(j, temp);
-                }  
-                //unselect (anim)
+                }
                 if(j == n - i - 1){
                     addAnimations(anim, AnimUtils.setColor(list.get(j-1), 
                                 Constants.COMPARE, Constants.DEFAULT),
                                         AnimUtils.setColor(list.get(n-i-1), 
                                 Constants.COMPARE, Constants.SORTED),
-                                        vars.setText(list.get(n-i-1) + " is sorted"));
+                                        vars.setText("%s is sorted", list.get(n-i-1)));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(AnimUtils.setColor(
-                            list.get(j-1), Constants.COMPARE, 
+                            list.get(j - 1), Constants.COMPARE, 
                             Constants.DEFAULT));
                 }
             }
@@ -114,22 +113,22 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
         
         addAnimations(anim, AnimUtils.setColor(list.get(0), 
                                 Constants.DEFAULT, Constants.SORTED),
-                            pc.unselectAll(),
+                            code.unselectAll(),
                             vars.setText("Array is sorted"));
         return anim;
     } 
     
-    private void addPseudocode(Pseudocode code){
+    private void addPseudocode(Pseudocode code) {
         code.addLines("BubbleSort(A):",
                 "  for i = 0 to size(A) - 1",
                 "    for j = 1 to (size(A) - i) - 1",
-                "      if array[i] > array[j]",
-                "        swap(array[i], array[j])");
+                "      if array[j - 1] > array[j]",
+                "        swap(array[j - 1], array[j])");
     }
     
     private void addCodeToUI(Pane codePane){
         Platform.runLater(() -> {
-            codePane.getChildren().addAll(pc.getCode());
+            codePane.getChildren().addAll(code.getCode());
         });
     }
 }
