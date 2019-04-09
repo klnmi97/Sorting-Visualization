@@ -6,6 +6,9 @@
 package sortingvisualization.Constants;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import sortingvisualization.Enums.Algorithm;
+import sortingvisualization.Utilities.Scaling;
 
 /**
  *
@@ -22,4 +25,37 @@ public class Constants {
     public static final Color SORTED = /*Color.valueOf("#F38902");//*/Color.ORANGE;
     public static final Color SELECTED = Color.RED;
     public static final Color LINE_SELECTION = Color.WHITE;
+    public static final Color PLACEHOLDER = Color.LIGHTGRAY;
+    
+    
+    public static final Font font = Font.font("Helvetica", 20 * Scaling.computeDPIScale());
+    
+    public static final int MAX = 100;
+    public static final int MIN = 0;
+    public static final int CNT_MAX = 10;
+    public static final int CNT_MIN = 0;
+    public static final int RDX_MAX = 9999;
+    public static final int RDX_MIN = 0;
+    
+    public static int getMinimum(Algorithm type){
+        switch (type) {
+            case Counting:
+                return Constants.CNT_MIN;
+            case Radix:
+                return Constants.RDX_MIN;
+            default:
+                return Constants.MIN;
+        }
+    }
+    
+    public static int getMaximum(Algorithm type){
+        switch (type) {
+            case Counting:
+                return Constants.CNT_MAX;
+            case Radix:
+                return Constants.RDX_MAX;
+            default:
+                return Constants.MAX;
+        }
+    }
 }

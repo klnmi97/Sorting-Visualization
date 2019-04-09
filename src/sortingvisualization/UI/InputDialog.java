@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.Data.Results;
 import sortingvisualization.Controllers.ViewController;
@@ -48,8 +49,8 @@ public class InputDialog extends Dialog<Results> {
     private int minInputValue;
     
     public InputDialog(){
-        this.maxInputValue = ViewController.MAX;
-        this.minInputValue = ViewController.MIN;
+        this.maxInputValue = Constants.MAX;
+        this.minInputValue = Constants.MIN;
         setTitle("New sorting");
         setHeaderText("Enter data");
         
@@ -128,20 +129,8 @@ public class InputDialog extends Dialog<Results> {
     }
     
     private void updateBounds(Algorithm type){
-        switch(type){
-            case Counting:
-                this.minInputValue = ViewController.CNT_MIN;
-                this.maxInputValue = ViewController.CNT_MAX;
-                break;
-            case Radix:
-                this.minInputValue = ViewController.RDX_MIN;
-                this.maxInputValue = ViewController.RDX_MAX;
-                break;
-            default:
-                this.minInputValue = ViewController.MIN;
-                this.maxInputValue = ViewController.MAX;
-                break;
-        }
+        this.minInputValue = Constants.getMinimum(type);
+        this.maxInputValue = Constants.getMaximum(type);
     }
     
     private boolean isInputValid(String inputText, int min, int max) throws Exception{

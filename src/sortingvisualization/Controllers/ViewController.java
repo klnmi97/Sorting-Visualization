@@ -10,6 +10,7 @@ import sortingvisualization.NodeControllers.Tree;
 import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.FixedNodes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import javafx.animation.Animation;
@@ -18,6 +19,7 @@ import javafx.concurrent.Task;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -27,6 +29,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.VariablesInfo;
@@ -63,12 +66,7 @@ public class ViewController {
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
     
-    public static final int MAX = 100;
-    public static final int MIN = 0;
-    public static final int CNT_MAX = 10;
-    public static final int CNT_MIN = 0;
-    public static final int RDX_MAX = 9999;
-    public static final int RDX_MIN = 0;
+    
     //Style
     
     
@@ -79,7 +77,7 @@ public class ViewController {
     private Algorithm currentInstance;
     
     private int childrenWidth;
-    private int childrenHeight;
+    private double childrenHeight;
     
     /**
      * Nodes and their animation creation controller
@@ -92,7 +90,7 @@ public class ViewController {
         this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        this.currentArray = generateRandomArray(N_VALUES, MIN, MAX);
+        this.currentArray = ArrayUtils.generateRandomArray(N_VALUES, Constants.MIN, Constants.MAX);
         this.childrenWidth = DEFAULT_ITEM_COUNT * SPACING;
     }
     
@@ -108,7 +106,7 @@ public class ViewController {
      * Get min height needed for graphic nodes on screen
      * @return width of children nodes for displayPane in px
      */
-    public int getChildrenHeight() {
+    public double getChildrenHeight() {
         return childrenHeight;
     }
     
@@ -122,85 +120,6 @@ public class ViewController {
     
     public static int countIndent(int number){
         return (int)(((double)number / 2) * -SPACING);
-    }
-    
-    private int[] generateRandomArray(int size, int min, int max){
-        Random randomValue = new Random();
-        int[] randomArray = new int[size];
-        for(int i = 0; i < size; i++){
-            randomArray[i] = randomValue.nextInt(max - min) + min + 1;
-        }
-        return randomArray;
-    }
-    
-    private int getMinimum(Algorithm type){
-        switch (type) {
-            case Counting:
-                return CNT_MIN;
-            case Radix:
-                return RDX_MIN;
-            default:
-                return MIN;
-        }
-    }
-    
-    private int getMaximum(Algorithm type){
-        switch (type) {
-            case Counting:
-                return CNT_MAX;
-            case Radix:
-                return RDX_MAX;
-            default:
-                return MAX;
-        }
-    }
-    
-    private BrickNode createCustomNode(int i, int value, int currentMax, 
-            Color color, double leftIndent, double topIndent) {
-        int num = value;
-        double percent = (double)num / currentMax;
-        Rectangle rectangle = new Rectangle(50 * scaling, (percent * 10 * 20 * scaling) + 5);
-        rectangle.setFill(color);
-        
-        Text text = new Text(String.valueOf(num));
-        text.setFont(font);
-        BrickNode node = new BrickNode(num);
-        node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
-        //node.setId(String.valueOf(num));
-        //stackPane.setValue(num);
-        node.getChildren().addAll(rectangle, text);
-        BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
-        node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(SPACING * i + leftIndent);
-        node.setTranslateY(topIndent);
-        node.setShape(rectangle);
-        return node;
-    }
-    
-    private List<BrickNode> createGreyNodes(int count){
-        List<BrickNode> subList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            BrickNode stackPane = createCustomNode(i, i, count, Color.LIGHTGREY, 
-                    countIndent(count), ViewController.LEVEL2);
-            subList.add(stackPane);
-        }
-        return subList;
-    }
-    
-    private List<Text> createLabelsList(int count, int step, int y){
-        List<Text> labels = new ArrayList<>();
-        int currentValue = 0;
-        int leftIndent = ViewController.countIndent(count);
-        for(int i = 0; i < count; i++){
-            Text label = new Text(String.valueOf(currentValue));
-            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
-            label.setTranslateX(SPACING * i + leftIndent);
-            label.setTranslateY(y);
-            label.fontProperty().set(font);
-            labels.add(label);
-            currentValue += step;
-        }
-        return labels;
     }
     
     private FlowPane createBucket(int x, int y, String labelText){
@@ -233,15 +152,15 @@ public class ViewController {
      
     private int[] loadArray(Algorithm type, int[] input){
         int[] outputArray;
-        int currentMin = getMinimum(type);
-        int currentMax = getMaximum(type);
+        int currentMin = Constants.getMinimum(type);
+        int currentMax = Constants.getMaximum(type);
         
         if(input != null){
             N_VALUES = input.length;
             outputArray = input;
         } else {
             N_VALUES = DEFAULT_ITEM_COUNT; //TODO: add dependency on screen size
-            outputArray = generateRandomArray(N_VALUES, currentMin, currentMax - 1);
+            outputArray = ArrayUtils.generateRandomArray(N_VALUES, currentMin, currentMax - 1);
         }
         
         return outputArray;
@@ -270,15 +189,15 @@ public class ViewController {
      * @param input array, may be null
      * @return background task to create animation
      */
-    public Task<List<Animation>> sort(Algorithm instanceType, int[] input){
+    public Task<List<Animation>> sort(Algorithm instanceType, int[] input) {
        
         int[] generatedArray = preInit(instanceType, input);
-        int currentMax = getMaximum(instanceType);
+        int currentMax = Constants.getMaximum(instanceType);
         
         return new Task<List<Animation>>() {
             @Override
             protected List<Animation> call() throws Exception {
-                DynamicNodes dNodes = new DynamicNodes();
+                DynamicNodes dNodes = new DynamicNodes(generatedArray, currentMax);
                 FixedNodes fNodes = new FixedNodes();
                 Tree tNodes;
                 VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
@@ -287,47 +206,43 @@ public class ViewController {
                 List<Animation> anim;
                 switch(currentInstance){
                     case Bubble:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new BubbleSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case CocktailShaker:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new CocktailShakerSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Insertion:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new InsertionSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Selection:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new SelectionSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Quick:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new QuickSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Merge:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new MergeSort(list, currentInfo, codePanel);
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Counting:
-                        List<Text> positionLabels = createLabelsList(N_VALUES, 1, LEVEL1 + 30);
-                        List<Text> countLabels = createLabelsList(getMaximum(instanceType), 0, LEVEL2 + 30);
-                        List<BrickNode> placeHolders = createGreyNodes(getMaximum(instanceType));
-                        list = dNodes.createList(generatedArray, currentMax);
+                        List<Text> countLabels = dNodes.createPlaceholderLabels();
+                        list = dNodes.getNodes();
                         sorting = new CountingSort(list, countLabels, currentInfo, codePanel);
-                        Platform.runLater(() -> {
-                            displayPane.getChildren().addAll(0, placeHolders);
-                            displayPane.getChildren().addAll(countLabels);
-                            displayPane.getChildren().addAll(0, positionLabels);
-                        });
-                        childrenHeight = LEVEL1 * -1 + (int)dNodes.NODE_HEIGHT;
+                        addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax));
+                        addChildrenAsync(displayPane, countLabels);
+                        addChildrenAsync(displayPane, 0, dNodes.createLabels());
+                        childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Bucket:
                         list = fNodes.createList(generatedArray, currentMax);
@@ -336,33 +251,27 @@ public class ViewController {
                                 / BucketSort.BUCKET_SIZE + 1;
                         List<FlowPane> buckets = createBucketList(
                                 bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
-                        Platform.runLater(() -> {
-                            displayPane.getChildren().addAll(buckets);
-                        });
+                        addChildrenAsync(displayPane, buckets);
                         childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
                         break;
                     case Radix:
                         list = fNodes.createList(generatedArray, currentMax);
                         sorting = new RadixSort(list, currentInfo, codePanel);
-                        List<FlowPane> rbuckets = createBucketList(CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
-                        Platform.runLater(() -> {
-                            displayPane.getChildren().addAll(rbuckets);
-                        });
+                        List<FlowPane> rbuckets = createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        addChildrenAsync(displayPane, rbuckets);
                         childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
                         break;
                     case Heap:
                         tNodes = new Tree(generatedArray);
                         list = tNodes.getNodesList();
                         sorting = new HeapSort(tNodes, currentInfo, codePanel);
-                        Platform.runLater(() -> {
-                                    displayPane.getChildren().addAll(tNodes.getChildConnections());
-                                    displayPane.getChildren().addAll(tNodes.getPlaceholders());
-                                    displayPane.getChildren().addAll(tNodes.getArrayNodes());
-                        });
+                        addChildrenAsync(displayPane, tNodes.getChildConnections());
+                        addChildrenAsync(displayPane, tNodes.getPlaceholders());
+                        addChildrenAsync(displayPane, tNodes.getArrayNodes());
                         childrenHeight = (int) tNodes.getMinViewPortHeight();
                         break;
                     default:
-                        list = dNodes.createList(generatedArray, currentMax);
+                        list = dNodes.getNodes();
                         sorting = new BubbleSort(list, currentInfo, codePanel);
                         break;
                 }
@@ -370,12 +279,28 @@ public class ViewController {
                 
                 childrenWidth = (list.size() + 1) * SPACING;
                 
-                Platform.runLater(() -> {
-                            displayPane.getChildren().addAll(list);
-                            infoPanel.getChildren().add(currentInfo.getInfoField());
-                        });
+                addChildrenAsync(displayPane, list);
+                addChildrenAsync(infoPanel, currentInfo.getInfoField());
                 return anim;
             }
         };
+    }
+    
+    private void addChildrenAsync(Pane pane, Node node) {
+        Platform.runLater(() -> {
+            pane.getChildren().add(node);
+        });
+    }
+    
+    private void addChildrenAsync(Pane pane, Collection<? extends Node> c) {
+        Platform.runLater(() -> {
+            pane.getChildren().addAll(c);
+        });
+    }
+    
+    private void addChildrenAsync(Pane pane, int index, Collection<? extends Node> c) {
+        Platform.runLater(() -> {
+            pane.getChildren().addAll(index, c);
+        });
     }
 }

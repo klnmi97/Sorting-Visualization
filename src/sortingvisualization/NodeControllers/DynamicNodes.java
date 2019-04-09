@@ -8,6 +8,7 @@ package sortingvisualization.NodeControllers;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -16,22 +17,46 @@ import sortingvisualization.Utilities.Scaling;
 import sortingvisualization.Controllers.ViewController;
 
 /**
- *
- * @author mihae
+ * Class represents nodes that have height dependent on value
+ * @author Mykhailo Klunko
  */
-public class DynamicNodes {
+public final class DynamicNodes {
     
     private static double scalingFactor = Scaling.computeDPIScale();
-    public static final double NODE_HEIGHT = 200 * scalingFactor;
-    public static final double NODE_WIDTH = 50 * scalingFactor;
+    
+    private static final double NODE_HEIGHT = 200 * scalingFactor;
+    private static final double NODE_WIDTH = 50 * scalingFactor;
+    
+    private static final int LEVEL1 = (int)(-350 * scalingFactor);
+    private static final int LEVEL2 = (int)(250 * scalingFactor) + LEVEL1;
+    private static final int SPACING = initSpacing();
 
     private List<BrickNode> list;
+    private final int currentMax;
     
-    public DynamicNodes(){
-        list = new ArrayList<>();
+    /**
+     * Create dynamic nodes manager class
+     * @param inputArray array with input values
+     * @param max maximal defined value
+     */
+    public DynamicNodes(int[] inputArray, int max){
+        this.currentMax = max;
+        this.list = createList(inputArray, max);
     }
     
-    public List<BrickNode> createList(int[] inputArray, int currentMax){
+    /**
+     * Get graphic nodes
+     * @return list of nodes
+     */
+    public List<BrickNode> getNodes(){
+        return list;
+    }
+    
+    private static int countIndent(int number){
+        return (int)(((double)number / 2) * -SPACING);
+    }
+    
+    private List<BrickNode> createList(int[] inputArray, int currentMax){
         list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
             BrickNode node = createValueNode(i, inputArray[i], currentMax, ViewController.countIndent(inputArray.length));
@@ -43,6 +68,54 @@ public class DynamicNodes {
     
     private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
         return createCustomNode(i, value, currentMax, Constants.DEFAULT, leftIndent, ViewController.LEVEL1);
+    }
+    
+    /**
+     * Create labels with position marks
+     * @return list of text labels
+     */
+    public List<Text> createLabels(){
+        return createLabelsList(list.size(), 1, LEVEL1 + 30);
+    }
+    
+    /**
+     * Create labels with number values for placeholders
+     * @return list of text labels
+     */
+    public List<Text> createPlaceholderLabels(){
+        return createLabelsList(currentMax, 0, LEVEL2 + 30);
+    }
+    
+    private List<Text> createLabelsList(int count, int step, int y){
+        List<Text> labels = new ArrayList<>();
+        int currentValue = 0;
+        int leftIndent = countIndent(count);
+        for(int i = 0; i < count; i++){
+            Text label = new Text(String.valueOf(currentValue));
+            StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
+            label.setTranslateX(SPACING * i + leftIndent);
+            label.setTranslateY(y);
+            label.fontProperty().set(Constants.font);
+            labels.add(label);
+            currentValue += step;
+        }
+        return labels;
+    }
+    
+    /**
+     * Create placeholders for dynamic nodes. Values starting from zero with
+     * step of size one
+     * @param count number of placeholders
+     * @return nodes that represent placeholders
+     */
+    public List<BrickNode> createPlaceHolders(int count){
+        List<BrickNode> subList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            BrickNode stackPane = createCustomNode(i, i, count, Constants.PLACEHOLDER, 
+                    countIndent(count), LEVEL2);
+            subList.add(stackPane);
+        }
+        return subList;
     }
     
     private BrickNode createCustomNode(int i, int value, int currentMax, 
@@ -68,5 +141,17 @@ public class DynamicNodes {
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;
+    }
+    
+    /**
+     * Get absolute minimal height of window needed for nodes to be in viewport
+     * @return height in pixels
+     */
+    public double getViewportMinHeight() {
+        return LEVEL1 * -1 + NODE_HEIGHT;
+    }
+    
+    private static int initSpacing() {
+        return (int)(60 * scalingFactor);
     }
 }
