@@ -121,34 +121,6 @@ public class ViewController {
     public static int countIndent(int number){
         return (int)(((double)number / 2) * -SPACING);
     }
-    
-    private FlowPane createBucket(int x, int y, String labelText){
-        FlowPane base = new FlowPane(Orientation.VERTICAL);
-        base.setColumnHalignment(HPos.CENTER);
-        base.setAlignment(Pos.BOTTOM_CENTER);
-        Line baseLine = new Line(0, 0, 50 * scaling, 0);
-        baseLine.setStrokeWidth(5 * scaling);
-        Text label = new Text(labelText);
-        label.setFont(font);
-        base.getChildren().addAll(baseLine, label);
-        base.setTranslateX(x);
-        base.setTranslateY(y + 24 * scaling); //TODO: smarter Y position. Problem with height of children because of FlowPane alignmen
-        return base;
-    }
-    
-    private List<FlowPane> createBucketList(int count, int startLabelCounter, int diff){
-        List<FlowPane> buckets = new ArrayList<>();
-        int y = ViewController.LEVEL2 + (int)(10 * scaling);
-        int currentLabel = startLabelCounter;
-        int leftIndent = countIndent(count); 
-        for(int i = 0; i < count; i++){
-            int x = SPACING * i + leftIndent;
-            FlowPane bucket = createBucket(x, y, Integer.toString(currentLabel));
-            buckets.add(bucket);
-            currentLabel += diff;
-        }
-        return buckets;
-    }
      
     private int[] loadArray(Algorithm type, int[] input){
         int[] outputArray;
@@ -197,8 +169,14 @@ public class ViewController {
         return new Task<List<Animation>>() {
             @Override
             protected List<Animation> call() throws Exception {
-                DynamicNodes dNodes = new DynamicNodes(generatedArray, currentMax);
-                FixedNodes fNodes = new FixedNodes();
+                return algorithmSelector(generatedArray, currentMax);
+            }
+        };
+    }
+    
+    private List<Animation> algorithmSelector(int[] generatedArray, int currentMax) {
+        DynamicNodes dNodes = new DynamicNodes(generatedArray, currentMax);
+                FixedNodes fNodes = new FixedNodes(generatedArray, currentMax);
                 Tree tNodes;
                 VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
                 AbstractAlgorithm sorting;
@@ -245,21 +223,21 @@ public class ViewController {
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Bucket:
-                        list = fNodes.createList(generatedArray, currentMax);
-                        sorting = new BucketSort(list, currentInfo, codePanel);
+                        list = fNodes.getNodes();
+                        sorting = new BucketSort(fNodes, currentInfo, codePanel);
                         int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
                                 / BucketSort.BUCKET_SIZE + 1;
-                        List<FlowPane> buckets = createBucketList(
+                        List<FlowPane> buckets = fNodes.createBucketList(
                                 bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
                         addChildrenAsync(displayPane, buckets);
-                        childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
+                        childrenHeight = fNodes.getMinViewPortHeight();
                         break;
                     case Radix:
-                        list = fNodes.createList(generatedArray, currentMax);
+                        list = fNodes.getNodes();
                         sorting = new RadixSort(list, currentInfo, codePanel);
-                        List<FlowPane> rbuckets = createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                        List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                         addChildrenAsync(displayPane, rbuckets);
-                        childrenHeight = LEVEL1 * -1 + (int)fNodes.NODE_HEIGHT;
+                        childrenHeight = fNodes.getMinViewPortHeight();
                         break;
                     case Heap:
                         tNodes = new Tree(generatedArray);
@@ -268,7 +246,7 @@ public class ViewController {
                         addChildrenAsync(displayPane, tNodes.getChildConnections());
                         addChildrenAsync(displayPane, tNodes.getPlaceholders());
                         addChildrenAsync(displayPane, tNodes.getArrayNodes());
-                        childrenHeight = (int) tNodes.getMinViewPortHeight();
+                        childrenHeight = tNodes.getMinViewPortHeight();
                         break;
                     default:
                         list = dNodes.getNodes();
@@ -282,8 +260,6 @@ public class ViewController {
                 addChildrenAsync(displayPane, list);
                 addChildrenAsync(infoPanel, currentInfo.getInfoField());
                 return anim;
-            }
-        };
     }
     
     private void addChildrenAsync(Pane pane, Node node) {

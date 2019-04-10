@@ -11,6 +11,7 @@ import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
@@ -54,7 +55,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
         List<Animation> anim = new ArrayList<>();
         
          // array of 0's at indices 0...maxValue
-        int[] count = new int[ViewController.CNT_MAX];
+        int[] count = new int[Constants.CNT_MAX];
         for(int i : count) {
             count[i] = 0;
         }

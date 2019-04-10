@@ -15,6 +15,7 @@ import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.FixedNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
@@ -29,6 +30,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
      */
     public static final int BUCKET_SIZE = 15;
     
+    private final FixedNodes nodeManager;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -36,12 +38,13 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     /**
      * Creates a new instance of Bucket Sort algorithm animation flow 
      * creator class
-     * @param list list of nodes to animate
+     * @param nodeManager fixed nodes manager
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public BucketSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public BucketSort(FixedNodes nodeManager, VariablesInfo vars, Pane infoPane){
+        this.nodeManager = nodeManager;
+        this.list = nodeManager.getNodes();
         this.code = new Pseudocode();
         this.vars = vars;
         addPseudocode(code);
