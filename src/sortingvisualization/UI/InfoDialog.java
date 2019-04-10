@@ -25,7 +25,7 @@ public class InfoDialog {
      * Creates window with text information
      * @param ownerStage parent stage
      */
-    public void showDescription(Stage ownerStage) {
+    public void showDescription(Stage ownerStage, String message) {
         
         Stage stage = new Stage();
         BorderPane rootPane = new BorderPane();

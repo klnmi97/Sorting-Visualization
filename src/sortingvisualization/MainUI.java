@@ -50,6 +50,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.UI.InfoDialog;
+import sortingvisualization.Utilities.DescriptionReader;
 
 /**
  * Main GUI application class
@@ -349,8 +350,9 @@ public class MainUI extends Application {
     }
 
     private void showDescription(Stage primaryStage) {
+        String desc = DescriptionReader.readDescription(currentAlgorithm.get());
         InfoDialog info = new InfoDialog();
-        info.showDescription(primaryStage);
+        info.showDescription(primaryStage, desc);
     }
 
     private void resetCurrent() {
