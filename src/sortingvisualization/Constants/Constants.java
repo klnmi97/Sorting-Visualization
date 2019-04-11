@@ -12,14 +12,14 @@ import sortingvisualization.Utilities.Scaling;
 
 /**
  *
- * @author mihae
+ * @author Mykhailo Klunko
  */
 public class Constants {
     
     public static final Color PANEL_BGND = /*Color.valueOf("#F0C243")*/Color.AQUAMARINE;
     public static final Color LOW_PAN_BGND = Color.LIGHTPINK;
     //colours of bricks:
-    //COMPARE - selected, DEFAULT - main color
+    //COLORS FOR STATIC AND DYNAMIC NODES
     public static final Color COMPARE = /*Color.valueOf("#F2355B");*/Color.AQUAMARINE;
     public static final Color DEFAULT = /*Color.valueOf("#02A694");*/Color.DARKCYAN;
     public static final Color SORTED = /*Color.valueOf("#F38902");//*/Color.ORANGE;
@@ -27,6 +27,13 @@ public class Constants {
     public static final Color LINE_SELECTION = Color.WHITE;
     public static final Color PLACEHOLDER = Color.LIGHTGRAY;
     
+    //COLORS FOR TREE NODES
+    public static final Color FILL = Color.WHITE;
+    public static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
+    public static final Color SELECTION = Color.AQUAMARINE;
+    public static final Color LIGHT_SELECTION = Color.GRAY;
+    public static final Color TREE_DEFAULT = Color.BLACK;
+    public static final Color ARRAY_SORTED = Color.GAINSBORO;
     
     public static final Font font = Font.font("Helvetica", 20 * Scaling.computeDPIScale());
     

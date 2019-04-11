@@ -23,6 +23,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
 import sortingvisualization.Controllers.ViewController;
 
@@ -38,12 +39,12 @@ public class Tree {
     private static final int ARRAY_ITEM_WIDTH = initArrayItemWidth();
     private static final int LEVEL_HEIGHT = initLevelHeight();
     
-    private static final Color FILL = Color.WHITE;
-    private static final Color PLACEHOLDER_BKGRND = Color.LIGHTGRAY;
-    private static final Color SELECTION = Color.AQUAMARINE;
-    private static final Color LIGHT_SELECTION = Color.GRAY;
-    private static final Color DEFAULT = Color.BLACK;
-    private static final Color ARRAY_SORTED = Color.GAINSBORO;
+    private static final Color FILL = Constants.FILL;
+    private static final Color PLACEHOLDER_BKGRND = Constants.PLACEHOLDER_BKGRND;
+    private static final Color SELECTION = Constants.SELECTION;
+    private static final Color LIGHT_SELECTION = Constants.LIGHT_SELECTION;
+    private static final Color DEFAULT = Constants.TREE_DEFAULT;
+    private static final Color ARRAY_SORTED = Constants.ARRAY_SORTED;
     
     private static final int ARRAY_SPACING = initArraySpacing();
     
