@@ -17,23 +17,30 @@ import javafx.util.Pair;
 import sortingvisualization.Utilities.Scaling;
 
 /**
- *
+ * Class represents color information manager
  * @author Mykhailo Klunko
  */
 public class ColorInfoManager {
     
     private static double scalingFactor = Scaling.computeDPIScale();
+    private static int NODE_SIZE = (int) (12 * scalingFactor);
+    private static Color DESC_COLOR = Color.GRAY;
     
+    /**
+     * Creates line with information about color meaning 
+     * @param infoPairs pair color - description
+     * @return node with separation line and information about colors
+     */
     public static Node createColorInfo(Pair<Color, String>... infoPairs) {
         
         HBox box = new HBox();
         for(Pair<Color, String> infoPair : infoPairs) {
-            Rectangle colorRect = new Rectangle(12 * scalingFactor, 12 * scalingFactor);
+            Rectangle colorRect = new Rectangle(NODE_SIZE, NODE_SIZE);
             colorRect.setFill(infoPair.getKey());
             colorRect.setStroke(Color.BLACK);
 
             Text desc = new Text(" - " + infoPair.getValue());
-            desc.setFill(Color.GREY);
+            desc.setFill(DESC_COLOR);
             
             HBox wrapper = new HBox(colorRect, desc);
             wrapper.setAlignment(Pos.CENTER);

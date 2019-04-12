@@ -7,6 +7,7 @@ package sortingvisualization.Constants;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.Utilities.Scaling;
 
@@ -36,6 +37,8 @@ public class Constants {
     public static final Color ARRAY_SORTED = Color.GAINSBORO;
     
     public static final Font font = Font.font("Helvetica", 20 * Scaling.computeDPIScale());
+    public static final Font descriptionFont = Font.font("Helvetica", 13 * Scaling.computeDPIScale());
+    public static final Font descHeaderFont = Font.font("Helvetica", FontWeight.BOLD, 16 * Scaling.computeDPIScale());
     
     public static final int MAX = 100;
     public static final int MIN = 0;

@@ -352,7 +352,7 @@ public class MainUI extends Application {
     private void showDescription(Stage primaryStage) {
         String desc = DescriptionReader.readDescription(currentAlgorithm.get());
         InfoDialog info = new InfoDialog();
-        info.showDescription(primaryStage, desc);
+        info.showDescription(primaryStage, desc, currentAlgorithm.get().getName());
     }
 
     private void resetCurrent() {

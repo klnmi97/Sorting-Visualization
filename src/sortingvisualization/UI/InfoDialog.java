@@ -5,14 +5,22 @@
  */
 package sortingvisualization.UI;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sortingvisualization.Constants.Constants;
 
 /**
  * Dialog with not editable text
@@ -25,13 +33,25 @@ public class InfoDialog {
      * Creates window with text information
      * @param ownerStage parent stage
      */
-    public void showDescription(Stage ownerStage, String message) {
+    public void showDescription(Stage ownerStage, String message, String algName) {
         
         Stage stage = new Stage();
         BorderPane rootPane = new BorderPane();
-        Text description = new Text(message);
-        description.setFill(Color.GRAY);
-        rootPane.setCenter(description);
+        Text header = new Text(algName);
+        header.setFont(Constants.descHeaderFont);
+        
+        VBox headerBox = new VBox(header);
+        headerBox.setAlignment(Pos.CENTER);
+        
+        TextArea textBox = new TextArea(message); 
+        textBox.setWrapText(true);
+        textBox.setEditable(false);
+        textBox.setFont(Constants.descriptionFont);
+        textBox.setStyle("-fx-focus-color: -fx-control-inner-background ; -fx-faint-focus-color: -fx-control-inner-background ;");
+        
+        rootPane.setTop(headerBox);
+        rootPane.setCenter(textBox);
+        rootPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
         Scene scene = new Scene(rootPane, 500, 500);
         //scene.getStylesheets().add("style.css");
