@@ -8,7 +8,9 @@ package sortingvisualization.NodeControllers;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
@@ -40,7 +42,10 @@ public class ColorInfoManager {
         }
         
         box.setSpacing(10 * scalingFactor);
-        return box;
+        
+        Line divider = new Line(0, 0, 500, 0);
+        VBox colorInfo = new VBox(divider, box);
+        return colorInfo;
     }
     
 }
