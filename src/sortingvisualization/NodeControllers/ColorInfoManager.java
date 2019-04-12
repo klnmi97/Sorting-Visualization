@@ -7,6 +7,7 @@ package sortingvisualization.NodeControllers;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -35,9 +36,8 @@ public class ColorInfoManager {
         
         HBox box = new HBox();
         for(Pair<Color, String> infoPair : infoPairs) {
-            Rectangle colorRect = new Rectangle(NODE_SIZE, NODE_SIZE);
+            Rectangle colorRect = createShadowedBox(NODE_SIZE, 1, 1, 1, 1, 2);
             colorRect.setFill(infoPair.getKey());
-            colorRect.setStroke(Color.BLACK);
 
             Text desc = new Text(" - " + infoPair.getValue());
             desc.setFill(DESC_COLOR);
@@ -54,5 +54,20 @@ public class ColorInfoManager {
         VBox colorInfo = new VBox(divider, box);
         return colorInfo;
     }
+    
+    private static Rectangle createShadowedBox(double size,
+    double shadowWidth, double shadowHeight,
+    double offsetX, double offsetY,
+    double radius) {
+        Rectangle r = new Rectangle(size, size);
+        DropShadow e = new DropShadow();
+        e.setWidth(shadowWidth);
+        e.setHeight(shadowHeight);
+        e.setOffsetX(offsetX);
+        e.setOffsetY(offsetY);
+        e.setRadius(radius);
+        r.setEffect(e);
+        return r;
+}
     
 }

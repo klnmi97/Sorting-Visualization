@@ -166,104 +166,110 @@ public class ViewController {
     
     private List<Animation> algorithmSelector(int[] generatedArray, int currentMax) {
         DynamicNodes dNodes = new DynamicNodes(generatedArray, currentMax);
-                FixedNodes fNodes = new FixedNodes(generatedArray, currentMax);
-                Tree tNodes;
-                VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
-                AbstractAlgorithm sorting;
-                List<BrickNode> list;
-                List<Animation> anim;
-                switch(currentInstance){
-                    case Bubble:
-                        list = dNodes.getNodes();
-                        sorting = new BubbleSort(list, currentInfo, codePanel);
-                        addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
-                                     new Pair<>(Constants.SORTED, "sorted"));
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case CocktailShaker:
-                        list = dNodes.getNodes();
-                        sorting = new CocktailShakerSort(list, currentInfo, codePanel);
-                        addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
-                                     new Pair<>(Constants.SORTED, "sorted"));
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Insertion:
-                        list = dNodes.getNodes();
-                        sorting = new InsertionSort(list, currentInfo, codePanel);
-                        addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
-                                     new Pair<>(Constants.SELECTED, "selection from unsorted"),
-                                     new Pair<>(Constants.COMPARE, "selection from sorted"));
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Selection:
-                        list = dNodes.getNodes();
-                        sorting = new SelectionSort(list, currentInfo, codePanel);
-                        addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
-                                     new Pair<>(Constants.SELECTED, "current min"),
-                                     new Pair<>(Constants.COMPARE, "compared item"));
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Quick:
-                        list = dNodes.getNodes();
-                        sorting = new QuickSort(list, currentInfo, codePanel);
-                        addColorInfo(new Pair<>(Constants.SELECTED, "pivot"),
-                                     new Pair<>(Constants.COMPARE, "current item"),
-                                     new Pair<>(Constants.SORTED, "item is on final position"));
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Merge:
-                        list = dNodes.getNodes();
-                        sorting = new MergeSort(list, currentInfo, codePanel);
-                        addColorInfo();
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Counting:
-                        List<Text> countLabels = dNodes.createPlaceholderLabels();
-                        list = dNodes.getNodes();
-                        sorting = new CountingSort(list, countLabels, currentInfo, codePanel);
-                        addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax));
-                        addChildrenAsync(displayPane, countLabels);
-                        addChildrenAsync(displayPane, 0, dNodes.createLabels());
-                        childrenHeight = dNodes.getViewportMinHeight();
-                        break;
-                    case Bucket:
-                        list = fNodes.getNodes();
-                        sorting = new BucketSort(fNodes, currentInfo, codePanel);
-                        int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
-                                / BucketSort.BUCKET_SIZE + 1;
-                        List<FlowPane> buckets = fNodes.createBucketList(
-                                bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
-                        addChildrenAsync(displayPane, buckets);
-                        childrenHeight = fNodes.getMinViewPortHeight();
-                        break;
-                    case Radix:
-                        list = fNodes.getNodes();
-                        sorting = new RadixSort(list, currentInfo, codePanel);
-                        List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
-                        addChildrenAsync(displayPane, rbuckets);
-                        childrenHeight = fNodes.getMinViewPortHeight();
-                        break;
-                    case Heap:
-                        tNodes = new Tree(generatedArray);
-                        list = tNodes.getNodesList();
-                        sorting = new HeapSort(tNodes, currentInfo, codePanel);
-                        addChildrenAsync(displayPane, tNodes.getChildConnections());
-                        addChildrenAsync(displayPane, tNodes.getPlaceholders());
-                        addChildrenAsync(displayPane, tNodes.getArrayNodes());
-                        childrenHeight = tNodes.getMinViewPortHeight();
-                        break;
-                    default:
-                        list = dNodes.getNodes();
-                        sorting = new BubbleSort(list, currentInfo, codePanel);
-                        break;
-                }
-                anim = sorting.sort();
-                
-                childrenWidth = (list.size() + 1) * SPACING;
-                
-                addChildrenAsync(displayPane, list);
-                addChildrenAsync(infoPanel, currentInfo.getInfoField());
-                return anim;
+        FixedNodes fNodes = new FixedNodes(generatedArray, currentMax);
+        Tree tNodes = new Tree(generatedArray);
+        
+        VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
+        AbstractAlgorithm sorting;
+        List<BrickNode> list;
+        List<Animation> anim;
+        
+        switch(currentInstance) {
+            case Bubble:
+                list = dNodes.getNodes();
+                sorting = new BubbleSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
+                             new Pair<>(Constants.SORTED, "sorted"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case CocktailShaker:
+                list = dNodes.getNodes();
+                sorting = new CocktailShakerSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
+                             new Pair<>(Constants.SORTED, "sorted"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Insertion:
+                list = dNodes.getNodes();
+                sorting = new InsertionSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
+                             new Pair<>(Constants.SELECTED, "selection from unsorted"),
+                             new Pair<>(Constants.COMPARE, "selection from sorted"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Selection:
+                list = dNodes.getNodes();
+                sorting = new SelectionSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
+                             new Pair<>(Constants.SELECTED, "current min"),
+                             new Pair<>(Constants.COMPARE, "compared item"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Quick:
+                list = dNodes.getNodes();
+                sorting = new QuickSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.SELECTED, "pivot"),
+                             new Pair<>(Constants.COMPARE, "current item"),
+                             new Pair<>(Constants.SORTED, "item is on final position"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Merge:
+                list = dNodes.getNodes();
+                sorting = new MergeSort(list, currentInfo, codePanel);
+                addColorInfo();
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Counting:
+                List<Text> countLabels = dNodes.createPlaceholderLabels();
+                list = dNodes.getNodes();
+                sorting = new CountingSort(list, countLabels, currentInfo, codePanel);
+                addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax));
+                addChildrenAsync(displayPane, countLabels);
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+            case Bucket:
+                list = fNodes.getNodes();
+                sorting = new BucketSort(fNodes, currentInfo, codePanel);
+                int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
+                        / BucketSort.BUCKET_SIZE + 1;
+                List<FlowPane> buckets = fNodes.createBucketList(
+                        bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
+                addChildrenAsync(displayPane, buckets);
+                childrenHeight = fNodes.getViewportMinHeight();
+                break;
+            case Radix:
+                list = fNodes.getNodes();
+                sorting = new RadixSort(list, currentInfo, codePanel);
+                List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                addChildrenAsync(displayPane, rbuckets);
+                childrenHeight = fNodes.getViewportMinHeight();
+                break;
+            case Heap:
+                list = tNodes.getNodesList();
+                sorting = new HeapSort(tNodes, currentInfo, codePanel);
+                addChildrenAsync(displayPane, tNodes.getChildConnections());
+                addChildrenAsync(displayPane, tNodes.getPlaceholders());
+                addChildrenAsync(displayPane, tNodes.getArrayNodes());
+                addColorInfo(new Pair<>(Constants.SELECTION, "comparing"), 
+                             new Pair<>(Constants.ARRAY_SORTED, "sorted"));
+                childrenHeight = tNodes.getViewportMinHeight();
+                break;
+            default:
+                list = dNodes.getNodes();
+                sorting = new BubbleSort(list, currentInfo, codePanel);
+                addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
+                             new Pair<>(Constants.SORTED, "sorted"));
+                childrenHeight = dNodes.getViewportMinHeight();
+                break;
+        }
+        anim = sorting.sort();
+
+        childrenWidth = (list.size() + 1) * SPACING;
+
+        addChildrenAsync(displayPane, list);
+        addChildrenAsync(infoPanel, currentInfo.getInfoField());
+        return anim;
     }
     
     private void addChildrenAsync(Pane pane, Node node) {

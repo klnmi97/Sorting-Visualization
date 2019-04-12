@@ -106,7 +106,7 @@ public class Tree {
      * Get minimal height of needed space
      * @return minimal height of viewport in px
      */
-    public double getMinViewPortHeight() {
+    public double getViewportMinHeight() {
         return childNodesHeight;
     }
     

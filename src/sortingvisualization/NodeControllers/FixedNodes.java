@@ -119,7 +119,11 @@ public class FixedNodes {
         return (int)(60 * scalingFactor);
     }
     
-    public double getMinViewPortHeight() {
+    /**
+     * Get absolute minimal height of window needed for nodes to be in viewport
+     * @return height in pixels
+     */
+    public double getViewportMinHeight() {
         return LEVEL1 * -1 + NODE_HEIGHT;
     }
 }
