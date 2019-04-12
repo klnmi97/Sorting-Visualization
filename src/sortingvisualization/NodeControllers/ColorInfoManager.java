@@ -50,7 +50,7 @@ public class ColorInfoManager {
         
         box.setSpacing(10 * scalingFactor);
         
-        Line divider = new Line(0, 0, 500, 0);
+        Line divider = new Line(0, 0, 400 * scalingFactor, 0);
         VBox colorInfo = new VBox(divider, box);
         return colorInfo;
     }
