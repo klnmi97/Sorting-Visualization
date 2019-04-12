@@ -9,29 +9,23 @@ import sortingvisualization.Utilities.ArrayUtils;
 import sortingvisualization.NodeControllers.Tree;
 import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.FixedNodes;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.ColorInfoManager;
 import sortingvisualization.NodeControllers.VariablesInfo;
 import sortingvisualization.algorithms.AbstractAlgorithm;
 import sortingvisualization.algorithms.BubbleSort;
@@ -65,11 +59,7 @@ public class ViewController {
 
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
-    
-    
-    //Style
-    
-    
+     
     private int[] currentArray;
     private final Pane displayPane;
     private final Pane codePanel;
@@ -186,31 +176,45 @@ public class ViewController {
                     case Bubble:
                         list = dNodes.getNodes();
                         sorting = new BubbleSort(list, currentInfo, codePanel);
+                        addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
+                                     new Pair<>(Constants.SORTED, "sorted"));
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case CocktailShaker:
                         list = dNodes.getNodes();
                         sorting = new CocktailShakerSort(list, currentInfo, codePanel);
+                        addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
+                                     new Pair<>(Constants.SORTED, "sorted"));
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Insertion:
                         list = dNodes.getNodes();
                         sorting = new InsertionSort(list, currentInfo, codePanel);
+                        addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
+                                     new Pair<>(Constants.SELECTED, "selection from unsorted"),
+                                     new Pair<>(Constants.COMPARE, "selection from sorted"));
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Selection:
                         list = dNodes.getNodes();
                         sorting = new SelectionSort(list, currentInfo, codePanel);
+                        addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
+                                     new Pair<>(Constants.SELECTED, "current min"),
+                                     new Pair<>(Constants.COMPARE, "compared item"));
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Quick:
                         list = dNodes.getNodes();
                         sorting = new QuickSort(list, currentInfo, codePanel);
+                        addColorInfo(new Pair<>(Constants.SELECTED, "pivot"),
+                                     new Pair<>(Constants.COMPARE, "current item"),
+                                     new Pair<>(Constants.SORTED, "item is on final position"));
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Merge:
                         list = dNodes.getNodes();
                         sorting = new MergeSort(list, currentInfo, codePanel);
+                        addColorInfo();
                         childrenHeight = dNodes.getViewportMinHeight();
                         break;
                     case Counting:
@@ -278,5 +282,9 @@ public class ViewController {
         Platform.runLater(() -> {
             pane.getChildren().addAll(index, c);
         });
+    }
+    
+    private void addColorInfo(Pair<Color, String>... description) {
+        addChildrenAsync(codePanel, ColorInfoManager.createColorInfo(description));
     }
 }

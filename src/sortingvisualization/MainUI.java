@@ -289,10 +289,11 @@ public class MainUI extends Application {
     
     private void initialize(Algorithm type, int[] input){
         resetCurrent.setDisable(true);
+        disableControls(true);
         currentAlgorithm.setValue(type);
-        headerLbl.setText(type.getName());
         Task<List<Animation>> sortingTask = creator.sort(type, input);
-        sortingTask.setOnSucceeded(e->{
+        sortingTask.setOnSucceeded(e -> {
+            headerLbl.setText(type.getName());
             BindingData bindings = controller.setupInstance(sortingTask.getValue());
             initButtonBinding(bindings);
             resetCurrent.setDisable(false);
@@ -301,14 +302,30 @@ public class MainUI extends Application {
             displayPane.minHeightProperty().setValue(creator.getChildrenHeight());
             
         });
+        sortingTask.setOnFailed(e -> {
+            
+        });
         sortingTask.run();
     }
     
-    private void initButtonBinding(BindingData bindings){
+    private void initButtonBinding(BindingData bindings) {
         stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
         stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
         playBtn.disableProperty().bind(bindings.getPlayBinding());
         speedSlider.valueProperty().addListener(bindings.getSpeedListener());
+    }
+    
+    private void unbindControls() {
+        stepForthBtn.disableProperty().unbind();
+        stepBackBtn.disableProperty().unbind();
+        playBtn.disableProperty().unbind();
+    }
+    
+    private void disableControls(boolean isDisabled) {
+        unbindControls();
+        stepForthBtn.disableProperty().set(isDisabled);
+        stepBackBtn.disableProperty().set(isDisabled);
+        playBtn.disableProperty().set(isDisabled);
     }
     
     private void setupKeyShortcuts(Stage stage){
