@@ -80,7 +80,7 @@ public class ViewController {
         this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        this.currentArray = ArrayUtils.generateRandomArray(N_VALUES, Constants.MIN, Constants.MAX);
+        this.currentArray = ArrayUtils.generateRandomArray(Constants.DEFAULT_ITEM_COUNT, Constants.MIN, Constants.MAX);
         this.childrenWidth = DEFAULT_ITEM_COUNT * SPACING;
     }
     
@@ -112,21 +112,7 @@ public class ViewController {
         return (int)(((double)number / 2) * -SPACING);
     }
      
-    private int[] loadArray(Algorithm type, int[] input){
-        int[] outputArray;
-        int currentMin = Constants.getMinimum(type);
-        int currentMax = Constants.getMaximum(type);
-        
-        if(input != null){
-            N_VALUES = input.length;
-            outputArray = input;
-        } else {
-            N_VALUES = DEFAULT_ITEM_COUNT; //TODO: add dependency on screen size
-            outputArray = ArrayUtils.generateRandomArray(N_VALUES, currentMin, currentMax - 1);
-        }
-        
-        return outputArray;
-    }
+    
     
     private void initValues(){
         displayPane.getChildren().clear();
@@ -138,11 +124,9 @@ public class ViewController {
         this.currentInstance = instanceType;
         initValues();
         
-        int[] generatedArray = loadArray(instanceType, input);
-        int size = generatedArray.length;
-        
+        int size = input.length;
         this.LEFT_INDENT = countIndent(size);
-        return generatedArray;
+        return input;
     }
     
     /**

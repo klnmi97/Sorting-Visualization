@@ -7,6 +7,8 @@ package sortingvisualization.Utilities;
 
 import java.util.List;
 import java.util.Random;
+import sortingvisualization.Constants.Constants;
+import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.NodeControllers.BrickNode;
 
 /**
@@ -14,6 +16,21 @@ import sortingvisualization.NodeControllers.BrickNode;
  * @author Mykhailo Klunko
  */
 public class ArrayUtils {
+    
+    public static int[] checkArray(Algorithm type, int[] input){
+        int[] outputArray;
+        int currentMin = Constants.getMinimum(type);
+        int currentMax = Constants.getMaximum(type);
+        
+        if(input != null){
+            outputArray = input;
+        } else {
+            outputArray = generateRandomArray(Constants.DEFAULT_ITEM_COUNT, currentMin, currentMax - 1);
+        }
+        
+        return outputArray;
+    }
+    
     public static int getArrayMin(int[] array){
         int minimum = array[0];
         for(int i = 0; i < array.length; i++){

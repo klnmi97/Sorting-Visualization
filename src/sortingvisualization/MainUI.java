@@ -50,6 +50,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.UI.InfoDialog;
+import sortingvisualization.Utilities.ArrayUtils;
 import sortingvisualization.Utilities.DescriptionReader;
 
 /**
@@ -68,8 +69,10 @@ public class MainUI extends Application {
     
     Button playBtn;
     Button pauseBtn;
+    Button toStartBtn;
     Button stepBackBtn;
     Button stepForthBtn;
+    Button toEndBtn;
     Button resetCurrent;
     Button infoButton;
     Button newButton;
@@ -90,7 +93,9 @@ public class MainUI extends Application {
     BorderPane root;
     Scene scene;
     
+    //current state
     ObjectProperty<Algorithm> currentAlgorithm;
+    int[] currentArray;
     
     public MainUI(){
         this.currentAlgorithm = new SimpleObjectProperty<>();
@@ -124,87 +129,16 @@ public class MainUI extends Application {
         
         HBox controlBox = new HBox();
         
-        Image playImg = new Image(getClass().getResourceAsStream("/play.png"));
-        ImageView playImgV = new ImageView(playImg);
-        playImgV.setFitHeight(25);
-        playImgV.setFitWidth(25);
-        
-        Image pauseImg = new Image(getClass().getResourceAsStream("/pause.png"));
-        ImageView pauseImgV = new ImageView(pauseImg);
-        pauseImgV.setFitHeight(25);
-        pauseImgV.setFitWidth(25);
-        
-        Image rewBackImg = new Image(getClass().getResourceAsStream("/rewind_back.png"));
-        ImageView rbImgView = new ImageView(rewBackImg);
-        rbImgView.setFitHeight(25);
-        rbImgView.setFitWidth(25);
-        
-        Image rewForthImg = new Image(getClass().getResourceAsStream("/rewind_forth.png"));
-        ImageView rfImgView = new ImageView(rewForthImg);
-        rfImgView.setFitHeight(25);
-        rfImgView.setFitWidth(25);
-        
-        Image refreshImg = new Image(getClass().getResourceAsStream("/refresh.png"));
-        ImageView refreshIV = new ImageView(refreshImg);
-        refreshIV.setFitHeight(25);
-        refreshIV.setFitWidth(25);
-        
-        playBtn = new Button();
-        playBtn.setTooltip(new Tooltip("Play!"));
-        playBtn.setGraphic(playImgV);
-        playBtn.getStyleClass().add("controllButton");
-        playBtn.setOnAction(event->controller.play());
-        
-        pauseBtn = new Button();
-        pauseBtn.setTooltip(new Tooltip("Pause"));
-        pauseBtn.setGraphic(pauseImgV);
-        pauseBtn.getStyleClass().add("controllButton");
-        pauseBtn.setOnAction(event->controller.pause());
-        
-        stepBackBtn = new Button();
-        stepBackBtn.setTooltip(new Tooltip("Step Back"));
-        stepBackBtn.setGraphic(rbImgView);
-        stepBackBtn.getStyleClass().add("controllButton");
-        stepBackBtn.setOnAction(event->controller.goStepBack());
-        
-        stepForthBtn = new Button();
-        stepForthBtn.setTooltip(new Tooltip("Step Forth"));
-        stepForthBtn.setGraphic(rfImgView);
-        stepForthBtn.getStyleClass().add("controllButton");
-        stepForthBtn.setOnAction(event->controller.goStepForth());
-        
-        showSidePanelBtn = new Button("<");
-        showSidePanelBtn.setMaxWidth(10);
-        showSidePanelBtn.setMinHeight(70);
-        showSidePanelBtn.getStyleClass().add("sideButton");
-        
-        resetCurrent = new Button();
-        resetCurrent.setTooltip(new Tooltip("New random"));
-        resetCurrent.setGraphic(refreshIV);
-        resetCurrent.getStyleClass().add("controllButton");
-        resetCurrent.setOnAction(event->resetCurrent());
-
-        newButton = new Button("NEW");
-        newButton.setTooltip(new Tooltip("Create sorting"));
-        newButton.getStyleClass().add("button");
-        newButton.setOnAction(event -> openNewSortingDialog());
-        
-        infoButton = new Button("INFO");
-        infoButton.setTooltip(new Tooltip("About " + DEFAULT_TYPE.getName()));
-        infoButton.getStyleClass().add("button");
-        infoButton.setOnAction(event -> showDescription(primaryStage));
-        
-        currentAlgorithm.addListener((obs, oldValue, newValue) -> {
-            infoButton.setTooltip(new Tooltip("About " + newValue.getName()));
-        });
+        //load button images, create buttons
+        initControlButtons(primaryStage);
         
         Region leftRegion = new Region();
         Region rightRegion = new Region();
         HBox.setHgrow(rightRegion, Priority.ALWAYS);
         HBox.setHgrow(leftRegion, Priority.ALWAYS);
         
-        controlBox.getChildren().addAll(resetCurrent, leftRegion, speedSlider, stepBackBtn, 
-                playBtn, pauseBtn, stepForthBtn, rightRegion, newButton, infoButton);
+        controlBox.getChildren().addAll(resetCurrent, leftRegion, speedSlider, toStartBtn, stepBackBtn, 
+                playBtn, pauseBtn, stepForthBtn, toEndBtn, rightRegion, newButton, infoButton);
         controlBox.setAlignment(Pos.CENTER);
         
         controlBox.getStyleClass().add("control-box");
@@ -258,7 +192,7 @@ public class MainUI extends Application {
         
         initialize(DEFAULT_TYPE, null);
         
-        scene = new Scene(root, 1280 * windowSizeFactor, 720 * windowSizeFactor);
+        scene = new Scene(root, 1280 * windowSizeFactor, 800 * windowSizeFactor);
         scene.getStylesheets().add("style.css");
         
         setupKeyShortcuts(primaryStage);
@@ -268,11 +202,12 @@ public class MainUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(1100);
+        primaryStage.setMaximized(true);
         primaryStage.show();
         showToastMessage(primaryStage, toastMessage);
     }
     
-    private void initializeUpperPanel(){
+    private void initializeUpperPanel() {
         algorithmButtonBox = new HBox();
         algorithmMenu = new MenuButton("Algorithms");
         
@@ -287,11 +222,91 @@ public class MainUI extends Application {
         algorithmButtonBox.setMinHeight(40);
     }
     
-    private void initialize(Algorithm type, int[] input){
+    private ImageView loadImageView(String resourcePath) {
+        Image image = new Image(getClass().getResourceAsStream(resourcePath));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(25);
+        imageView.setFitWidth(25);
+        return imageView;
+    }
+    
+    private void initControlButtons(Stage stage) {
+        ImageView playImgV = loadImageView("/play.png");
+        ImageView pauseImgV = loadImageView("/pause.png");
+        ImageView startImgView = loadImageView("/start.png");
+        ImageView rbImgView = loadImageView("/rewind_back.png");
+        ImageView rfImgView = loadImageView("/rewind_forth.png");
+        ImageView endImgView = loadImageView("/end.png");
+        ImageView refreshIV = loadImageView("/refresh.png");
+        
+        playBtn = new Button();
+        playBtn.setTooltip(new Tooltip("Play!"));
+        playBtn.setGraphic(playImgV);
+        playBtn.getStyleClass().add("controllButton");
+        playBtn.setOnAction(event -> controller.play());
+        
+        pauseBtn = new Button();
+        pauseBtn.setTooltip(new Tooltip("Pause"));
+        pauseBtn.setGraphic(pauseImgV);
+        pauseBtn.getStyleClass().add("controllButton");
+        pauseBtn.setOnAction(event -> controller.pause());
+        
+        toStartBtn = new Button();
+        toStartBtn.setTooltip(new Tooltip("Go to start"));
+        toStartBtn.setGraphic(startImgView);
+        toStartBtn.getStyleClass().add("controllButton");
+        toStartBtn.setOnAction(event -> initialize(currentAlgorithm.get(), currentArray));
+        
+        stepBackBtn = new Button();
+        stepBackBtn.setTooltip(new Tooltip("Step Back"));
+        stepBackBtn.setGraphic(rbImgView);
+        stepBackBtn.getStyleClass().add("controllButton");
+        stepBackBtn.setOnAction(event -> controller.goStepBack());
+        
+        stepForthBtn = new Button();
+        stepForthBtn.setTooltip(new Tooltip("Step Forth"));
+        stepForthBtn.setGraphic(rfImgView);
+        stepForthBtn.getStyleClass().add("controllButton");
+        stepForthBtn.setOnAction(event -> controller.goStepForth());
+        
+        toEndBtn = new Button();
+        toEndBtn.setTooltip(new Tooltip("Go to end"));
+        toEndBtn.setGraphic(endImgView);
+        toEndBtn.getStyleClass().add("controllButton");
+        toEndBtn.setOnAction(event -> controller.playFast());
+        
+        showSidePanelBtn = new Button("<");
+        showSidePanelBtn.setMaxWidth(10);
+        showSidePanelBtn.setMinHeight(70);
+        showSidePanelBtn.getStyleClass().add("sideButton");
+        
+        resetCurrent = new Button();
+        resetCurrent.setTooltip(new Tooltip("New random"));
+        resetCurrent.setGraphic(refreshIV);
+        resetCurrent.getStyleClass().add("controllButton");
+        resetCurrent.setOnAction(event -> resetCurrent());
+
+        newButton = new Button("NEW");
+        newButton.setTooltip(new Tooltip("Create sorting"));
+        newButton.getStyleClass().add("button");
+        newButton.setOnAction(event -> openNewSortingDialog());
+        
+        infoButton = new Button("INFO");
+        infoButton.setTooltip(new Tooltip("About " + DEFAULT_TYPE.getName()));
+        infoButton.getStyleClass().add("button");
+        infoButton.setOnAction(event -> showDescription(stage));
+        
+        currentAlgorithm.addListener((obs, oldValue, newValue) -> {
+            infoButton.setTooltip(new Tooltip("About " + newValue.getName()));
+        });
+    }
+    
+    private void initialize(Algorithm type, int[] input) {
         resetCurrent.setDisable(true);
         disableControls(true);
         currentAlgorithm.setValue(type);
-        Task<List<Animation>> sortingTask = creator.sort(type, input);
+        currentArray = ArrayUtils.checkArray(type, input);
+        Task<List<Animation>> sortingTask = creator.sort(type, currentArray);
         sortingTask.setOnSucceeded(e -> {
             headerLbl.setText(type.getName());
             BindingData bindings = controller.setupInstance(sortingTask.getValue());
@@ -310,21 +325,27 @@ public class MainUI extends Application {
     
     private void initButtonBinding(BindingData bindings) {
         stepForthBtn.disableProperty().bind(bindings.getStepForthBinding());
+        toStartBtn.disableProperty().bind(bindings.getStepBackBinding());
         stepBackBtn.disableProperty().bind(bindings.getStepBackBinding());
+        toEndBtn.disableProperty().bind(bindings.getStepForthBinding());
         playBtn.disableProperty().bind(bindings.getPlayBinding());
         speedSlider.valueProperty().addListener(bindings.getSpeedListener());
     }
     
     private void unbindControls() {
+        toStartBtn.disableProperty().unbind();
         stepForthBtn.disableProperty().unbind();
         stepBackBtn.disableProperty().unbind();
+        toEndBtn.disableProperty().unbind();
         playBtn.disableProperty().unbind();
     }
     
     private void disableControls(boolean isDisabled) {
         unbindControls();
+        toStartBtn.disableProperty().set(isDisabled);
         stepForthBtn.disableProperty().set(isDisabled);
         stepBackBtn.disableProperty().set(isDisabled);
+        toEndBtn.disableProperty().set(isDisabled);
         playBtn.disableProperty().set(isDisabled);
     }
     
@@ -375,6 +396,16 @@ public class MainUI extends Application {
     private void resetCurrent() {
         initialize(currentAlgorithm.getValue(), null);
     }
+    
+    /*private void disableDoubleclick(Button b) {
+        b.setOnMouseClicked((MouseEvent mouseEvent) -> {
+            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                if(mouseEvent.getClickCount() == 2){
+                    System.out.println("Double clicked");
+                }
+            }
+        });
+    }*/
     
     public static void main(String[] args) throws InterruptedException {
         launch(args);

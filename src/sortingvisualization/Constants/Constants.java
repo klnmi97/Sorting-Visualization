@@ -17,6 +17,8 @@ import sortingvisualization.Utilities.Scaling;
  */
 public class Constants {
     
+    public static final int DEFAULT_ITEM_COUNT = 12;
+    
     public static final Color PANEL_BGND = /*Color.valueOf("#F0C243")*/Color.AQUAMARINE;
     public static final Color LOW_PAN_BGND = Color.LIGHTPINK;
     //colours of bricks:

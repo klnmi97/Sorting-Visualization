@@ -187,7 +187,7 @@ public class Tree {
     private List<Circle> createPlaceholders(){
         if(treeNodes == null) return null;
         
-        List<Circle> placeholders = new ArrayList<>();
+        List<Circle> placeHolders = new ArrayList<>();
         int size = treeNodes.size();
         for (int i = 0; i < size; i++) {
             Circle holder = new Circle(NODE_SIZE);
@@ -195,10 +195,10 @@ public class Tree {
             holder.setTranslateX(getNodeX(i));
             holder.setTranslateY(getNodeY(i, size));
             StackPane.setAlignment(holder, Pos.BOTTOM_CENTER);
-            placeholders.add(holder);
+            placeHolders.add(holder);
         }
         
-        return placeholders;
+        return placeHolders;
     }
     
     //left indent for each level of tree

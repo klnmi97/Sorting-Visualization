@@ -20,8 +20,9 @@ import javafx.beans.value.ObservableValue;
  */
 public class AnimationController {
     
+    private static final int MAX_SPEED = 9999;
     private List<Animation> transitions = null;
-    private IntegerProperty nextTransitionIndex;
+    private final IntegerProperty nextTransitionIndex;
     private BooleanBinding anyPlayingAnim;
     private BooleanBinding stepForthBinding;
     private BooleanBinding stepBackBinding;
@@ -65,6 +66,18 @@ public class AnimationController {
                 play();
             });
             anim.setRate(currentSpeed);
+            anim.play();}
+    }
+    
+    public void playFast() {
+        if(nextTransitionIndex.get()<transitions.size()){
+            int index = nextTransitionIndex.get();
+            Animation anim = transitions.get(index);
+            anim.setOnFinished(evt -> {
+                nextTransitionIndex.set(index+1);
+                playFast();
+            });
+            anim.setRate(MAX_SPEED);
             anim.play();}
     }
     
