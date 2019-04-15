@@ -55,7 +55,6 @@ public class ViewController {
     public static int LEFT_INDENT = countIndent(N_VALUES);
     public static final int LEVEL1 = (int)(-350 * scaling);
     public static final int LEVEL2 = (int)(250 * scaling) + LEVEL1;
-    public static final Font font = Font.font("Helvetica", 20 * scaling);
 
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
@@ -161,21 +160,21 @@ public class ViewController {
         switch(currentInstance) {
             case Bubble:
                 list = dNodes.getNodes();
-                sorting = new BubbleSort(list, currentInfo, codePanel);
+                sorting = new BubbleSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case CocktailShaker:
                 list = dNodes.getNodes();
-                sorting = new CocktailShakerSort(list, currentInfo, codePanel);
+                sorting = new CocktailShakerSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Insertion:
                 list = dNodes.getNodes();
-                sorting = new InsertionSort(list, currentInfo, codePanel);
+                sorting = new InsertionSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
                              new Pair<>(Constants.SELECTED, "selection from unsorted"),
                              new Pair<>(Constants.COMPARE, "selection from sorted"));
@@ -183,7 +182,7 @@ public class ViewController {
                 break;
             case Selection:
                 list = dNodes.getNodes();
-                sorting = new SelectionSort(list, currentInfo, codePanel);
+                sorting = new SelectionSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
                              new Pair<>(Constants.SELECTED, "current min"),
                              new Pair<>(Constants.COMPARE, "compared item"));
@@ -191,7 +190,7 @@ public class ViewController {
                 break;
             case Quick:
                 list = dNodes.getNodes();
-                sorting = new QuickSort(list, currentInfo, codePanel);
+                sorting = new QuickSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.SELECTED, "pivot"),
                              new Pair<>(Constants.COMPARE, "current item"),
                              new Pair<>(Constants.SORTED, "item is on final position"));
@@ -199,14 +198,14 @@ public class ViewController {
                 break;
             case Merge:
                 list = dNodes.getNodes();
-                sorting = new MergeSort(list, currentInfo, codePanel);
+                sorting = new MergeSort(dNodes, currentInfo, codePanel);
                 addColorInfo();
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Counting:
                 List<Text> countLabels = dNodes.createPlaceholderLabels();
                 list = dNodes.getNodes();
-                sorting = new CountingSort(list, countLabels, currentInfo, codePanel);
+                sorting = new CountingSort(dNodes, countLabels, currentInfo, codePanel);
                 addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax));
                 addChildrenAsync(displayPane, countLabels);
                 addChildrenAsync(displayPane, 0, dNodes.createLabels());
@@ -241,7 +240,7 @@ public class ViewController {
                 break;
             default:
                 list = dNodes.getNodes();
-                sorting = new BubbleSort(list, currentInfo, codePanel);
+                sorting = new BubbleSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
                 childrenHeight = dNodes.getViewportMinHeight();

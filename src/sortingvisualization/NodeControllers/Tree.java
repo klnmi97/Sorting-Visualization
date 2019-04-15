@@ -263,7 +263,7 @@ public class Tree {
         body.setStrokeWidth(3);
         
         Text text = new Text(String.valueOf(value));
-        text.setFont(ViewController.font);
+        text.setFont(Constants.font);
         text.setTranslateY(-10);
         
         BrickNode node = new BrickNode(value);
@@ -321,7 +321,7 @@ public class Tree {
         cell.setStroke(DEFAULT);
         
         Text text = new Text(String.valueOf(value));
-        text.setFont(ViewController.font);
+        text.setFont(Constants.font);
         
         BrickNode node = new BrickNode(value);
         node.setPrefSize(cell.getWidth(), cell.getHeight());

@@ -12,10 +12,10 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import sortingvisualization.Constants.Constants;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
@@ -25,6 +25,7 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class CountingSort extends Sorting implements AbstractAlgorithm {
     
+    private final DynamicNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final List<Text> counters;
@@ -32,13 +33,14 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
     
     /**
      * Counting Sort animation manager
-     * @param list list with graphic elements to sort
+     * @param manager node manager
      * @param counters label counters for each value of item range
      * @param vars instance of variables information class
      * @param infoPane pane to add code graphic representation to
      */
-    public CountingSort(List<BrickNode> list, List<Text> counters, VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public CountingSort(DynamicNodes manager, List<Text> counters, VariablesInfo vars, Pane infoPane) {
+        this.mngr = manager;
+        this.list = manager.getNodes();
         this.code = new Pseudocode();
         this.counters = counters;
         this.vars = vars;
@@ -68,9 +70,9 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String oldValue = Integer.toString(value-1);
             String newValue = Integer.toString(value);
             addAnimations(anim, 
-                    AnimUtils.moveDownToX(num, list.indexOf(num), num.getValue(),
+                    mngr.moveDownToX(num, list.indexOf(num), num.getValue(),
                             ViewController.LEFT_INDENT, ViewController.TEN_LEFT_INDENT),
-                    AnimUtils.setText(counters.get(num.getValue()), oldValue, newValue),
+                    mngr.setText(counters.get(num.getValue()), oldValue, newValue),
                     code.selectLine(3),
                     vars.setText("Increase counter of " + num + " by one from " 
                             + oldValue + " to " + newValue));
@@ -84,7 +86,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             
             String newVal = Integer.toString(count[i]);
             addAnimations(anim, 
-                    AnimUtils.setText(counters.get(i), oldVal, newVal),
+                    mngr.setText(counters.get(i), oldVal, newVal),
                     code.selectLine(5),
                     vars.setText("Add counter of " + (i - 1) + " to the counter of " + i 
                             + "\nCounter of " + i + " is " + oldVal + " + " + count[i - 1]));
@@ -99,7 +101,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String oldVal = Integer.toString(count[list.get(i).getValue()] + 1);
             String newVal = Integer.toString(count[list.get(i).getValue()]);
             addAnimations(anim, 
-                    AnimUtils.setText(counters.get(list.get(i).getValue()), oldVal, newVal),
+                    mngr.setText(counters.get(list.get(i).getValue()), oldVal, newVal),
                     code.selectLine(7),
                     vars.setText("Iterating through the initial array, index = " + i
                             + "\nCounter of " + list.get(i) + " was decreased by one and now is " + newVal));
@@ -107,7 +109,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             sorted[count[list.get(i).getValue()]] = list.get(i);
             
             addAnimations(anim, 
-                    AnimUtils.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
+                    mngr.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
                     ViewController.TEN_LEFT_INDENT, ViewController.LEFT_INDENT),
                     code.selectLine(8),
                     vars.setText("Move " + list.get(i) + " to the " + count[list.get(i).getValue()] 

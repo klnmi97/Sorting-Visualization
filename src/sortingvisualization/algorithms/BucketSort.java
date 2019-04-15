@@ -134,7 +134,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             bucketArray[j + 1] = key;
             //replace with new list implementation
             if(i != j + 1){
-                ParallelTransition parallel = AnimUtils.makeParallel(
+                ParallelTransition parallel = new ParallelTransition(
                     moveUp,
                     AnimUtils.moveY(key, i, j + 1));
                 

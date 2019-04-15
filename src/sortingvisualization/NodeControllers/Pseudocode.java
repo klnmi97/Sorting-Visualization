@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import javafx.animation.Animation;
+import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
@@ -19,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import sortingvisualization.Constants.Constants;
 
 /**
@@ -87,17 +89,13 @@ public class Pseudocode {
         
         for(int i = 0; i < codeLines.size(); i++){
             if(isLineSelected(i) && !isInArray(i, lines)){
-                pt.getChildren().add(
-                        AnimUtils.setColor(codeLines.get(i), 
-                                Constants.LINE_SELECTION, BGND));
+                pt.getChildren().add(setColor(codeLines.get(i), Constants.LINE_SELECTION, BGND));
                 selection.set(i, Boolean.FALSE);
             }
         }
         for(int line : lines){
             if(!(line > codeLines.size() || line < 0) && !isLineSelected(line)){
-                pt.getChildren().add(
-                            AnimUtils.setColor(codeLines.get(line), 
-                                    BGND, Constants.LINE_SELECTION));
+                pt.getChildren().add(setColor(codeLines.get(line), BGND, Constants.LINE_SELECTION));
                 selection.set(line, Boolean.TRUE);
             }
         }
@@ -131,5 +129,9 @@ public class Pseudocode {
     
     private boolean isInArray(int number, int[] array){
         return IntStream.of(array).anyMatch(x -> x == number);
+    }
+    
+    private Animation setColor(StackPane node, Color fromColor, Color toColor){
+        return new FillTransition(Duration.millis(1000), node.getShape(), fromColor, toColor);
     }
 }

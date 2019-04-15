@@ -12,8 +12,8 @@ import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import sortingvisualization.Constants.Constants;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
@@ -24,6 +24,7 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class BubbleSort extends Sorting implements AbstractAlgorithm{
 
+    private final DynamicNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -31,12 +32,13 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
     /**
      * Creates a new instance of the Bubble Sort algorithm animation flow 
      * creator class
-     * @param list list of nodes to animate
+     * @param manager node manager
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public BubbleSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public BubbleSort(DynamicNodes manager, VariablesInfo vars, Pane infoPane){
+        this.mngr = manager;
+        this.list = manager.getNodes();
         this.code = new Pseudocode();
         this.vars = vars;
         addPseudocode(code);
@@ -73,11 +75,11 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                     addAnimations(anim, code.selectLine(3),
                             vars.setText("Checking if %s > %s, j = %d", 
                                     list.get(j - 1), list.get(j), j),
-                            AnimUtils.selectNodes(list.get(j - 1), list.get(j)));
+                            mngr.selectNodes(list.get(j - 1), list.get(j)));
                     
                 } else {
                     
-                    parallelTransition.getChildren().add(AnimUtils.setColor(
+                    parallelTransition.getChildren().add(mngr.setColor(
                             list.get(j), Constants.DEFAULT, 
                             Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
@@ -87,7 +89,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 }
                 
                 if(list.get(j-1).getValue() > list.get(j).getValue()) {
-                    addAnimations(anim, AnimUtils.swap(list.get(j), list.get(j-1), j, j - 1),
+                    addAnimations(anim, mngr.swap(list.get(j), list.get(j-1), j, j - 1),
                                         code.selectLine(4),
                                         vars.setText("Swapping %s and %s, j = %d", 
                                                 list.get(j - 1), list.get(j), j));
@@ -97,21 +99,21 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                     list.set(j, temp);
                 }
                 if(j == n - i - 1){
-                    addAnimations(anim, AnimUtils.setColor(list.get(j-1), 
+                    addAnimations(anim, mngr.setColor(list.get(j-1), 
                                 Constants.COMPARE, Constants.DEFAULT),
-                                        AnimUtils.setColor(list.get(n-i-1), 
+                                        mngr.setColor(list.get(n-i-1), 
                                 Constants.COMPARE, Constants.SORTED),
                                         vars.setText("%s is sorted", list.get(n-i-1)));
                 } else {
                     parallelTransition = new ParallelTransition();
-                    parallelTransition.getChildren().add(AnimUtils.setColor(
+                    parallelTransition.getChildren().add(mngr.setColor(
                             list.get(j - 1), Constants.COMPARE, 
                             Constants.DEFAULT));
                 }
             }
         }
         
-        addAnimations(anim, AnimUtils.setColor(list.get(0), 
+        addAnimations(anim, mngr.setColor(list.get(0), 
                                 Constants.DEFAULT, Constants.SORTED),
                             code.unselectAll(),
                             vars.setText("Array is sorted"));

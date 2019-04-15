@@ -13,8 +13,8 @@ import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import sortingvisualization.Constants.Constants;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
@@ -25,6 +25,7 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class SelectionSort extends Sorting implements AbstractAlgorithm {
 
+    private final DynamicNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode pc;
     private final VariablesInfo vars;
@@ -32,12 +33,13 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
     /**
      * Creates a new instance of the Insertion Sort algorithm animation flow 
      * creator class
-     * @param list list of nodes to animate
+     * @param manager node manager
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public SelectionSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public SelectionSort(DynamicNodes manager, VariablesInfo vars, Pane infoPane) {
+        this.mngr = manager;
+        this.list = manager.getNodes();
         this.pc = new Pseudocode();
         this.vars = vars;
         addPseudocode(pc);
@@ -60,12 +62,12 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
             
             addAnimations(anim, pc.selectLines(2, 3),
                     vars.setText("Set %s at position %d as current minimum", list.get(i), i),
-                    AnimUtils.setColor(list.get(i), Constants.DEFAULT, Constants.SELECTED));
+                    mngr.setColor(list.get(i), Constants.DEFAULT, Constants.SELECTED));
             compareTransition = new ParallelTransition();
             
             for (int j = i + 1; j < arrayLength; j++) {
                 
-                compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), Constants.DEFAULT, 
+                compareTransition.getChildren().add(mngr.setColor(list.get(j), Constants.DEFAULT, 
                         Constants.COMPARE));
                 addAnimations(anim, pc.selectLine(4),
                         vars.setText("Check if %s < %s", list.get(j), list.get(index)),
@@ -75,9 +77,9 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
                     
                     addAnimations(anim, pc.selectLine(5),
                             vars.setText("Set %s at position %d as current minimum", list.get(j), j),
-                            AnimUtils.setColor(list.get(index), Constants.SELECTED, 
+                            mngr.setColor(list.get(index), Constants.SELECTED, 
                                     Constants.DEFAULT),
-                            AnimUtils.setColor(list.get(j), 
+                            mngr.setColor(list.get(j), 
                                     Constants.COMPARE, Constants.SELECTED));
                     
                     index = j;  //searching for lowest index 
@@ -86,7 +88,7 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
                 } else {
                     
                     compareTransition = new ParallelTransition();
-                    compareTransition.getChildren().add(AnimUtils.setColor(list.get(j), 
+                    compareTransition.getChildren().add(mngr.setColor(list.get(j), 
                             Constants.COMPARE, Constants.DEFAULT));
                 }
             }
@@ -98,13 +100,13 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
                 addAnimations(anim, pc.selectLine(6), 
                         vars.setText("Swap %s and %s", list.get(index), list.get(i)),
                         new SequentialTransition(
-                        AnimUtils.setColor(list.get(i), Constants.DEFAULT, Constants.SELECTED), 
-                        AnimUtils.swap(list.get(index), list.get(i), index, i)));
+                        mngr.setColor(list.get(i), Constants.DEFAULT, Constants.SELECTED), 
+                        mngr.swap(list.get(index), list.get(i), index, i)));
                 
-                parallelTransition.getChildren().add(AnimUtils.setColor(list.get(i), Constants.SELECTED, 
+                parallelTransition.getChildren().add(mngr.setColor(list.get(i), Constants.SELECTED, 
                         Constants.DEFAULT));
             }
-            parallelTransition.getChildren().add(AnimUtils.setColor(list.get(index), Constants.SELECTED, 
+            parallelTransition.getChildren().add(mngr.setColor(list.get(index), Constants.SELECTED, 
                     Constants.SORTED));
             addAnimations(anim, pc.selectLine(6),
                     vars.setText("%s is now sorted", list.get(index)),
@@ -118,7 +120,7 @@ public class SelectionSort extends Sorting implements AbstractAlgorithm {
         }
         addAnimations(anim, pc.unselectAll(),
                 vars.setText("Array is sorted"),
-                AnimUtils.setColor(list.get(arrayLength - 1), Constants.DEFAULT, 
+                mngr.setColor(list.get(arrayLength - 1), Constants.DEFAULT, 
                         Constants.SORTED));
         return anim;
     }

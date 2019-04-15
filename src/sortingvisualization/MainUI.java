@@ -59,7 +59,7 @@ import sortingvisualization.Utilities.DescriptionReader;
  */
 public class MainUI extends Application {
     
-    private static final String toastMessage = "Click the side panel to hide it";
+    private static final String HELP_MSG = "Click the side panel to hide it";
     private static final Algorithm DEFAULT_TYPE = Algorithm.Bubble;
     
     HBox algorithmButtonBox;
@@ -178,7 +178,7 @@ public class MainUI extends Application {
         sidePanel.getChildren().addAll(topSidePanel, infoPane);
         showSidePanelBtn.setOnAction(event->{
             root.setRight(sideScroll);
-            showToastMessage(primaryStage, toastMessage);});
+            showToastMessage(primaryStage, HELP_MSG);});
         
         creator = new ViewController(displayPane, codePane, infoPane);
         controller = new AnimationController();
@@ -204,7 +204,7 @@ public class MainUI extends Application {
         primaryStage.setMinWidth(1100);
         primaryStage.setMaximized(true);
         primaryStage.show();
-        showToastMessage(primaryStage, toastMessage);
+        showToastMessage(primaryStage, HELP_MSG);
     }
     
     private void initializeUpperPanel() {

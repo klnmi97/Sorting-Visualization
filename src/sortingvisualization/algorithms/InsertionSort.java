@@ -14,8 +14,8 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.Constants.Constants;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
+import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
@@ -26,6 +26,7 @@ import sortingvisualization.NodeControllers.VariablesInfo;
  */
 public class InsertionSort extends Sorting implements AbstractAlgorithm {
 
+    private final DynamicNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -33,12 +34,13 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
     /**
      * Creates a new instance of Insertion Sort algorithm animation flow 
      * creator class
-     * @param list list of nodes to animate
+     * @param manager node manager
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public InsertionSort(List<BrickNode> list,VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public InsertionSort(DynamicNodes manager, VariablesInfo vars, Pane infoPane) {
+        this.mngr = manager;
+        this.list = manager.getNodes();
         this.code = new Pseudocode();
         this.vars = vars;
         addPseudocode(code);
@@ -61,25 +63,25 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             if(i == 1){
                 addAnimations(anim, code.selectLines(1, 2),
                         vars.setText(list.get(i - 1) + " is sorted"),
-                        AnimUtils.setColor(list.get(i-1), Constants.DEFAULT, Constants.SORTED));
+                        mngr.setColor(list.get(i-1), Constants.DEFAULT, Constants.SORTED));
             }
             addAnimations(anim, code.selectLine(3), 
                     vars.setText("Selecting " + list.get(i)),
                     new SequentialTransition(
-                    AnimUtils.setColor(key, Constants.DEFAULT, Color.RED),
-                    AnimUtils.moveDownToX(key, i, i)));
+                    mngr.setColor(key, Constants.DEFAULT, Color.RED),
+                    mngr.moveDownToX(key, i, i)));
             
             int j = i-1;
             while (j>=0 && list.get(j).compareTo(key) == 1) 
             {
                 addAnimations(anim, code.selectLines(5),
                         vars.setText("Check if " + list.get(j) + " > " + key),
-                        AnimUtils.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
+                        mngr.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(6),
                         vars.setText("Moving " + list.get(j) + " one position right"),
                         new SequentialTransition(
-                        AnimUtils.swap(key, list.get(j), j+1, j),
-                        AnimUtils.setColor(list.get(j), 
+                        mngr.swap(key, list.get(j), j+1, j),
+                        mngr.setColor(list.get(j), 
                                 Constants.COMPARE, Constants.SORTED)));
                 
                 list.set(j+1, list.get(j));
@@ -88,21 +90,21 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             if(j >= 0){
                 addAnimations(anim, code.selectLines(5),
                         vars.setText("Check if " + list.get(j) + " > " + key),
-                        AnimUtils.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
+                        mngr.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(7),
                         vars.setText("Insert " + key + " at the " + (j + 1) + ". position"),
                         new ParallelTransition(
-                        AnimUtils.setColor(list.get(j), Constants.COMPARE, 
+                        mngr.setColor(list.get(j), Constants.COMPARE, 
                                     Constants.SORTED),
                         new SequentialTransition(
-                                AnimUtils.moveNodeUp(key),
-                                AnimUtils.setColor(key, Color.RED, Constants.SORTED))));
+                                mngr.moveNodeUp(key),
+                                mngr.setColor(key, Color.RED, Constants.SORTED))));
             } else{
                 addAnimations(anim, code.selectLines(5, 7),
                         vars.setText("No elements left to compare with. Insert " 
                                 + key + " at the " + (j + 1) + ". position"),
-                        new SequentialTransition(AnimUtils.moveNodeUp(key),
-                    AnimUtils.setColor(key, Color.RED, Constants.SORTED)));
+                        new SequentialTransition(mngr.moveNodeUp(key),
+                    mngr.setColor(key, Color.RED, Constants.SORTED)));
             }
             list.set(j+1, key);
         }
