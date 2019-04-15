@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
@@ -71,7 +70,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String newValue = Integer.toString(value);
             addAnimations(anim, 
                     mngr.moveDownToX(num, list.indexOf(num), num.getValue(),
-                            ViewController.LEFT_INDENT, ViewController.TEN_LEFT_INDENT),
+                            mngr.getUpperLevelIndent(), mngr.countIndent(Constants.CNT_MAX)),
                     mngr.setText(counters.get(num.getValue()), oldValue, newValue),
                     code.selectLine(3),
                     vars.setText("Increase counter of " + num + " by one from " 
@@ -110,7 +109,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             
             addAnimations(anim, 
                     mngr.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
-                    ViewController.TEN_LEFT_INDENT, ViewController.LEFT_INDENT),
+                    mngr.countIndent(Constants.CNT_MAX), mngr.getUpperLevelIndent()),
                     code.selectLine(8),
                     vars.setText("Move " + list.get(i) + " to the " + count[list.get(i).getValue()] 
                             + ". position"));

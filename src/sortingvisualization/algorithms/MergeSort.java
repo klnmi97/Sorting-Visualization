@@ -95,7 +95,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             Color cRight = getNodeColor(list.size() - high);
             ParallelTransition pt = new ParallelTransition();
             for(int i = low; i <= high; i++){
-                pt.getChildren().add(mngr.setColor(list.get(i), old, current));
+                pt.getChildren().add(mngr.setColor(i, old, current));
             }
             String msg;
             switch(child){
@@ -147,7 +147,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
             if(child == LEFT || child == RIGHT){
                 addAnimations(anim, code.selectLine(recursionLine),
                         vars.setText("Apply MergeSort to %s", list.get(low)),
-                    mngr.setColor(list.get(low), old, current));
+                    mngr.setColor(low, old, current));
             }
         }
     }

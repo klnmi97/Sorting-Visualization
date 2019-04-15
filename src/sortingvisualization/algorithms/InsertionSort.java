@@ -63,7 +63,7 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             if(i == 1){
                 addAnimations(anim, code.selectLines(1, 2),
                         vars.setText(list.get(i - 1) + " is sorted"),
-                        mngr.setColor(list.get(i-1), Constants.DEFAULT, Constants.SORTED));
+                        mngr.setColor(i - 1, Constants.DEFAULT, Constants.SORTED));
             }
             addAnimations(anim, code.selectLine(3), 
                     vars.setText("Selecting " + list.get(i)),
@@ -76,13 +76,12 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             {
                 addAnimations(anim, code.selectLines(5),
                         vars.setText("Check if " + list.get(j) + " > " + key),
-                        mngr.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
+                        mngr.setColor(j, Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(6),
                         vars.setText("Moving " + list.get(j) + " one position right"),
                         new SequentialTransition(
-                        mngr.swap(key, list.get(j), j+1, j),
-                        mngr.setColor(list.get(j), 
-                                Constants.COMPARE, Constants.SORTED)));
+                        mngr.swap(key, list.get(j), j + 1, j),
+                        mngr.setColor(j, Constants.COMPARE, Constants.SORTED)));
                 
                 list.set(j+1, list.get(j));
                 j = j-1;
@@ -90,11 +89,11 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             if(j >= 0){
                 addAnimations(anim, code.selectLines(5),
                         vars.setText("Check if " + list.get(j) + " > " + key),
-                        mngr.setColor(list.get(j), Constants.SORTED, Constants.COMPARE));
+                        mngr.setColor(j, Constants.SORTED, Constants.COMPARE));
                 addAnimations(anim, code.selectLine(7),
                         vars.setText("Insert " + key + " at the " + (j + 1) + ". position"),
                         new ParallelTransition(
-                        mngr.setColor(list.get(j), Constants.COMPARE, 
+                        mngr.setColor(j, Constants.COMPARE, 
                                     Constants.SORTED),
                         new SequentialTransition(
                                 mngr.moveNodeUp(key),

@@ -63,8 +63,21 @@ public final class DynamicNodes {
         return list;
     }
     
-    private static int countIndent(int number){
-        return (int)(((double)number / 2) * -SPACING);
+    /**
+     * Gets left side indent from center point for centering
+     * @return counted left indent
+     */
+    public int getUpperLevelIndent() {
+        return countIndent(list.size());
+    }
+    
+    /**
+     * Counts indent from center to left for the line of the nodes for centering
+     * @param count number of nodes
+     * @return left side spacing from center in pixels
+     */
+    public int countIndent(int count){
+        return (int)(((double)count / 2) * -SPACING);
     }
     
     private List<BrickNode> createList(int[] inputArray, int currentMax){
@@ -158,12 +171,23 @@ public final class DynamicNodes {
     
     /**
      * Changes node color
+     * @param nodePosition position of the node to be changed
+     * @param original original node color
+     * @param newColor new node color
+     * @return animation of color change
+     */
+    public Animation setColor(int nodePosition, Color original, Color newColor){
+        return new FillTransition(SPEED, list.get(nodePosition).getShape(), original, newColor);
+    }
+    
+    /**
+     * Changes node color
      * @param node node to be changed
      * @param original original node color
      * @param newColor new node color
      * @return animation of color change
      */
-    public Animation setColor(StackPane node, Color original, Color newColor){
+    public Animation setColor(BrickNode node, Color original, Color newColor){
         return new FillTransition(SPEED, node.getShape(), original, newColor);
     }
     
@@ -176,7 +200,7 @@ public final class DynamicNodes {
      * @param node2 second node to highlight selection
      * @return animation of highlighting two nodes by changing color
      */
-    public Animation selectNodes(BrickNode node1, BrickNode node2){
+    public Animation selectNodes(int node1, int node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
                 setColor(node1, Constants.DEFAULT, Constants.COMPARE), 
@@ -193,7 +217,7 @@ public final class DynamicNodes {
      * @param node2 second node to change color to default
      * @return animation of changing color of two nodes
      */
-    public Animation unselectNodes(BrickNode node1, BrickNode node2){
+    public Animation unselectNodes(int node1, int node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
                 setColor(node1, Constants.COMPARE, Constants.DEFAULT), 
@@ -203,16 +227,16 @@ public final class DynamicNodes {
     
     /**
      * Swaps two dynamic nodes. Must be applied before the real swap
-     * @param firstNode first node to swap
-     * @param secondNode second node to swap
-     * @param poss1 position of the first node in array
-     * @param poss2 position of the second node in array
+     * @param firstNode first node to swap (position in array)
+     * @param secondNode second node to swap (position in array)
+     * @param firstX position of the first node in the visual array
+     * @param secondX position of the second node in the visual array
      * @return animation of swapping two nodes
      */
-    public Animation swap(BrickNode firstNode, BrickNode secondNode, int poss1, int poss2){
+    public Animation swap(BrickNode firstNode, BrickNode secondNode, int firstX, int secondX) {
         int leftIndent = countIndent(list.size());
-        double pos1 = poss1 * SPACING + leftIndent;
-        double pos2 = poss2 * SPACING + leftIndent;
+        double pos1 = firstX * SPACING + leftIndent;
+        double pos2 = secondX * SPACING + leftIndent;
         TranslateTransition transition1 = new TranslateTransition();
         transition1.setDuration(SPEED);
         transition1.setNode(firstNode);
@@ -231,6 +255,16 @@ public final class DynamicNodes {
     }
     
     /**
+     * Swaps two dynamic nodes. Must be applied before the real swap
+     * @param firstNode first node to swap (position in array)
+     * @param secondNode second node to swap (position in array)
+     * @return animation of swapping two nodes
+     */
+    public Animation swap(int firstNode, int secondNode) {
+        return swap(list.get(firstNode), list.get(secondNode), firstNode, secondNode);
+    }
+    
+    /**
      * Moves node from the upper line to lower line with different X coordinates
      * @param node node to move
      * @param fromX original Xth position of the node in the array
@@ -239,7 +273,8 @@ public final class DynamicNodes {
      * @param withLeftIndent left indent of the lower level
      * @return animation of moving node down
      */
-    public Animation moveDownToX(BrickNode node, int fromX, int toX, double startLeftIndent, double withLeftIndent) {
+    public Animation moveDownToX(BrickNode node, int fromX, int toX, 
+            double startLeftIndent, double withLeftIndent) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(node);
         //get start position of node to allow backward animation
@@ -253,6 +288,7 @@ public final class DynamicNodes {
     
     /**
      * Moves node from the upper line to lower line with different X coordinates
+     * but the same line length
      * @param node node to move
      * @param fromX original Xth position of the node in the array
      * @param toX new Xth position of the node in the array

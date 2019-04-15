@@ -76,12 +76,11 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                     addAnimations(anim, pc.selectLine(5),
                             vars.setText("Check if " + list.get(k) 
                                     + " > " + list.get(k + 1)),
-                            mngr.selectNodes(list.get(k), list.get(k+1)));
+                            mngr.selectNodes(k, k + 1));
                     
                 } else {
                     parallelTransition.getChildren().add(
-                            mngr.setColor(list.get(k+1), 
-                                    Constants.DEFAULT, Constants.COMPARE));
+                            mngr.setColor(k + 1, Constants.DEFAULT, Constants.COMPARE));
                     addAnimations(anim, pc.selectLine(5),
                             vars.setText("Check if " + list.get(k) 
                                     + " > " + list.get(k + 1)),
@@ -93,7 +92,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                             vars.setText("Swap " + list.get(k)
                                     + " and " + list.get(k + 1)
                                     + ", set swapped to true"),
-                            mngr.swap(list.get(k), list.get(k + 1), k, k + 1));
+                            mngr.swap(k, k + 1));
                     //swap
                     BrickNode temp = list.get(k);
                     list.set(k, list.get(k + 1));
@@ -106,13 +105,11 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                 if(k == j - 1){
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(mngr.setColor(
-                            list.get(k+1), Constants.COMPARE, 
-                            Constants.SORTED));
+                            k + 1, Constants.COMPARE, Constants.SORTED));
                 } else {
                     parallelTransition = new ParallelTransition();
                     parallelTransition.getChildren().add(mngr.setColor(
-                            list.get(k), Constants.COMPARE, 
-                            Constants.DEFAULT));
+                            k, Constants.COMPARE, Constants.DEFAULT));
                 }
             }
             
@@ -135,8 +132,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                 {
                     
                     parallelTransition.getChildren().add(mngr.setColor(
-                            list.get(k-1), Constants.DEFAULT, 
-                                Constants.COMPARE));
+                            k - 1, Constants.DEFAULT, Constants.COMPARE));
                     addAnimations(anim, pc.selectLine(11),
                             vars.setText("Check if " + list.get(k - 1)
                                     + " > " + list.get(k)),
@@ -146,7 +142,7 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                     {
                         addAnimations(anim, pc.selectLines(12, 13),
                                 vars.setText("Swap " + list.get(k - 1) + " and " + list.get(k)),
-                                mngr.swap(list.get(k), list.get(k - 1), k, k - 1));
+                                mngr.swap(k, k - 1));
                         
                         BrickNode temp = list.get(k);
                         list.set(k, list.get(k - 1));
@@ -159,13 +155,11 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
                     if(k == i + 1){
                         parallelTransition = new ParallelTransition();
                         parallelTransition.getChildren().add(mngr.setColor(
-                                list.get(k-1), Constants.COMPARE, 
-                                Constants.SORTED));
+                                k - 1, Constants.COMPARE, Constants.SORTED));
                     } else {
                         parallelTransition = new ParallelTransition();
                         parallelTransition.getChildren().add(mngr.setColor(
-                                list.get(k), Constants.COMPARE, 
-                                Constants.DEFAULT));
+                                k, Constants.COMPARE, Constants.DEFAULT));
                     }
                 }
                 lastStart = i;
@@ -180,11 +174,11 @@ public class CocktailShakerSort extends Sorting implements AbstractAlgorithm {
         parallelTransition = new ParallelTransition();
         for (int k = lastStart; k < lastFinish; k++) {
             parallelTransition.getChildren().add(
-                    mngr.setColor(list.get(k), Constants.DEFAULT, Constants.SORTED));
+                    mngr.setColor(k, Constants.DEFAULT, Constants.SORTED));
         }
         
         addAnimations(anim, new SequentialTransition(
-                mngr.unselectNodes(list.get(firstSelected), list.get(secondSelected)), 
+                mngr.unselectNodes(firstSelected, secondSelected), 
                 parallelTransition),
                 pc.unselectAll(),
                 vars.setText("Array is sorted!"));

@@ -80,7 +80,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         }
         else if(low == high){
             addAnimations(anim, vars.setText("%s is sorted", list.get(high)),
-                    mngr.setColor(list.get(high), Constants.DEFAULT, Constants.SORTED));
+                    mngr.setColor(high, Constants.DEFAULT, Constants.SORTED));
         }
     } 
      
@@ -99,19 +99,19 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         
         addAnimations(anim, code.selectLines(2,7,8,9),
                 vars.setText("Select %s as a pivot\nindex is %s", pivot, list.get(index)),
-                mngr.setColor(list.get(high), Constants.DEFAULT, Constants.SELECTED));
+                mngr.setColor(high, Constants.DEFAULT, Constants.SELECTED));
         
         for (int j=low; j<high; j++) 
         { 
             addAnimations(anim, code.selectLines(2, 10),
                     vars.setText("Check if %s < %s, index is %s", list.get(j), pivot, list.get(index)),
-                    mngr.setColor(list.get(j), Constants.DEFAULT, Constants.COMPARE));
+                    mngr.setColor(j, Constants.DEFAULT, Constants.COMPARE));
             // If current element is smaller than or 
             // equal to pivot
             if (list.get(j).getValue() <= pivot.getValue()) {
                 addAnimations(anim, code.selectLines(2, 11),
                         vars.setText("Swap %s and %s", list.get(j), list.get(index)),
-                        mngr.swap(list.get(index), list.get(j), index, j));
+                        mngr.swap(index, j));
                 
                 BrickNode temp = list.get(index); 
                 list.set(index, list.get(j)); 
@@ -119,18 +119,18 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
                 
                 addAnimations(anim, code.selectLines(2, 12),
                         vars.setText("index is now %s", list.get(index + 1)),
-                        mngr.setColor(list.get(index), Constants.COMPARE, Constants.DEFAULT));
+                        mngr.setColor(index, Constants.COMPARE, Constants.DEFAULT));
                 index++;
                 
             } else {
-                addAnimations(anim, mngr.setColor(list.get(j), Constants.COMPARE, Constants.DEFAULT));
+                addAnimations(anim, mngr.setColor(j, Constants.COMPARE, Constants.DEFAULT));
             } 
             
         } 
   
         addAnimations(anim, code.selectLines(2, 13),
                 vars.setText("Swap %s and %s", list.get(index), pivot),
-                mngr.swap(list.get(index), list.get(high), index, high));
+                mngr.swap(index, high));
         // swap arr[i+1] and arr[high] (or pivot)
         BrickNode temp = list.get(index); 
         list.set(index, list.get(high)); 
