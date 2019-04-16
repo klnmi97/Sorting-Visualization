@@ -12,10 +12,9 @@ import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.NodeControllers.FixedNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
 /**
@@ -26,6 +25,8 @@ import sortingvisualization.NodeControllers.VariablesInfo;
 public class RadixSort extends Sorting implements AbstractAlgorithm {
     
     private static final int DIGITS = 10;
+    
+    private final FixedNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -33,12 +34,13 @@ public class RadixSort extends Sorting implements AbstractAlgorithm {
     /**
      * Creates a new instance of the Radix Sort algorithm animation flow 
      * creator class
-     * @param list list of nodes to animate
+     * @param nodeManager node manager instance for fixed size nodes
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public RadixSort(List<BrickNode> list, VariablesInfo vars, Pane infoPane){
-        this.list = list;
+    public RadixSort(FixedNodes nodeManager, VariablesInfo vars, Pane infoPane) {
+        this.mngr = nodeManager;
+        this.list = nodeManager.getNodes();
         this.code = new Pseudocode();
         this.vars = vars;
         addPseudocode(code);
@@ -59,12 +61,12 @@ public class RadixSort extends Sorting implements AbstractAlgorithm {
         for (int exp = 1, i = 0; maxValue/exp > 0; exp *= DIGITS, i++) {
             addAnimations(anim, code.selectLine(1),
                     vars.setText("i is %d", i),
-                    AnimUtils.setDigitsColor(list, i, Color.BLACK, Color.RED));
+                    mngr.setDigitsColor(list, i, Color.BLACK, Color.RED));
             
             countSort(list, list.size(), exp, anim);
             
             addAnimations(anim, vars.setText(""),
-                    AnimUtils.setDigitsColor(list, i, Color.RED, Color.BLACK));
+                    mngr.setDigitsColor(list, i, Color.RED, Color.BLACK));
         }
         addAnimations(anim, code.unselectAll(),
                 vars.setText("Array is sorted"));
@@ -87,8 +89,7 @@ public class RadixSort extends Sorting implements AbstractAlgorithm {
             
             addAnimations(anim, code.selectLine(2),
                     vars.setText("Sorting with Counting sort by %d. digit:\n%d in %s", currentDigit, bucket, list.get(i)),
-                    AnimUtils.moveTo(list.get(i), i, bucket, count[bucket] - 1, 
-                    ViewController.LEFT_INDENT, ViewController.countIndent(DIGITS)));
+                    mngr.moveDownTo(list.get(i), i, bucket, 0, count[bucket] - 1, DIGITS));
         }
   
         //Fill helper array for animation
@@ -111,8 +112,7 @@ public class RadixSort extends Sorting implements AbstractAlgorithm {
             output[toX] = list.get(i);
             
             addAnimations(anim, vars.setText("Place %s to the position %d in the output array", list.get(i), toX),
-                    AnimUtils.moveFrom(list.get(i), toX, digit, fromY, 
-                    ViewController.countIndent(10), ViewController.LEFT_INDENT));
+                    mngr.moveUpTo(list.get(i), toX, digit, fromY, 0, DIGITS));
             
             count[digit]--; 
             helperCount[digit]--;

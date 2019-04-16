@@ -6,7 +6,6 @@
 package sortingvisualization.NodeControllers;
 
 import sortingvisualization.Utilities.Scaling;
-import sortingvisualization.Utilities.AnimUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;

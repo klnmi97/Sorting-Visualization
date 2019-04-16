@@ -223,7 +223,7 @@ public class ViewController {
                 break;
             case Radix:
                 list = fNodes.getNodes();
-                sorting = new RadixSort(list, currentInfo, codePanel);
+                sorting = new RadixSort(fNodes, currentInfo, codePanel);
                 List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                 addChildrenAsync(displayPane, rbuckets);
                 childrenHeight = fNodes.getViewportMinHeight();

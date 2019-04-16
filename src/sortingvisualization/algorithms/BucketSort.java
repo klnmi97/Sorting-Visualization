@@ -11,10 +11,8 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import sortingvisualization.Utilities.AnimUtils;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.FixedNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 
@@ -30,7 +28,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
      */
     public static final int BUCKET_SIZE = 15;
     
-    private final FixedNodes nodeManager;
+    private final FixedNodes mngr;
     private final List<BrickNode> list;
     private final Pseudocode code;
     private final VariablesInfo vars;
@@ -42,8 +40,8 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
      * @param vars instance of variables information class
      * @param infoPane pane where the code will be placed
      */
-    public BucketSort(FixedNodes nodeManager, VariablesInfo vars, Pane infoPane){
-        this.nodeManager = nodeManager;
+    public BucketSort(FixedNodes nodeManager, VariablesInfo vars, Pane infoPane) {
+        this.mngr = nodeManager;
         this.list = nodeManager.getNodes();
         this.code = new Pseudocode();
         this.vars = vars;
@@ -70,7 +68,6 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
         for (int i = 0; i < bucketCount; i++) {
             buckets.add(new ArrayList<>());
         }
-        int bucketsLIndent = (int)(((double)bucketCount / 2) * -ViewController.SPACING);
         
         vars.setDefaultText("Created " + bucketCount + " buckets of expected capacity " 
                 + BUCKET_SIZE + " items");
@@ -86,8 +83,8 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             addAnimations(anim, code.selectLine(2),
                     vars.setText("Move %d. item of value %s to the bucket of range %d-%d", 
                             i, list.get(i), bucketMin, bucketMax),
-                    AnimUtils.moveTo(list.get(i), i, selectedBucket, 
-                            nextBucketVal, ViewController.LEFT_INDENT, bucketsLIndent));
+                    mngr.moveDownTo(list.get(i), i, selectedBucket, 
+                            0, nextBucketVal, bucketCount));
         }
         
         // Sort buckets and place back into input array
@@ -102,8 +99,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
                 addAnimations(anim, code.selectLines(5, 6),
                         vars.setText("Move %d. item in bucket of value %s to the position %d", 
                                 j, bucketArray[j], currentIndex-1),
-                        AnimUtils.moveFrom(bucketArray[j], currentIndex-1, i, j, 
-                                bucketsLIndent, ViewController.LEFT_INDENT));
+                        mngr.moveUpTo(bucketArray[j], currentIndex-1, i, j, 0, bucketCount));
             }
         }
         addAnimations(anim, code.unselectAll(),
@@ -111,7 +107,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
         return anim;
     }
     
-     /*
+   /*
     * Local Insertion sort for sorting buckets
     */
     private void sortStable(BrickNode[] bucketArray, int bucket, List<Animation> anim) {
@@ -128,7 +124,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             while (j>=0 && bucketArray[j].compareTo(key) == 1) 
             {
                 bucketArray[j + 1] = bucketArray[j];
-                moveUp.getChildren().add(AnimUtils.moveY(bucketArray[j], j, j + 1));
+                moveUp.getChildren().add(mngr.changeLowY(bucketArray[j], j, j + 1));
                 j = j-1;
             }
             bucketArray[j + 1] = key;
@@ -136,7 +132,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
             if(i != j + 1){
                 ParallelTransition parallel = new ParallelTransition(
                     moveUp,
-                    AnimUtils.moveY(key, i, j + 1));
+                    mngr.changeLowY(key, i, j + 1));
                 
                 if(parallel.getChildren().size() > 0){
                     
