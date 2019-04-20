@@ -141,7 +141,7 @@ public class Tree {
     private List<BrickNode> createList(int[] inputArray){
         List<BrickNode> list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
-            BrickNode node = createNode(inputArray[i], Color.BLACK, 
+            BrickNode node = createNode(inputArray[i], DEFAULT, 
                     getNodeX(i), getNodeY(i, inputArray.length));
             list.add(node);
         }
@@ -164,6 +164,7 @@ public class Tree {
                 int endY = getNodeY(l, size) + NODE_SIZE;
                 Line left = new Line(startX, startY, endX, endY);
                 left.setStrokeWidth(3);
+                left.setStroke(DEFAULT);
                 left.setTranslateX((startX + endX) / 2) ;
                 left.setTranslateY((startY + endY) / 2);
                 StackPane.setAlignment(left, Pos.BOTTOM_CENTER);
@@ -174,6 +175,7 @@ public class Tree {
                 int endY = getNodeY(r, size) + NODE_SIZE;
                 Line right = new Line(startX, startY, endX, endY);
                 right.setStrokeWidth(3);
+                right.setStroke(DEFAULT);
                 right.setTranslateX((startX + endX) / 2) ;
                 right.setTranslateY((startY + endY) / 2);
                 StackPane.setAlignment(right, Pos.BOTTOM_CENTER);
@@ -263,7 +265,7 @@ public class Tree {
         body.setStrokeWidth(3);
         
         Text text = new Text(String.valueOf(value));
-        text.setFont(Constants.font);
+        text.setFont(Constants.MAIN_FONT);
         text.setTranslateY(-10);
         
         BrickNode node = new BrickNode(value);
@@ -321,7 +323,7 @@ public class Tree {
         cell.setStroke(DEFAULT);
         
         Text text = new Text(String.valueOf(value));
-        text.setFont(Constants.font);
+        text.setFont(Constants.MAIN_FONT);
         
         BrickNode node = new BrickNode(value);
         node.setPrefSize(cell.getWidth(), cell.getHeight());

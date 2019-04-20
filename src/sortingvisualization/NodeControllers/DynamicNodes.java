@@ -91,7 +91,7 @@ public final class DynamicNodes {
     }
     
     private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
-        return createCustomNode(i, value, currentMax, Constants.DEFAULT, leftIndent, ViewController.LEVEL1);
+        return createCustomNode(i, value, currentMax, Constants.D_DEFAULT, leftIndent, ViewController.LEVEL1);
     }
     
     /**
@@ -119,7 +119,7 @@ public final class DynamicNodes {
             StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
             label.setTranslateX(SPACING * i + leftIndent);
             label.setTranslateY(y);
-            label.fontProperty().set(Constants.font);
+            label.fontProperty().set(Constants.MAIN_FONT);
             labels.add(label);
             currentValue += step;
         }
@@ -153,7 +153,7 @@ public final class DynamicNodes {
         rectangle.setFill(color);
         
         Text text = new Text(String.valueOf(num));
-        text.setFont(Constants.font);
+        text.setFont(Constants.MAIN_FONT);
         BrickNode node = new BrickNode(num);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         //node.setId(String.valueOf(num));
@@ -203,8 +203,8 @@ public final class DynamicNodes {
     public Animation selectNodes(int node1, int node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
-                setColor(node1, Constants.DEFAULT, Constants.COMPARE), 
-                setColor(node2, Constants.DEFAULT, Constants.COMPARE));
+                setColor(node1, Constants.D_DEFAULT, Constants.COMPARE), 
+                setColor(node2, Constants.D_DEFAULT, Constants.COMPARE));
         return parallelTransition;
     }
     
@@ -220,8 +220,8 @@ public final class DynamicNodes {
     public Animation unselectNodes(int node1, int node2){
         ParallelTransition parallelTransition = new ParallelTransition();
         parallelTransition.getChildren().addAll(
-                setColor(node1, Constants.COMPARE, Constants.DEFAULT), 
-                setColor(node2, Constants.COMPARE, Constants.DEFAULT));
+                setColor(node1, Constants.COMPARE, Constants.D_DEFAULT), 
+                setColor(node2, Constants.COMPARE, Constants.D_DEFAULT));
         return parallelTransition;
     }
     
@@ -353,7 +353,7 @@ public final class DynamicNodes {
             new KeyFrame(Duration.millis(1),
                 new KeyValue(label.fontProperty(), Font.font("Helvetica", 30))),
             new KeyFrame(SPEED,
-                new KeyValue(label.fontProperty(), Constants.font)));
+                new KeyValue(label.fontProperty(), Constants.MAIN_FONT)));
     }
     
     /**

@@ -18,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.Pair;
@@ -45,24 +44,23 @@ import sortingvisualization.algorithms.SelectionSort;
  */
 public class ViewController {
     
-    private static final double scaling = initScaling();
+    private static final double SCALING = initScaling();
     
     //TODO: create new metrics
     public static final int DEFAULT_ITEM_COUNT = 12;
     public static int N_VALUES = 12;
     public static final int SPACING = initSpacing();
     public static int TEN_LEFT_INDENT = countIndent(10);
-    public static int LEFT_INDENT = countIndent(N_VALUES);
-    public static final int LEVEL1 = (int)(-350 * scaling);
-    public static final int LEVEL2 = (int)(250 * scaling) + LEVEL1;
+    public static int LEFT_INDENT = countIndent(DEFAULT_ITEM_COUNT);
+    public static final int LEVEL1 = (int)(-350 * SCALING);
+    public static final int LEVEL2 = (int)(250 * SCALING) + LEVEL1;
 
     public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
-     
-    private int[] currentArray;
+   
     private final Pane displayPane;
     private final Pane codePanel;
-    private Pane infoPanel;
+    private final Pane infoPanel;
     private Algorithm currentInstance;
     
     private int childrenWidth;
@@ -79,7 +77,6 @@ public class ViewController {
         this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        this.currentArray = ArrayUtils.generateRandomArray(Constants.DEFAULT_ITEM_COUNT, Constants.MIN, Constants.MAX);
         this.childrenWidth = DEFAULT_ITEM_COUNT * SPACING;
     }
     
@@ -104,7 +101,7 @@ public class ViewController {
     }
     
     private static int initSpacing() {
-        return (int)(60 * scaling);
+        return (int)(60 * SCALING);
     }
     
     public static int countIndent(int number){
@@ -113,7 +110,7 @@ public class ViewController {
      
     
     
-    private void initValues(){
+    private void clear(){
         displayPane.getChildren().clear();
         codePanel.getChildren().clear();
         infoPanel.getChildren().clear();
@@ -121,7 +118,7 @@ public class ViewController {
     
     private int[] preInit(Algorithm instanceType, int[] input){
         this.currentInstance = instanceType;
-        initValues();
+        clear();
         
         int size = input.length;
         this.LEFT_INDENT = countIndent(size);
@@ -152,7 +149,7 @@ public class ViewController {
         FixedNodes fNodes = new FixedNodes(generatedArray, currentMax);
         Tree tNodes = new Tree(generatedArray);
         
-        VariablesInfo currentInfo = new VariablesInfo(400 * scaling);
+        VariablesInfo currentInfo = new VariablesInfo(400 * SCALING);
         AbstractAlgorithm sorting;
         List<BrickNode> list;
         List<Animation> anim;

@@ -61,7 +61,7 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         int number = list.size();
         List<Animation> anim = new ArrayList<>();
         
-        sortRange(0, number - 1, anim, list, Constants.DEFAULT, ROOT);
+        sortRange(0, number - 1, anim, list, Constants.D_DEFAULT, ROOT);
         addAnimations(anim, code.unselectAll(),
                 vars.setText("Array is sorted"));
         return anim;

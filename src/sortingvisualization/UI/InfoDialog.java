@@ -46,7 +46,7 @@ public class InfoDialog {
         TextArea textBox = new TextArea(message); 
         textBox.setWrapText(true);
         textBox.setEditable(false);
-        textBox.setFont(Constants.descriptionFont);
+        textBox.setFont(Constants.DESC_FONT);
         textBox.setStyle("-fx-focus-color: -fx-control-inner-background ; -fx-faint-focus-color: -fx-control-inner-background ;");
         
         rootPane.setTop(headerBox);

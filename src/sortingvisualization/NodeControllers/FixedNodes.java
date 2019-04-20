@@ -99,8 +99,9 @@ public class FixedNodes {
         base.setAlignment(Pos.BOTTOM_CENTER);
         Line baseLine = new Line(0, 0, 50 * scalingFactor, 0);
         baseLine.setStrokeWidth(5 * scalingFactor);
+        baseLine.setStroke(Constants.BUCKET);
         Text label = new Text(labelText);
-        label.setFont(Constants.font);
+        label.setFont(Constants.MAIN_FONT);
         base.getChildren().addAll(baseLine, label);
         base.setTranslateX(x);
         base.setTranslateY(y + 24 * scalingFactor); //TODO: smarter Y position. Problem with height of children because of FlowPane alignmen
@@ -109,11 +110,11 @@ public class FixedNodes {
     
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
         Rectangle rectangle = new Rectangle(NODE_WIDTH, NODE_HEIGHT);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setFill(Color.WHITE);
+        rectangle.setStroke(Constants.STROKE);
+        rectangle.setFill(Constants.F_DEFAULT);
         
         Text text = new Text(String.valueOf(value));
-        text.setFont(Constants.font);
+        text.setFont(Constants.MAIN_FONT);
         BrickNode node = new BrickNode(value);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         HBox numberBox = new HBox();
@@ -122,7 +123,7 @@ public class FixedNodes {
         for(char ch: valueToSet.toCharArray()){
             Text digit = new Text(Character.toString(ch));
             digit.setUserData(String.valueOf(index));
-            digit.setFont(Constants.font);
+            digit.setFont(Constants.MAIN_FONT);
             numberBox.getChildren().add(digit);
             numberBox.setAlignment(Pos.BOTTOM_CENTER);
             node.getDigits().add(digit);

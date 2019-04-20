@@ -79,8 +79,7 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                     
                 } else {
                     
-                    parallelTransition.getChildren().add(mngr.setColor(
-                            j, Constants.DEFAULT, Constants.COMPARE));
+                    parallelTransition.getChildren().add(mngr.setColor(j, Constants.D_DEFAULT, Constants.COMPARE));
                     addAnimations(anim, parallelTransition, 
                                         code.selectLine(3),
                                         vars.setText("Checking if %s > %s, j = %d", 
@@ -99,20 +98,19 @@ public class BubbleSort extends Sorting implements AbstractAlgorithm{
                 }
                 if(j == n - i - 1){
                     addAnimations(anim, mngr.setColor(j-1, 
-                                Constants.COMPARE, Constants.DEFAULT),
+                                Constants.COMPARE, Constants.D_DEFAULT),
                                         mngr.setColor(n - i - 1, 
                                 Constants.COMPARE, Constants.SORTED),
                                         vars.setText("%s is sorted", list.get(n-i-1)));
                 } else {
                     parallelTransition = new ParallelTransition();
-                    parallelTransition.getChildren().add(mngr.setColor(
-                            j - 1, Constants.COMPARE, Constants.DEFAULT));
+                    parallelTransition.getChildren().add(mngr.setColor(j - 1, Constants.COMPARE, Constants.D_DEFAULT));
                 }
             }
         }
         
         addAnimations(anim, mngr.setColor(0, 
-                                Constants.DEFAULT, Constants.SORTED),
+                                Constants.D_DEFAULT, Constants.SORTED),
                             code.unselectAll(),
                             vars.setText("Array is sorted"));
         return anim;

@@ -63,12 +63,12 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
             if(i == 1){
                 addAnimations(anim, code.selectLines(1, 2),
                         vars.setText(list.get(i - 1) + " is sorted"),
-                        mngr.setColor(i - 1, Constants.DEFAULT, Constants.SORTED));
+                        mngr.setColor(i - 1, Constants.D_DEFAULT, Constants.SORTED));
             }
             addAnimations(anim, code.selectLine(3), 
                     vars.setText("Selecting " + list.get(i)),
                     new SequentialTransition(
-                    mngr.setColor(key, Constants.DEFAULT, Color.RED),
+                    mngr.setColor(key, Constants.D_DEFAULT, Color.RED),
                     mngr.moveDownToX(key, i, i)));
             
             int j = i-1;

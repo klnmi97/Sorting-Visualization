@@ -80,7 +80,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         }
         else if(low == high){
             addAnimations(anim, vars.setText("%s is sorted", list.get(high)),
-                    mngr.setColor(high, Constants.DEFAULT, Constants.SORTED));
+                    mngr.setColor(high, Constants.D_DEFAULT, Constants.SORTED));
         }
     } 
      
@@ -99,13 +99,13 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         
         addAnimations(anim, code.selectLines(2,7,8,9),
                 vars.setText("Select %s as a pivot\nindex is %s", pivot, list.get(index)),
-                mngr.setColor(high, Constants.DEFAULT, Constants.SELECTED));
+                mngr.setColor(high, Constants.D_DEFAULT, Constants.SELECTED));
         
         for (int j=low; j<high; j++) 
         { 
             addAnimations(anim, code.selectLines(2, 10),
                     vars.setText("Check if %s < %s, index is %s", list.get(j), pivot, list.get(index)),
-                    mngr.setColor(j, Constants.DEFAULT, Constants.COMPARE));
+                    mngr.setColor(j, Constants.D_DEFAULT, Constants.COMPARE));
             // If current element is smaller than or 
             // equal to pivot
             if (list.get(j).getValue() <= pivot.getValue()) {
@@ -119,11 +119,11 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
                 
                 addAnimations(anim, code.selectLines(2, 12),
                         vars.setText("index is now %s", list.get(index + 1)),
-                        mngr.setColor(index, Constants.COMPARE, Constants.DEFAULT));
+                        mngr.setColor(index, Constants.COMPARE, Constants.D_DEFAULT));
                 index++;
                 
             } else {
-                addAnimations(anim, mngr.setColor(j, Constants.COMPARE, Constants.DEFAULT));
+                addAnimations(anim, mngr.setColor(j, Constants.COMPARE, Constants.D_DEFAULT));
             } 
             
         } 
