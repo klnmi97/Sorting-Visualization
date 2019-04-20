@@ -206,14 +206,8 @@ public class MergeSort extends Sorting implements AbstractAlgorithm {
         }
 
         ParallelTransition moveUp = new ParallelTransition();
-
         for (int z = low; z <= high; z++) {
-            TranslateTransition moveNodeUp = new TranslateTransition();
-            moveNodeUp.setNode(helperNodes[z]);
-            moveNodeUp.setDuration(ViewController.SPEED);
-            moveNodeUp.setFromY(ViewController.LEVEL2);
-            moveNodeUp.setToY(ViewController.LEVEL1);
-            moveUp.getChildren().add(moveNodeUp);
+            moveUp.getChildren().add(mngr.moveNodeUp(helperNodes[z]));
         }
 
         addAnimations(anim, moveUp,

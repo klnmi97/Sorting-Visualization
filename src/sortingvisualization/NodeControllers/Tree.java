@@ -23,34 +23,30 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
-import sortingvisualization.Controllers.ViewController;
 
 /**
  *
  * @author Mykhailo Klunko
  */
 public class Tree {
-    private static final double scalingFactor = Scaling.computeDPIScale();
+    private static final double SCALING_FACTOR = Scaling.computeDPIScale();
     
     private static final int NODE_SIZE = initNodeSize();
     private static final int ARRAY_ITEM_HEIGHT = initArrayItemHeight();
     private static final int ARRAY_ITEM_WIDTH = initArrayItemWidth();
     private static final int LEVEL_HEIGHT = initLevelHeight();
     
-    private static final Color FILL = Constants.FILL;
-    private static final Color PLACEHOLDER_BKGRND = Constants.PLACEHOLDER_BKGRND;
-    private static final Color SELECTION = Constants.SELECTION;
-    private static final Color LIGHT_SELECTION = Constants.LIGHT_SELECTION;
-    private static final Color DEFAULT = Constants.TREE_DEFAULT;
-    private static final Color ARRAY_SORTED = Constants.ARRAY_SORTED;
+    private static final Duration ANIM_SPEED = Duration.millis(1000);
     
+    //metrics
     private static final int ARRAY_SPACING = initArraySpacing();
-    
     private final int TREE_SPACING;
     private final double SPACING_COEF;
     
+    //graphic part
     private final List<BrickNode> treeNodes;
     private final List<BrickNode> arrayNodes;
     private final List<Line> childConnections;
@@ -141,7 +137,7 @@ public class Tree {
     private List<BrickNode> createList(int[] inputArray){
         List<BrickNode> list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
-            BrickNode node = createNode(inputArray[i], DEFAULT, 
+            BrickNode node = createNode(inputArray[i], Constants.TREE_DEFAULT, 
                     getNodeX(i), getNodeY(i, inputArray.length));
             list.add(node);
         }
@@ -164,7 +160,7 @@ public class Tree {
                 int endY = getNodeY(l, size) + NODE_SIZE;
                 Line left = new Line(startX, startY, endX, endY);
                 left.setStrokeWidth(3);
-                left.setStroke(DEFAULT);
+                left.setStroke(Constants.TREE_DEFAULT);
                 left.setTranslateX((startX + endX) / 2) ;
                 left.setTranslateY((startY + endY) / 2);
                 StackPane.setAlignment(left, Pos.BOTTOM_CENTER);
@@ -175,7 +171,7 @@ public class Tree {
                 int endY = getNodeY(r, size) + NODE_SIZE;
                 Line right = new Line(startX, startY, endX, endY);
                 right.setStrokeWidth(3);
-                right.setStroke(DEFAULT);
+                right.setStroke(Constants.TREE_DEFAULT);
                 right.setTranslateX((startX + endX) / 2) ;
                 right.setTranslateY((startY + endY) / 2);
                 StackPane.setAlignment(right, Pos.BOTTOM_CENTER);
@@ -193,7 +189,7 @@ public class Tree {
         int size = treeNodes.size();
         for (int i = 0; i < size; i++) {
             Circle holder = new Circle(NODE_SIZE);
-            holder.setFill(PLACEHOLDER_BKGRND);
+            holder.setFill(Constants.PLACEHOLDER_BKGRND);
             holder.setTranslateX(getNodeX(i));
             holder.setTranslateY(getNodeY(i, size));
             StackPane.setAlignment(holder, Pos.BOTTOM_CENTER);
@@ -211,7 +207,7 @@ public class Tree {
     //count first spacing between nodes, depends on size of array
     private int countSecondLevelSpacing(int[] array){
         int levels = getNuberOfLevels(array.length);
-        return (int)(65 * levels * scalingFactor);
+        return (int)(65 * levels * SCALING_FACTOR);
     }
     
     //coefficient to change spacing for tree levels
@@ -260,7 +256,7 @@ public class Tree {
     
     private BrickNode createNode(int value, Color color, double x, double y) {
         Circle body = new Circle(NODE_SIZE);
-        body.setFill(FILL);
+        body.setFill(Constants.FILL);
         body.setStroke(color);
         body.setStrokeWidth(3);
         
@@ -319,8 +315,8 @@ public class Tree {
     //creates node of the array
     private BrickNode createArrayNode(int value, double x, double y){
         Rectangle cell = new Rectangle(ARRAY_ITEM_WIDTH, ARRAY_ITEM_HEIGHT);
-        cell.setFill(FILL);
-        cell.setStroke(DEFAULT);
+        cell.setFill(Constants.FILL);
+        cell.setStroke(Constants.TREE_DEFAULT);
         
         Text text = new Text(String.valueOf(value));
         text.setFont(Constants.MAIN_FONT);
@@ -350,13 +346,13 @@ public class Tree {
         
         TranslateTransition lr = new TranslateTransition();
         lr.setNode(arrayNodes.get(firstNode));
-        lr.setDuration(ViewController.SPEED);
+        lr.setDuration(ANIM_SPEED);
         lr.setFromX(getArrayNodeX(firstNode, size));
         lr.setToX(getArrayNodeX(secondNode, size));
         
         TranslateTransition rl = new TranslateTransition();
         rl.setNode(arrayNodes.get(secondNode));
-        rl.setDuration(ViewController.SPEED);
+        rl.setDuration(ANIM_SPEED);
         rl.setFromX(getArrayNodeX(secondNode, size));
         rl.setToX(getArrayNodeX(firstNode, size));
         
@@ -379,7 +375,7 @@ public class Tree {
         
         TranslateTransition lr = new TranslateTransition();
         lr.setNode(treeNodes.get(firstNode));
-        lr.setDuration(ViewController.SPEED);
+        lr.setDuration(ANIM_SPEED);
         lr.setFromX(getNodeX(firstNode));
         lr.setFromY(getNodeY(firstNode, size));
         lr.setToX(getNodeX(secondNode));
@@ -387,7 +383,7 @@ public class Tree {
         
         TranslateTransition rl = new TranslateTransition();
         rl.setNode(treeNodes.get(secondNode));
-        rl.setDuration(ViewController.SPEED);
+        rl.setDuration(ANIM_SPEED);
         rl.setFromX(getNodeX(secondNode));
         rl.setFromY(getNodeY(secondNode, size));
         rl.setToX(getNodeX(firstNode));
@@ -427,17 +423,26 @@ public class Tree {
         ParallelTransition select = new ParallelTransition();
         ParallelTransition unselect = new ParallelTransition();
         
-        Animation changeStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), DEFAULT, LIGHT_SELECTION);
-        Animation repaintFirst = repaint(treeNodes.get(firstNode).getShape(), FILL, SELECTION);
-        Animation changeStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), DEFAULT, LIGHT_SELECTION);
-        Animation repaintSecond = repaint(treeNodes.get(secondNode).getShape(), FILL, SELECTION);
+        Animation changeStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), 
+                Constants.TREE_DEFAULT, Constants.LIGHT_SELECTION);
+        Animation repaintFirst = repaint(treeNodes.get(firstNode).getShape(), 
+                Constants.FILL, Constants.SELECTION);
+        Animation changeStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), 
+                Constants.TREE_DEFAULT, Constants.LIGHT_SELECTION);
+        Animation repaintSecond = repaint(treeNodes.get(secondNode).getShape(), 
+                Constants.FILL, Constants.SELECTION);
         select.getChildren().addAll(changeStrokeFirst, repaintFirst, changeStrokeSecond, repaintSecond);
         
-        Animation backStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), LIGHT_SELECTION, DEFAULT);
-        Animation paintBackFirst = repaint(treeNodes.get(firstNode).getShape(), SELECTION, FILL);
-        Animation backStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), LIGHT_SELECTION, DEFAULT);
-        Animation paintBackSecond = repaint(treeNodes.get(secondNode).getShape(), SELECTION, FILL);
-        unselect.getChildren().addAll(backStrokeFirst, paintBackFirst, backStrokeSecond, paintBackSecond);
+        Animation backStrokeFirst = repaintStroke(treeNodes.get(firstNode).getShape(), 
+                Constants.LIGHT_SELECTION, Constants.TREE_DEFAULT);
+        Animation paintBackFirst = repaint(treeNodes.get(firstNode).getShape(), 
+                Constants.SELECTION, Constants.FILL);
+        Animation backStrokeSecond = repaintStroke(treeNodes.get(secondNode).getShape(), 
+                Constants.LIGHT_SELECTION, Constants.TREE_DEFAULT);
+        Animation paintBackSecond = repaint(treeNodes.get(secondNode).getShape(), 
+                Constants.SELECTION, Constants.FILL);
+        unselect.getChildren().addAll(backStrokeFirst, paintBackFirst, 
+                backStrokeSecond, paintBackSecond);
         
         compare.getChildren().addAll(select, unselect);
         return compare;
@@ -458,12 +463,12 @@ public class Tree {
         ParallelTransition select = new ParallelTransition();
         ParallelTransition unselect = new ParallelTransition();
         
-        Animation selectFirst = repaint(arrayNodes.get(firstNode).getShape(), FILL, SELECTION);
-        Animation selectSecond = repaint(arrayNodes.get(secondNode).getShape(), FILL, SELECTION);
+        Animation selectFirst = repaint(arrayNodes.get(firstNode).getShape(), Constants.FILL, Constants.SELECTION);
+        Animation selectSecond = repaint(arrayNodes.get(secondNode).getShape(), Constants.FILL, Constants.SELECTION);
         select.getChildren().addAll(selectFirst, selectSecond);
         
-        Animation unselectFirst = repaint(arrayNodes.get(firstNode).getShape(), SELECTION, FILL);
-        Animation unselectSecond = repaint(arrayNodes.get(secondNode).getShape(), SELECTION, FILL);
+        Animation unselectFirst = repaint(arrayNodes.get(firstNode).getShape(), Constants.SELECTION, Constants.FILL);
+        Animation unselectSecond = repaint(arrayNodes.get(secondNode).getShape(), Constants.SELECTION, Constants.FILL);
         unselect.getChildren().addAll(unselectFirst, unselectSecond);
         
         compare.getChildren().addAll(select, unselect);
@@ -489,7 +494,7 @@ public class Tree {
     private Animation repaintStroke(Shape shape, Color fromValue, Color toValue) {
         StrokeTransition repainting = new StrokeTransition();
         repainting.setShape(shape);
-        repainting.setDuration(ViewController.SPEED);
+        repainting.setDuration(ANIM_SPEED);
         repainting.setFromValue(fromValue);
         repainting.setToValue(toValue);
         return repainting;
@@ -499,7 +504,7 @@ public class Tree {
     private Animation repaint(Shape shape, Color fromValue, Color toValue) {
         FillTransition repaint = new FillTransition();
         repaint.setShape(shape);
-        repaint.setDuration(ViewController.SPEED);
+        repaint.setDuration(ANIM_SPEED);
         repaint.setFromValue(fromValue);
         repaint.setToValue(toValue);
         return repaint;
@@ -514,7 +519,7 @@ public class Tree {
     public Animation setSorted(int nodePosition) {
         ParallelTransition setSorted = new ParallelTransition();
         
-        Animation array = repaint(arrayNodes.get(nodePosition).getShape(), FILL, ARRAY_SORTED);
+        Animation array = repaint(arrayNodes.get(nodePosition).getShape(), Constants.FILL, Constants.ARRAY_SORTED);
         Animation tree = hideNode(treeNodes.get(nodePosition));
         Animation circle = hideNode(placeholders.get(nodePosition));
         if(nodePosition > 0){
@@ -529,7 +534,7 @@ public class Tree {
     private Animation hideNode(Node node) {
         FadeTransition hide = new FadeTransition();
         hide.setNode(node);
-        hide.setDuration(ViewController.SPEED);
+        hide.setDuration(ANIM_SPEED);
         hide.setFromValue(1);
         hide.setToValue(0);
         
@@ -539,7 +544,7 @@ public class Tree {
     /*** Init utils ***/
     
     private static int initNodeSize() {
-        return (int)(25 * scalingFactor);
+        return (int)(25 * SCALING_FACTOR);
     }
     
     private static int initArraySpacing() {
@@ -547,15 +552,15 @@ public class Tree {
     }
 
     private static int initArrayItemHeight() {
-        return (int)(30 * scalingFactor);
+        return (int)(30 * SCALING_FACTOR);
     }
     
     private static int initArrayItemWidth() {
-        return (int)(50 * scalingFactor);
+        return (int)(50 * SCALING_FACTOR);
     }
     
     private static int initLevelHeight() {
-        return (int)(100 * scalingFactor);
+        return (int)(100 * SCALING_FACTOR);
     }
 
     private double computeChildrenHeight(int[] array) {

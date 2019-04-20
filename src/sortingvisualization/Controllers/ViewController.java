@@ -46,16 +46,8 @@ public class ViewController {
     
     private static final double SCALING = initScaling();
     
-    //TODO: create new metrics
-    public static final int DEFAULT_ITEM_COUNT = 12;
-    public static int N_VALUES = 12;
-    public static final int SPACING = initSpacing();
-    public static int TEN_LEFT_INDENT = countIndent(10);
-    public static int LEFT_INDENT = countIndent(DEFAULT_ITEM_COUNT);
-    public static final int LEVEL1 = (int)(-350 * SCALING);
-    public static final int LEVEL2 = (int)(250 * SCALING) + LEVEL1;
+    private static final int SPACING = initSpacing();
 
-    public static final Duration SPEED = Duration.millis(1000);
     public  double currentSpeed = 3;
    
     private final Pane displayPane;
@@ -77,7 +69,7 @@ public class ViewController {
         this.codePanel = codePanel;
         this.infoPanel = infoPanel;
         this.currentInstance = Algorithm.Bubble;
-        this.childrenWidth = DEFAULT_ITEM_COUNT * SPACING;
+        this.childrenWidth = Constants.DEFAULT_ITEM_COUNT * SPACING;
     }
     
     /**
@@ -104,12 +96,6 @@ public class ViewController {
         return (int)(60 * SCALING);
     }
     
-    public static int countIndent(int number){
-        return (int)(((double)number / 2) * -SPACING);
-    }
-     
-    
-    
     private void clear(){
         displayPane.getChildren().clear();
         codePanel.getChildren().clear();
@@ -120,8 +106,6 @@ public class ViewController {
         this.currentInstance = instanceType;
         clear();
         
-        int size = input.length;
-        this.LEFT_INDENT = countIndent(size);
         return input;
     }
     

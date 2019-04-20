@@ -83,7 +83,7 @@ public final class DynamicNodes {
     private List<BrickNode> createList(int[] inputArray, int currentMax){
         list = new ArrayList<>();
         for(int i = 0; i < inputArray.length; i++){
-            BrickNode node = createValueNode(i, inputArray[i], currentMax, ViewController.countIndent(inputArray.length));
+            BrickNode node = createValueNode(i, inputArray[i], currentMax, countIndent(inputArray.length));
             
             list.add(node);
         }
@@ -91,7 +91,7 @@ public final class DynamicNodes {
     }
     
     private BrickNode createValueNode(int i, int value, int currentMax, int leftIndent) {
-        return createCustomNode(i, value, currentMax, Constants.D_DEFAULT, leftIndent, ViewController.LEVEL1);
+        return createCustomNode(i, value, currentMax, Constants.D_DEFAULT, leftIndent, LEVEL1);
     }
     
     /**
@@ -161,7 +161,7 @@ public final class DynamicNodes {
         node.getChildren().addAll(rectangle, text);
         BrickNode.setAlignment(text, Pos.BOTTOM_CENTER);
         node.setAlignment(Pos.BOTTOM_CENTER);
-        node.setTranslateX(ViewController.SPACING * i + leftIndent);
+        node.setTranslateX(SPACING * i + leftIndent);
         node.setTranslateY(topIndent);
         node.setShape(rectangle);
         return node;

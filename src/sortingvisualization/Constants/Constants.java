@@ -65,8 +65,12 @@ public class Constants {
     public static final Font MAIN_FONT = Font.font("Helvetica", 20 * Scaling.computeDPIScale());
     /*small main font*/
     public static final Font DESC_FONT = Font.font("Helvetica", 13 * Scaling.computeDPIScale());
-    /*small header font*/
-    public static final Font descHeaderFont = Font.font("Helvetica", FontWeight.BOLD, 16 * Scaling.computeDPIScale());
+    /*small header font*/ //(used in dialog)
+    public static final Font DESC_HEADER_FONT = Font.font("Helvetica", FontWeight.BOLD, 16 * Scaling.computeDPIScale());
+    /*pseudo code font*/
+    public static final Font CODE_FONT = Font.font("Courier New", FontWeight.MEDIUM, 13 * Scaling.computeDPIScale());
+    /*variables info font*/
+    public static final Font INFO_FONT = Font.font("Courier New", FontWeight.MEDIUM, 14 * Scaling.computeDPIScale());
     
     //constants for range of algorithms. Do not change it!
     /*general maximum*/

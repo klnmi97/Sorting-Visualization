@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
-import sortingvisualization.Controllers.ViewController;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
 
 /**
@@ -22,10 +22,7 @@ import sortingvisualization.Utilities.Scaling;
  */
 public class VariablesInfo {
     
-    private static final double scaling = Scaling.computeDPIScale();
-    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 14 * scaling); //TODO: maybe better font
-    
-    private Label infoField;
+    private final Label infoField;
     private String previousValue;
     
     /**
@@ -35,7 +32,7 @@ public class VariablesInfo {
     public VariablesInfo(double preferredWidth){
         this.previousValue = "";
         this.infoField = new Label("");
-        infoField.setFont(font);
+        infoField.setFont(Constants.INFO_FONT);
         infoField.setWrapText(true);
         infoField.setPrefWidth(preferredWidth);
     }
@@ -59,7 +56,7 @@ public class VariablesInfo {
         return new Timeline(
             new KeyFrame(Duration.millis(0),
                 new KeyValue(infoField.textProperty(), oldVal)),
-            new KeyFrame(ViewController.SPEED.multiply(0.1),
+            new KeyFrame(Duration.millis(100),
                 new KeyValue(infoField.textProperty(), value)));
     }
     

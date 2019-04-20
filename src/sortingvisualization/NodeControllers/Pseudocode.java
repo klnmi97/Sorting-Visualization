@@ -28,8 +28,7 @@ import sortingvisualization.Constants.Constants;
  */
 public class Pseudocode {
     
-    private static final double scaling = Scaling.computeDPIScale();
-    private static final Font font = Font.font("Courier New", FontWeight.MEDIUM, 13 * scaling); //TODO: maybe better font
+    private static final double SCALE_FACTOR = Scaling.computeDPIScale();
     private static final Color BGND = Constants.PANEL_BGND;
     private final List<StackPane> codeLines;
     private final List<Boolean> selection;
@@ -113,11 +112,11 @@ public class Pseudocode {
     }
     
     private StackPane createLine(String line) {
-        Rectangle rectangle = new Rectangle(420 * scaling, 27 * scaling);
+        Rectangle rectangle = new Rectangle(420 * SCALE_FACTOR, 27 * SCALE_FACTOR);
         rectangle.setFill(BGND);
         
         Text text = new Text(line);
-        text.setFont(font);
+        text.setFont(Constants.CODE_FONT);
         StackPane node = new StackPane();
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         node.getChildren().addAll(rectangle, text);

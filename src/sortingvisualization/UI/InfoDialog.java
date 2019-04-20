@@ -38,7 +38,7 @@ public class InfoDialog {
         Stage stage = new Stage();
         BorderPane rootPane = new BorderPane();
         Text header = new Text(algName);
-        header.setFont(Constants.descHeaderFont);
+        header.setFont(Constants.DESC_HEADER_FONT);
         
         VBox headerBox = new VBox(header);
         headerBox.setAlignment(Pos.CENTER);
