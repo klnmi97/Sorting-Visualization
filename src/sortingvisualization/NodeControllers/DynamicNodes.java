@@ -23,7 +23,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
-import sortingvisualization.Controllers.ViewController;
 
 /**
  * Class represents nodes that have height dependent on value

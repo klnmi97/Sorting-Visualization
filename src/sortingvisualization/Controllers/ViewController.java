@@ -19,7 +19,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.Enums.Algorithm;
@@ -255,6 +254,6 @@ public class ViewController {
     }
     
     private void addColorInfo(Pair<Color, String>... description) {
-        addChildrenAsync(codePanel, ColorInfoManager.createColorInfo(description));
+        addChildrenAsync(displayPane, ColorInfoManager.createColorInfo(description));
     }
 }

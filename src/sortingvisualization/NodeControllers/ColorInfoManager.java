@@ -5,16 +5,17 @@
  */
 package sortingvisualization.NodeControllers;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
 
 /**
@@ -23,6 +24,7 @@ import sortingvisualization.Utilities.Scaling;
  */
 public class ColorInfoManager {
     
+    private static final String HEADER = "Colors meaning:";
     private static double scalingFactor = Scaling.computeDPIScale();
     private static int NODE_SIZE = (int) (12 * scalingFactor);
     private static Color DESC_COLOR = Color.GRAY;
@@ -34,7 +36,7 @@ public class ColorInfoManager {
      */
     public static Node createColorInfo(Pair<Color, String>... infoPairs) {
         
-        HBox box = new HBox();
+        VBox box = new VBox();
         for(Pair<Color, String> infoPair : infoPairs) {
             Rectangle colorRect = createShadowedBox(NODE_SIZE, 1, 1, 1, 1, 2);
             colorRect.setFill(infoPair.getKey());
@@ -43,15 +45,18 @@ public class ColorInfoManager {
             desc.setFill(DESC_COLOR);
             
             HBox wrapper = new HBox(colorRect, desc);
-            wrapper.setAlignment(Pos.CENTER);
+            wrapper.setAlignment(Pos.BOTTOM_LEFT);
             box.getChildren().addAll(wrapper);
             
         }
         
-        box.setSpacing(10 * scalingFactor);
+        box.setPadding(new Insets(0, 0, 5, 0));
         
-        Line divider = new Line(0, 0, 400 * scalingFactor, 0);
-        VBox colorInfo = new VBox(divider, box);
+        Text header = new Text(HEADER);
+        header.setFont(Constants.DESC_FONT);
+        
+        VBox colorInfo = new VBox(header, box);
+        colorInfo.setAlignment(Pos.BOTTOM_LEFT);
         return colorInfo;
     }
     
