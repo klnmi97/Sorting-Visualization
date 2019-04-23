@@ -108,6 +108,30 @@ public class FixedNodes {
         return base;
     }
     
+    /**
+     * Create labels with position marks
+     * @return list of text labels
+     */
+    public List<Text> createLabels(){
+        return createLabelsList(list.size(), 1, LEVEL1 + 30);
+    }
+    
+    private List<Text> createLabelsList(int count, int step, int y){
+        List<Text> labels = new ArrayList<>();
+        int currentValue = 0;
+        int leftIndent = countIndent(count);
+        for(int i = 0; i < count; i++){
+            Text label = new Text(String.valueOf(currentValue));
+            BrickNode.setAlignment(label, Pos.BOTTOM_CENTER);
+            label.setTranslateX(SPACING * i + leftIndent);
+            label.setTranslateY(y);
+            label.fontProperty().set(Constants.MAIN_FONT);
+            labels.add(label);
+            currentValue += step;
+        }
+        return labels;
+    }
+    
     private BrickNode createFixedNode(int i, int value, double leftIndent, double topIndent){
         Rectangle rectangle = new Rectangle(NODE_WIDTH, NODE_HEIGHT);
         rectangle.setStroke(Constants.STROKE);

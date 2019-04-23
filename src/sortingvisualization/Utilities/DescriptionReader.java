@@ -5,10 +5,9 @@
  */
 package sortingvisualization.Utilities;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import sortingvisualization.Enums.Algorithm;
 
 /**
@@ -17,16 +16,25 @@ import sortingvisualization.Enums.Algorithm;
  */
 public class DescriptionReader {
     
-    private static String path = "/res/desc/";
+    private static String path = "desc/";
     
-    public static String readDescription(Algorithm algInstance) {
-        String currentfile = System.getProperty("user.dir") + path + algInstance.getName().replaceAll("\\s","") + ".txt";
+    public String readDescription(Algorithm algInstance) {
+        String currentfile = path + algInstance.getName().replaceAll("\\s","") + ".txt";
         String content = "";
         
         try {
-            content = new String(Files.readAllBytes(Paths.get(currentfile)));
+            InputStream stream = getClass().getClassLoader().getResourceAsStream(currentfile);
+            StringBuilder resultStringBuilder = new StringBuilder();
+            try (BufferedReader br
+              = new BufferedReader(new InputStreamReader(stream))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    resultStringBuilder.append(line).append("\n");
+                }
+            }
+            content = resultStringBuilder.toString();
         } catch(Exception e) {
-            content = "Description not found :'(";
+            content = "Sorry, description was not found :(";
         }
         
         return content;

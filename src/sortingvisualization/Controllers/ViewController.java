@@ -201,6 +201,7 @@ public class ViewController {
                 List<FlowPane> buckets = fNodes.createBucketList(
                         bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
                 addChildrenAsync(displayPane, buckets);
+                addChildrenAsync(displayPane, 0, fNodes.createLabels());
                 childrenHeight = fNodes.getViewportMinHeight();
                 break;
             case Radix:
@@ -208,6 +209,7 @@ public class ViewController {
                 sorting = new RadixSort(fNodes, currentInfo, codePanel);
                 List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                 addChildrenAsync(displayPane, rbuckets);
+                addChildrenAsync(displayPane, 0, fNodes.createLabels());
                 childrenHeight = fNodes.getViewportMinHeight();
                 break;
             case Heap:
