@@ -1,0 +1,2 @@
+Selection Sort is an in-place comparison-based algorithm which divides the array into two parts, the sorted part at the left side and the unsorted part at the right side. Initially, the sorted part is empty and the unsorted part is the entire list.
+The smallest element is selected from the unsorted array and swapped with the leftmost element and that element becomes a part of the sorted array. This process continues until the sorted part becomes the whole array.

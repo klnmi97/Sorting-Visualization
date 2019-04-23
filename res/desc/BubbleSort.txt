@@ -1,3 +1,1 @@
-Bubble sort is a sorting algorithm that works by repeatedly stepping through lists that need to be sorted, comparing each pair of adjacent items and swapping them if they are in the wrong order. This passing procedure is repeated until no swaps are required, indicating that the list is sorted. Bubble sort gets its name because smaller elements bubble toward the top of the list.
-
-Bubble sort is also referred to as sinking sort or comparison sort.
+Bubble sort is a sorting algorithm that works by repeatedly stepping through the array that need to be sorted. It compares each pair of adjacent items and swaps them if they are in the wrong order. This procedure is repeated until no swaps are required, indicating that the list is sorted. Bubble Sort has its name because smaller elements bubble toward the top of the array.

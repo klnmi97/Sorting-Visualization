@@ -1,0 +1,1 @@
+Radix Sort is based on the idea of using separate digits to determine final positions. It works with the help of some stable sorting algorithm, it can be for example Counting Sort, taking digits one by one from least significant to most significant.

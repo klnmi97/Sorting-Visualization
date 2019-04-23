@@ -1,0 +1,3 @@
+Merge Sort uses 'divide and conquer' tecnique.
+Firstly, the algorithm divides the whole array iteratively into equal halves unless the atomic values are achieved. Then, it combines the parts in a sorted manner.
+While comparing two sublists for merging, the first element of both lists is taken into consideration. While sorting in ascending order, the element that is of a lesser value becomes a new element of the sorted list. This procedure is repeated until both the smaller sublists are empty and the new combined sublist comprises all the elements of both the sublists.

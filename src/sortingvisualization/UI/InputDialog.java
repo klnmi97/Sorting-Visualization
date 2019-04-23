@@ -28,10 +28,9 @@ import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.Data.Results;
-import sortingvisualization.Controllers.ViewController;
 
 /**
- *
+ * Dialog window for getting user input data
  * @author Mykhailo Klunko
  */
 public class InputDialog extends Dialog<Results> {
@@ -55,6 +54,7 @@ public class InputDialog extends Dialog<Results> {
         setHeaderText("Enter data");
         
         DialogPane dialogPane = getDialogPane();
+        dialogPane.setPrefWidth(450);
         Scene scene = dialogPane.getScene();
         Stage stage = (Stage) scene.getWindow();
         
@@ -65,16 +65,10 @@ public class InputDialog extends Dialog<Results> {
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         final Button okButton = (Button)getDialogPane().lookupButton(ButtonType.OK);
         
-        //Font dialogFont = Font.font("Times", FontWeight.BOLD, 12);
         inputLbl = new Label("Enter the sequence: ");
-        //inputLbl.setFont(dialogFont);
         choiseLbl = new Label("Choose an Algorithm: ");
-        //choiseLbl.setFont(dialogFont);
         errorLbl = new Label("");
         errorLbl.textFillProperty().setValue(Color.RED);
-        //errorLbl.setFont(dialogFont);
-        
-        int[] parsedInput;
         
         ObservableList<Algorithm> options =
             FXCollections.observableArrayList(Algorithm.values());
@@ -92,11 +86,12 @@ public class InputDialog extends Dialog<Results> {
             }
             
         });
+        comboBox.setPrefWidth(250);
         
         inputTextField = new TextField(Arrays.toString(
                 ArrayUtils.generateRandomArray(10, minInputValue, maxInputValue))
                 .replaceAll("\\s+", " ").replaceAll("\\[|\\]", ""));
-        inputTextField.setPrefWidth(200);
+        inputTextField.setPrefWidth(250);
         
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
             try{
@@ -128,6 +123,7 @@ public class InputDialog extends Dialog<Results> {
         Platform.runLater(inputTextField::requestFocus);
     }
     
+    //update minimum and maximum values
     private void updateBounds(Algorithm type){
         this.minInputValue = Constants.getMinimum(type);
         this.maxInputValue = Constants.getMaximum(type);
@@ -153,11 +149,11 @@ public class InputDialog extends Dialog<Results> {
         int minValue = ArrayUtils.getArrayMin(input);
         int maxValue = ArrayUtils.getArrayMax(input);
         
-        if(maxValue > max){
+        if(maxValue >= max){
             throw new Exception("Input value must be less than " + max);
         }
         if(minValue < min){
-            throw new Exception("Input value must be bigger than " + min);
+            throw new Exception("Input value must be grater than or equal to " + min);
         }
         if(intStr.length < MIN_INPUT_LENGTH){
             throw new Exception("Enter at least " + MIN_INPUT_LENGTH + " numbers");
