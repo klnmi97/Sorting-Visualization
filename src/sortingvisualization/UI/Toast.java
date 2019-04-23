@@ -56,12 +56,10 @@ public final class Toast {
         });
         
         Text text = new Text(toastMsg);
-        //text.setFont(Font.font("Verdana", 16));
         text.getStyleClass().add("toastfont");
         text.setFill(Color.WHITE);
 
         StackPane root = new StackPane(text);
-        //root.setStyle("-fx-background-radius: 0; -fx-background-color: rgba(0, 0, 0, 0.2); -fx-padding: 10px;");
         root.getStyleClass().add("toast");
         root.setOpacity(0);
 
@@ -86,7 +84,6 @@ public final class Toast {
                         }
                         catch (InterruptedException e)
                         {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                            Timeline fadeOutTimeline = new Timeline();

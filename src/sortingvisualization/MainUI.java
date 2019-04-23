@@ -303,6 +303,7 @@ public class MainUI extends Application {
         });
     }
     
+    //visualization initialization
     private void initialize(Algorithm type, int[] input) {
         resetCurrent.setDisable(true);
         disableControls(true);
