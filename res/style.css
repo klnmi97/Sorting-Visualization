@@ -28,6 +28,12 @@
     -fx-background-color: #000000;
 }
 
+.tooltip {
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px;
+    -fx-padding: 10 20 10 20;
+}
+
 .sideButton{
     -fx-padding: 0;
     -fx-min-width: 20px;
@@ -44,6 +50,21 @@
     -fx-font-family: "Arial";
     -fx-font-size: 20px;
     -fx-font-weight: bold;
+}
+
+/*** Toast ***/
+
+.toast {
+    -fx-background-radius: 0; 
+    -fx-background-color: rgba(0, 0, 0, 0.2); 
+    -fx-padding: 10px;
+    
+}
+
+.toastfont {
+    -fx-font-family: "Veranda";
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
 }
 
 /*** CONTEXT MENU WITH ALGORITHMS ***/

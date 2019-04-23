@@ -124,6 +124,8 @@ public class MainUI extends Application {
         speedSlider.setMajorTickUnit(3);
         speedSlider.setMinorTickCount(1);
         speedSlider.setBlockIncrement(1);
+        speedSlider.setTooltip(new Tooltip("Animations speed"));
+        speedSlider.getStyleClass().add("controlSlider");
         
         initializeUpperPanel();
         

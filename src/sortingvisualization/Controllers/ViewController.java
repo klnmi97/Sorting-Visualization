@@ -169,6 +169,7 @@ public class ViewController {
                 addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
                              new Pair<>(Constants.SELECTED, "current min"),
                              new Pair<>(Constants.COMPARE, "compared item"));
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Quick:
