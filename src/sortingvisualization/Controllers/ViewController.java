@@ -143,6 +143,7 @@ public class ViewController {
                 sorting = new BubbleSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case CocktailShaker:
@@ -150,14 +151,16 @@ public class ViewController {
                 sorting = new CocktailShakerSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Insertion:
                 list = dNodes.getNodes();
                 sorting = new InsertionSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.SORTED, "sorted"),
-                             new Pair<>(Constants.SELECTED, "selection from unsorted"),
-                             new Pair<>(Constants.COMPARE, "selection from sorted"));
+                             new Pair<>(Constants.SELECTED, "selection from unsorted part"),
+                             new Pair<>(Constants.COMPARE, "selection from sorted part"));
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Selection:

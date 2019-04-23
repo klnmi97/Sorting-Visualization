@@ -145,7 +145,7 @@ public final class DynamicNodes {
             Color color, double leftIndent, double topIndent) {
         int num = value;
         double percent = (double)num / currentMax;
-        if(percent < 0.07){
+        if(percent < 0.08){
             percent = 0;
         }
         Rectangle rectangle = new Rectangle(NODE_WIDTH, (percent * NODE_HEIGHT) + 5);

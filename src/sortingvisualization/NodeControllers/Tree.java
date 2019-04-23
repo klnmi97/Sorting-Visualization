@@ -308,7 +308,7 @@ public class Tree {
     
     //counts array node's Y position on stackpane with TOP_CENTER alignment
     private int getArrayNodeY(){
-        int topMargin = 10;
+        int topMargin = ARRAY_ITEM_HEIGHT / 2;
         return topMargin;
     }
     
@@ -326,6 +326,7 @@ public class Tree {
         //node.setId(String.valueOf(num));
         node.getChildren().addAll(cell, text);
         node.setAlignment(Pos.TOP_CENTER);
+        BrickNode.setAlignment(text, Pos.TOP_CENTER);
         node.setTranslateX(x);
         node.setTranslateY(y);
         node.setShape(cell);

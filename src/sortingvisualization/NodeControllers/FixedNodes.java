@@ -113,8 +113,6 @@ public class FixedNodes {
         rectangle.setStroke(Constants.STROKE);
         rectangle.setFill(Constants.F_DEFAULT);
         
-        Text text = new Text(String.valueOf(value));
-        text.setFont(Constants.MAIN_FONT);
         BrickNode node = new BrickNode(value);
         node.setPrefSize(rectangle.getWidth(), rectangle.getHeight());
         HBox numberBox = new HBox();
