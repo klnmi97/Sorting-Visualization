@@ -21,23 +21,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
+import sortingvisualization.Utilities.Scaling;
 
 /**
  * Dialog with not editable text
  * @author Mykhailo Klunko
  */
 public class InfoDialog {
-    private static String message = "Place for algorithm description";
     
+    private static final double SCALE = Scaling.computeDPIScale();
     /**
      * Creates window with text information
      * @param ownerStage parent stage
+     * @param message main text
+     * @param heading heading for the information window
      */
-    public void showDescription(Stage ownerStage, String message, String algName) {
+    public void showDescription(Stage ownerStage, String message, String heading) {
         
         Stage stage = new Stage();
         BorderPane rootPane = new BorderPane();
-        Text header = new Text(algName);
+        Text header = new Text(heading);
         header.setFont(Constants.DESC_HEADER_FONT);
         
         VBox headerBox = new VBox(header);
@@ -53,8 +56,7 @@ public class InfoDialog {
         rootPane.setCenter(textBox);
         rootPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
-        Scene scene = new Scene(rootPane, 500, 500);
-        //scene.getStylesheets().add("style.css");
+        Scene scene = new Scene(rootPane, 300 * SCALE, 300 * SCALE);
         scene.setOnKeyReleased(event -> {
             if(event.getCode() == KeyCode.ESCAPE){
                 stage.close();
@@ -67,8 +69,8 @@ public class InfoDialog {
         stage.setTitle("Description");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         stage.setScene(scene);
-        stage.setMinHeight(200);
-        stage.setMinWidth(500);
+        //stage.setMinHeight(200);
+        //stage.setMinWidth(400);
         stage.show();
     }
 }
