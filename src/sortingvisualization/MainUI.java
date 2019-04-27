@@ -354,12 +354,12 @@ public class MainUI extends Application {
     
     private void setupKeyShortcuts(Stage stage){
         scene.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.R) {
+            if(event.getCode() == KeyCode.R && !event.isShortcutDown()) {
                 event.consume();
                 if(playBtn.isDisabled()){
-                    controller.pause();
+                    pauseBtn.fire();
                 } else {
-                    controller.play();
+                    playBtn.fire();
                 }
             } else if(event.getCode() == KeyCode.F1) { 
                 showDescription(stage);
@@ -367,6 +367,12 @@ public class MainUI extends Application {
                 openNewSortingDialog();
             } else if(event.getCode() == KeyCode.F5) {
                 resetCurrent();
+            } else if(event.getCode() == KeyCode.ESCAPE && !event.isShortcutDown()) {
+                stage.close();
+            } else if(event.getCode() == KeyCode.A && event.isShortcutDown()) {
+                stepBackBtn.fire();
+            } else if(event.getCode() == KeyCode.D && event.isShortcutDown()) {
+                stepForthBtn.fire();
             }
         });
     }
