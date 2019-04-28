@@ -119,8 +119,8 @@ public class InsertionSort extends Sorting implements AbstractAlgorithm {
                 "  for each unsorted element",
                 "    select the element i",
                 "      for j = lastSortedIndex downto 0",
-                "        if selectedElement > i-th element",
-                "          move sorted element right by 1",
+                "        if selectedElement > element i",
+                "          move selectedElement right by 1",
                 "        else insert element i here");
     }
     

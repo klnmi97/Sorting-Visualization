@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import sortingvisualization.Constants.Constants;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
-import sortingvisualization.Controllers.ViewController;
 import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.VariablesInfo;
 

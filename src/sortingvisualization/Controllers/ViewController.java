@@ -183,6 +183,7 @@ public class ViewController {
             case Merge:
                 list = dNodes.getNodes();
                 sorting = new MergeSort(dNodes, currentInfo, codePanel);
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
             case Counting:

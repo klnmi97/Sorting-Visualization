@@ -82,8 +82,7 @@ public class AnimationController {
     }
     
     /**
-     * Stops current animation from list got by 
-     * {@link #setupInstance(List<Animation>)}
+     * Stops current animation
      */
     public void pause(){
         transitions.stream()
@@ -95,8 +94,7 @@ public class AnimationController {
     }
     
     /**
-     * Plays previous step from list got by 
-     * {@link #setupInstance(List<Animation>)}
+     * Plays previous step
      */
     public void goStepBack() {
         if(!stepBackBinding.get()){
@@ -109,8 +107,7 @@ public class AnimationController {
     }
     
     /**
-     * Play next step from list got by 
-     * {@link #setupInstance(List<Animation>)}
+     * Play next step
      */
     public void goStepForth() {
         if(!stepForthBinding.get()){
