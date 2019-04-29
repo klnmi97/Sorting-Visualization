@@ -49,6 +49,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sortingvisualization.Constants.Constants;
+import sortingvisualization.UI.AboutDialog;
 import sortingvisualization.UI.InfoDialog;
 import sortingvisualization.Utilities.ArrayUtils;
 import sortingvisualization.Utilities.DescriptionReader;
@@ -67,6 +68,7 @@ public class MainUI extends Application {
     Label controlLbl;
     Label headerLbl;
     
+    Button aboutBtn;
     Button playBtn;
     Button pauseBtn;
     Button toStartBtn;
@@ -127,7 +129,8 @@ public class MainUI extends Application {
         speedSlider.setTooltip(new Tooltip("Animations speed"));
         speedSlider.getStyleClass().add("controlSlider");
         
-        initializeUpperPanel();
+        //init upper panel
+        initializeUpperPanel(primaryStage);
         
         HBox controlBox = new HBox();
         
@@ -199,7 +202,7 @@ public class MainUI extends Application {
         
         setupKeyShortcuts(primaryStage);
         
-        primaryStage.setTitle("Algorithm Tutor");
+        primaryStage.setTitle("Algorithm Visualizer");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/appicon.png")));
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(720);
@@ -209,7 +212,7 @@ public class MainUI extends Application {
         showToastMessage(primaryStage, HELP_MSG);
     }
     
-    private void initializeUpperPanel() {
+    private void initializeUpperPanel(Stage parentStage) {
         algorithmButtonBox = new HBox();
         algorithmMenu = new MenuButton("Algorithms");
         
@@ -219,7 +222,15 @@ public class MainUI extends Application {
             algorithmMenu.getItems().add(aItem);
         }
         
-        algorithmButtonBox.getChildren().add(algorithmMenu);
+        aboutBtn = new Button("About");
+        aboutBtn.setTooltip(new Tooltip("About application"));
+        aboutBtn.getStyleClass().add("controllButton");
+        aboutBtn.setOnAction(event -> showAbout(parentStage));
+        
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+        
+        algorithmButtonBox.getChildren().addAll(algorithmMenu, region, aboutBtn);
         algorithmButtonBox.getStyleClass().add("default_background");
         algorithmButtonBox.setMinHeight(40);
     }
@@ -362,6 +373,8 @@ public class MainUI extends Application {
                     playBtn.fire();
                 }
             } else if(event.getCode() == KeyCode.F1) { 
+                showAbout(stage);
+            } else if(event.getCode() == KeyCode.F2) {
                 showDescription(stage);
             } else if(event.getCode() == KeyCode.F4) {
                 openNewSortingDialog();
@@ -401,6 +414,11 @@ public class MainUI extends Application {
         String desc = reader.readDescription(currentAlgorithm.get());
         InfoDialog info = new InfoDialog();
         info.showDescription(primaryStage, desc, currentAlgorithm.get().getName());
+    }
+    
+    private void showAbout(Stage primaryStage) {
+        AboutDialog info = new AboutDialog();
+        info.showDescription(primaryStage);
     }
 
     private void resetCurrent() {

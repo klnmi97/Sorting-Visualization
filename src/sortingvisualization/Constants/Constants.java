@@ -63,8 +63,10 @@ public class Constants {
     
     /*main font*/
     public static final Font MAIN_FONT = Font.font("Helvetica", 20 * Scaling.computeDPIScale());
+    /*main bold font*/
+    public static final Font MAIN_BOLD = Font.font("Helvetica", FontWeight.BOLD, 20 * Scaling.computeDPIScale());
     /*small main font*/
-    public static final Font DESC_FONT = Font.font("Helvetica", 13 * Scaling.computeDPIScale());
+    public static final Font DESC_FONT = Font.font("Helvetica", 15 * Scaling.computeDPIScale());
     /*small header font*/ //(used in dialog)
     public static final Font DESC_HEADER_FONT = Font.font("Helvetica", FontWeight.BOLD, 16 * Scaling.computeDPIScale());
     /*pseudo code font*/
