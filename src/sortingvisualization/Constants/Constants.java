@@ -76,11 +76,11 @@ public class Constants {
     
     //constants for range of algorithms. Do not change it!
     /*general maximum*/
-    public static final int MAX = 100;
+    public static final int MAX = 99;
     /*general minimun*/
     public static final int MIN = 0;
     /*maximum for counting sort*/
-    public static final int CNT_MAX = 10;
+    public static final int CNT_MAX = 9;
     /*minimum for counting sort*/
     public static final int CNT_MIN = 0;
     /*maximum for radix sort*/

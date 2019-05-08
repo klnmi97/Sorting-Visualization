@@ -17,6 +17,12 @@ import sortingvisualization.NodeControllers.BrickNode;
  */
 public class ArrayUtils {
     
+    /**
+     * Checks the array. If it is null, generates new in accordance with the type
+     * @param type type of the algorithm
+     * @param input array or null
+     * @return existing or generated array
+     */
     public static int[] checkArray(Algorithm type, int[] input){
         int[] outputArray;
         int currentMin = Constants.getMinimum(type);
@@ -25,7 +31,7 @@ public class ArrayUtils {
         if(input != null){
             outputArray = input;
         } else {
-            outputArray = generateRandomArray(Constants.DEFAULT_ITEM_COUNT, currentMin, currentMax - 1);
+            outputArray = generateRandomArray(Constants.DEFAULT_ITEM_COUNT, currentMin, currentMax);
         }
         
         return outputArray;
@@ -71,11 +77,11 @@ public class ArrayUtils {
         return minimum;
     }
     
-    public static int[] generateRandomArray(int size, int min, int max){
+    public static int[] generateRandomArray(int size, int min, int max) {
         Random randomValue = new Random();
         int[] randomArray = new int[size];
         for(int i = 0; i < size; i++){
-            randomArray[i] = randomValue.nextInt(max - min) + min;
+            randomArray[i] = randomValue.nextInt((max - min) + 1) + min;
         }
         return randomArray;
     }

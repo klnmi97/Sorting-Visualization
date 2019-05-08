@@ -149,8 +149,8 @@ public class InputDialog extends Dialog<Results> {
         int minValue = ArrayUtils.getArrayMin(input);
         int maxValue = ArrayUtils.getArrayMax(input);
         
-        if(maxValue >= max){
-            throw new Exception("Input value must be less than " + max);
+        if(maxValue > max){
+            throw new Exception("Input value must be less than " + (max + 1));
         }
         if(minValue < min){
             throw new Exception("Input value must be grater than or equal to " + min);
