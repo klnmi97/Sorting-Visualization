@@ -190,7 +190,7 @@ public class ViewController {
                 List<Text> countLabels = dNodes.createPlaceholderLabels();
                 list = dNodes.getNodes();
                 sorting = new CountingSort(dNodes, countLabels, currentInfo, codePanel);
-                addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax));
+                addChildrenAsync(displayPane, 0, dNodes.createPlaceHolders(currentMax + 1));
                 addChildrenAsync(displayPane, countLabels);
                 addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
@@ -198,10 +198,9 @@ public class ViewController {
             case Bucket:
                 list = fNodes.getNodes();
                 sorting = new BucketSort(fNodes, currentInfo, codePanel);
-                int bucketCount = (ArrayUtils.getMaxValue(list) - ArrayUtils.getMinValue(list)) 
-                        / BucketSort.BUCKET_SIZE + 1;
+                int bucketCount = (Constants.MAX - Constants.MIN) / list.size() + 1;
                 List<FlowPane> buckets = fNodes.createBucketList(
-                        bucketCount, ArrayUtils.getMinValue(list), BucketSort.BUCKET_SIZE);
+                        bucketCount, Constants.MIN, list.size());
                 addChildrenAsync(displayPane, buckets);
                 addChildrenAsync(displayPane, 0, fNodes.createLabels());
                 childrenHeight = fNodes.getViewportMinHeight();
@@ -209,7 +208,7 @@ public class ViewController {
             case Radix:
                 list = fNodes.getNodes();
                 sorting = new RadixSort(fNodes, currentInfo, codePanel);
-                List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
+                List<FlowPane> rbuckets = fNodes.createBucketList(Constants.CNT_MAX + 1, 0, 1); //TODO: get rid of magic numbers (count, min, increment)
                 addChildrenAsync(displayPane, rbuckets);
                 addChildrenAsync(displayPane, 0, fNodes.createLabels());
                 childrenHeight = fNodes.getViewportMinHeight();
@@ -229,6 +228,7 @@ public class ViewController {
                 sorting = new BubbleSort(dNodes, currentInfo, codePanel);
                 addColorInfo(new Pair<>(Constants.COMPARE, "comparing"), 
                              new Pair<>(Constants.SORTED, "sorted"));
+                addChildrenAsync(displayPane, 0, dNodes.createLabels());
                 childrenHeight = dNodes.getViewportMinHeight();
                 break;
         }

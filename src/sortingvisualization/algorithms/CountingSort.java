@@ -55,8 +55,9 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
     public List<Animation> sort() { 
         List<Animation> anim = new ArrayList<>();
         
-         // array of 0's at indices 0...maxValue
-        int[] count = new int[Constants.CNT_MAX];
+        int max = Constants.CNT_MAX + 1;
+        // array of 0's at indices 0...maxValue
+        int[] count = new int[max];
         for(int i : count) {
             count[i] = 0;
         }
@@ -70,7 +71,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             String newValue = Integer.toString(value);
             addAnimations(anim, 
                     mngr.moveDownToX(num, list.indexOf(num), num.getValue(),
-                            mngr.getUpperLevelIndent(), mngr.countIndent(Constants.CNT_MAX)),
+                            mngr.getUpperLevelIndent(), mngr.countIndent(max)),
                     mngr.setText(counters.get(num.getValue()), oldValue, newValue),
                     code.selectLine(3),
                     vars.setText("Increase counter of " + num + " by one from " 
@@ -109,7 +110,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
             
             addAnimations(anim, 
                     mngr.moveUpToX(list.get(i), list.get(i).getValue(), count[list.get(i).getValue()], 
-                    mngr.countIndent(Constants.CNT_MAX), mngr.getUpperLevelIndent()),
+                    mngr.countIndent(max), mngr.getUpperLevelIndent()),
                     code.selectLine(8),
                     vars.setText("Move " + list.get(i) + " to the " + count[list.get(i).getValue()] 
                             + ". position"));

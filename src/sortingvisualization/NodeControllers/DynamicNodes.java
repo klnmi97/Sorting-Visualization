@@ -106,7 +106,7 @@ public final class DynamicNodes {
      * @return list of text labels
      */
     public List<Text> createPlaceholderLabels(){
-        return createLabelsList(currentMax, 0, LEVEL2 + 30);
+        return createLabelsList(currentMax + 1, 0, LEVEL2 + 30);
     }
     
     private List<Text> createLabelsList(int count, int step, int y){
