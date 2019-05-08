@@ -11,6 +11,7 @@ import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import sortingvisualization.Constants.Constants;
 import sortingvisualization.NodeControllers.BrickNode;
 import sortingvisualization.NodeControllers.Pseudocode;
 import sortingvisualization.NodeControllers.FixedNodes;
@@ -26,7 +27,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     /**
      * Maximum capacity of one bucket
      */
-    public static final int BUCKET_SIZE = 15;
+    private final int BUCKET_SIZE;
     
     private final FixedNodes mngr;
     private final List<BrickNode> list;
@@ -43,6 +44,7 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     public BucketSort(FixedNodes nodeManager, VariablesInfo vars, Pane infoPane) {
         this.mngr = nodeManager;
         this.list = nodeManager.getNodes();
+        this.BUCKET_SIZE = list.size();
         this.code = new Pseudocode();
         this.vars = vars;
         addPseudocode(code);
@@ -58,8 +60,8 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
         List<Animation> anim = new ArrayList<>();
         
         // Determine minimum and maximum values
-        int minValue = getMinValue(list);
-        int maxValue = getMaxValue(list);
+        int minValue = Constants.MIN;//getMinValue(list);
+        int maxValue = Constants.MAX;//getMaxValue(list);
         
         
         // Initialise buckets
