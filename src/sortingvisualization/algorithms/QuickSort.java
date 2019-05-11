@@ -104,7 +104,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         for (int j=low; j<high; j++) 
         { 
             addAnimations(anim, code.selectLines(2, 10),
-                    vars.setText("Check if %s < %s, index is %s", list.get(j), pivot, list.get(index)),
+                    vars.setText("Check if %s < %s, A[index] is %s", list.get(j), pivot, list.get(index)),
                     mngr.setColor(j, Constants.D_DEFAULT, Constants.COMPARE));
             // If current element is smaller than or 
             // equal to pivot
