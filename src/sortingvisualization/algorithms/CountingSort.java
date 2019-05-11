@@ -119,7 +119,7 @@ public class CountingSort extends Sorting implements AbstractAlgorithm {
     private void addPseudocode(Pseudocode code) {
         code.addLines(
                 "CountingSort(A):",
-                " create a counting array size of max value - 1",
+                " create a counting array size of max value",
                 " for each element in the initial array",
                 "   increase the corresponding counter by 1",
                 " for each counter in counting array",

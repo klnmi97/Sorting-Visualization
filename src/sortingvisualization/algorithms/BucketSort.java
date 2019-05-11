@@ -111,9 +111,10 @@ public class BucketSort extends Sorting implements AbstractAlgorithm{
     private void sortStable(BrickNode[] bucketArray, int bucket, List<Animation> anim) {
         int n = bucketArray.length;
         
-        addAnimations(anim, code.selectLines(3, 4),
-                vars.setText("Sort %d. bucket with insertion sort", bucket));
-        
+        if(bucketArray.length > 0) {
+            addAnimations(anim, code.selectLines(3, 4),
+                    vars.setText("Sort %d. bucket with insertion sort", bucket));
+        }
         for (int i = 1; i < n; ++i)
         {
             ParallelTransition moveUp = new ParallelTransition();
