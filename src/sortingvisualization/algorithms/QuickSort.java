@@ -98,7 +98,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
         int index = low; // index of smaller element
         
         addAnimations(anim, code.selectLines(2,7,8,9),
-                vars.setText("Select %s as a pivot\nindex is %s", pivot, list.get(index)),
+                vars.setText("Select %s as a pivot\nA[index] is %s", pivot, list.get(index)),
                 mngr.setColor(high, Constants.D_DEFAULT, Constants.SELECTED));
         
         for (int j=low; j<high; j++) 
@@ -118,7 +118,7 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
                 list.set(j, temp);
                 
                 addAnimations(anim, code.selectLines(2, 12),
-                        vars.setText("index is now %s", list.get(index + 1)),
+                        vars.setText("A[index] is now %s", list.get(index + 1)),
                         mngr.setColor(index, Constants.COMPARE, Constants.D_DEFAULT));
                 index++;
                 
@@ -151,20 +151,20 @@ public class QuickSort extends Sorting implements AbstractAlgorithm {
     private void addPseudocode(Pseudocode code){
         //TODO: improve pseudocode
         code.addLines(
-                "QuickSort(arr, low, high):",
+                "QuickSort(A, low, high):",
                 "  if low < high",
-                "    mid = Partition(arr, low, high)",
-                "    QuickSort(arr, low, mid - 1)",
-                "    QuickSort(arr, mid + 1, high)",
+                "    mid = Partition(A, low, high)",
+                "    QuickSort(A, low, mid - 1)",
+                "    QuickSort(A, mid + 1, high)",
                 "",
-                "Partition(arr, low, high):",
-                "  pivot = arr[high]",
+                "Partition(A, low, high):",
+                "  pivot = A[high]",
                 "  index = low",
                 "  for j = low to high - 1",
-                "    if arr[j] ≤ pivot",
-                "      swap(arr[j], arr[index])",
+                "    if A[j] ≤ pivot",
+                "      swap(A[j], A[index])",
                 "      index++",
-                "  swap(arr[index], pivot)",
+                "  swap(A[index], pivot)",
                 "  return index + 1");
     }
     
