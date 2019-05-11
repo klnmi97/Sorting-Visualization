@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.NodeControllers;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ import sortingvisualization.Constants.Constants;
 import sortingvisualization.Utilities.Scaling;
 
 /**
- *
+ * Class that controls visual heap and corresponding visual array
  * @author Mykhailo Klunko
  */
 public class Tree {
@@ -52,8 +48,13 @@ public class Tree {
     private final List<Line> childConnections;
     private final List<Circle> placeholders;
     
+    /** Min height of the visual nodes in pixels */
     public final double childNodesHeight;
     
+    /**
+     * Instantiates the Tree class
+     * @param inputArray integer array with data for visual representation
+     */
     public Tree(int[] inputArray){
         this.TREE_SPACING = countSecondLevelSpacing(inputArray);
         this.SPACING_COEF = countSpacingCoefficient(inputArray);

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.Utilities;
 
 import java.io.BufferedReader;
@@ -11,13 +7,19 @@ import java.io.InputStreamReader;
 import sortingvisualization.Enums.Algorithm;
 
 /**
- *
+ * Reader of *.txt description files from the resource folder based on the
+ * algorithm type
  * @author Mykhailo Klunko
  */
 public class DescriptionReader {
     
     private static String path = "desc/";
     
+    /**
+     * Read description for the exact algorithm type if exists
+     * @param algInstance type of the algorithm
+     * @return String with description text
+     */
     public String readDescription(Algorithm algInstance) {
         String currentfile = path + algInstance.getName().replaceAll("\\s","") + ".txt";
         String content = "";

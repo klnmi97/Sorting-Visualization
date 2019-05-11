@@ -1,11 +1,7 @@
-/*
- * Created on: September, 2018
- *
- */
+
 package sortingvisualization.Controllers;
 
 import sortingvisualization.Utilities.Scaling;
-import sortingvisualization.Utilities.ArrayUtils;
 import sortingvisualization.NodeControllers.Tree;
 import sortingvisualization.NodeControllers.DynamicNodes;
 import sortingvisualization.NodeControllers.FixedNodes;
@@ -38,7 +34,7 @@ import sortingvisualization.algorithms.RadixSort;
 import sortingvisualization.algorithms.SelectionSort;
 
 /**
- *
+ * Controller for creating animations and sorting process
  * @author Mykhailo Klunko
  */
 public class ViewController {
@@ -127,6 +123,9 @@ public class ViewController {
         };
     }
     
+    /*
+     * Switcher of algorithms. Makes main setup.
+     */
     private List<Animation> algorithmSelector(int[] generatedArray, int currentMax) {
         DynamicNodes dNodes = new DynamicNodes(generatedArray, currentMax);
         FixedNodes fNodes = new FixedNodes(generatedArray, currentMax);

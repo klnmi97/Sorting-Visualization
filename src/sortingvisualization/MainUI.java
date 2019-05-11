@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization;
 
 
@@ -99,6 +95,9 @@ public class MainUI extends Application {
     ObjectProperty<Algorithm> currentAlgorithm;
     int[] currentArray;
     
+    /**
+     * Main class constructor
+     */
     public MainUI(){
         this.currentAlgorithm = new SimpleObjectProperty<>();
         this.currentAlgorithm.setValue(DEFAULT_TYPE);
@@ -424,16 +423,6 @@ public class MainUI extends Application {
     private void resetCurrent() {
         initialize(currentAlgorithm.getValue(), null);
     }
-    
-    /*private void disableDoubleclick(Button b) {
-        b.setOnMouseClicked((MouseEvent mouseEvent) -> {
-            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                if(mouseEvent.getClickCount() == 2){
-                    System.out.println("Double clicked");
-                }
-            }
-        });
-    }*/
     
     public static void main(String[] args) throws InterruptedException {
         launch(args);

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.Controllers;
 
 import sortingvisualization.Data.BindingData;
@@ -15,7 +11,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 /**
- *
+ * Controller of animation. Provides functions for playing, stopping and stepping
+ * through the list of animations
  * @author Mykhailo Klunko
  */
 public class AnimationController {
@@ -31,6 +28,9 @@ public class AnimationController {
     
     private double currentSpeed = 3;
     
+    /**
+     * Instantiates AnimationController class
+     */
     public AnimationController(){
         nextTransitionIndex = new SimpleIntegerProperty(0);
     }
@@ -55,7 +55,7 @@ public class AnimationController {
     }
     
     /**
-     * Plays animations from list got by setupInstance
+     * Plays animations from list got by setupInstance function
      */
     public void play(){
         if(nextTransitionIndex.get()<transitions.size()){
@@ -69,6 +69,9 @@ public class AnimationController {
             anim.play();}
     }
     
+    /**
+     * Plays animations on the maximal speed (fast forward)
+     */
     public void playFast() {
         if(nextTransitionIndex.get()<transitions.size()){
             int index = nextTransitionIndex.get();
@@ -138,6 +141,9 @@ public class AnimationController {
 
     }
     
+    /*
+     * Creates bindings that reacts on the main actions
+     */
     private BindingData createBindings() {
         anyPlayingAnim = createAnyPlayingBinding(transitions);
         stepForthBinding = nextTransitionIndex.greaterThanOrEqualTo(transitions.size())

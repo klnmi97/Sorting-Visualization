@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.UI;
 
 import sortingvisualization.Utilities.ArrayUtils;
@@ -47,6 +43,9 @@ public class InputDialog extends Dialog<Results> {
     private int maxInputValue;
     private int minInputValue;
     
+    /**
+     * Instantiates InputDialog, that controls user input
+     */
     public InputDialog(){
         this.maxInputValue = Constants.MAX;
         this.minInputValue = Constants.MIN;
@@ -129,6 +128,7 @@ public class InputDialog extends Dialog<Results> {
         this.maxInputValue = Constants.getMaximum(type);
     }
     
+    /** Validates input */
     private boolean isInputValid(String inputText, int min, int max) throws Exception{
         
         if(inputText.isEmpty() || !inputText.matches(".*\\d.*")){

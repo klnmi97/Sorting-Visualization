@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.Utilities;
 
 import java.util.List;
@@ -12,7 +8,7 @@ import sortingvisualization.Enums.Algorithm;
 import sortingvisualization.NodeControllers.BrickNode;
 
 /**
- *
+ * Tools for working with array
  * @author Mykhailo Klunko
  */
 public class ArrayUtils {
@@ -37,6 +33,11 @@ public class ArrayUtils {
         return outputArray;
     }
     
+    /**
+     * Get minimum value from the integer array
+     * @param array array of integers
+     * @return minimum value
+     */
     public static int getArrayMin(int[] array){
         int minimum = array[0];
         for(int i = 0; i < array.length; i++){
@@ -47,6 +48,11 @@ public class ArrayUtils {
         return minimum;
     }
     
+    /**
+     * Get maximum value from the integer array
+     * @param array array of integers
+     * @return maximum value
+     */
     public static int getArrayMax(int[] array){
         int maximum = array[0];
         for(int i = 0; i < array.length; i++){
@@ -57,6 +63,11 @@ public class ArrayUtils {
         return maximum;
     }
     
+    /**
+     * Get maximum value from the list of BrickNodes
+     * @param list array of BrickNodes
+     * @return maximum value
+     */
     public static int getMaxValue(List<BrickNode> list){
         int maximum = list.get(0).getValue();
         for(int i = 0; i < list.size(); i++){
@@ -67,6 +78,11 @@ public class ArrayUtils {
         return maximum;
     }
     
+    /**
+     * Get minimum value from the list of BrickNodes
+     * @param list array of BrickNodes
+     * @return minimum value
+     */
     public static int getMinValue(List<BrickNode> list){
         int minimum = list.get(0).getValue();
         for(int i = 0; i < list.size(); i++){
@@ -77,6 +93,13 @@ public class ArrayUtils {
         return minimum;
     }
     
+    /**
+     * Generate random array of integers
+     * @param size size of array
+     * @param min minimum value included
+     * @param max maximum value included
+     * @return array of integers
+     */
     public static int[] generateRandomArray(int size, int min, int max) {
         Random randomValue = new Random();
         int[] randomArray = new int[size];

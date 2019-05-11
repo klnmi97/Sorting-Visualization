@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.NodeControllers;
 
 import javafx.animation.Animation;
@@ -10,14 +6,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import sortingvisualization.Constants.Constants;
-import sortingvisualization.Utilities.Scaling;
 
 /**
- * 
+ * Information panel that show the current state of variables
  * @author Mykhailo Klunko
  */
 public class VariablesInfo {

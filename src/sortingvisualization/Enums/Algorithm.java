@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.Enums;
 
 /**
- *
+ * List of available algorithms
  * @author Mykhailo Klunko
  */
 
@@ -36,8 +32,22 @@ public enum Algorithm {
         this.shortName = shortName;
     }
     
+    /**
+     * Get index of current algorithm
+     * @return index in the enum
+     */
     public int getIndex(){return index;}
+    
+    /**
+     * Gets long name of the current algorithm type
+     * @return
+     */
     public String getName(){return name;}
+    
+    /**
+     * Gets acronym for the current algorithm
+     * @return String with acronym
+     */
     public String getShortName(){return shortName;}
     
     @Override

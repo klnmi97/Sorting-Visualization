@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.NodeControllers;
 
 import javafx.geometry.Insets;
@@ -25,9 +21,9 @@ import sortingvisualization.Utilities.Scaling;
 public class ColorInfoManager {
     
     private static final String HEADER = "Colors meaning:";
-    private static double scalingFactor = Scaling.computeDPIScale();
-    private static int NODE_SIZE = (int) (12 * scalingFactor);
-    private static Color DESC_COLOR = Color.GRAY;
+    private static final double SCALING = Scaling.computeDPIScale();
+    private static final int NODE_SIZE = (int) (12 * SCALING);
+    private static final Color DESC_COLOR = Color.GRAY;
     
     /**
      * Creates line with information about color meaning 
@@ -73,6 +69,6 @@ public class ColorInfoManager {
         e.setRadius(radius);
         r.setEffect(e);
         return r;
-}
+    }
     
 }

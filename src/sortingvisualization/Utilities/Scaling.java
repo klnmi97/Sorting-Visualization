@@ -1,19 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sortingvisualization.Utilities;
 
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 /**
- *
- * @author mihae
+ * Tool that manages scaling based on the screen resolution or DPI
+ * @author Mykhailo Klunko
  */
 public class Scaling {
     
+    /**
+     * Computes scaling factor for the current main screen based on the resolution
+     * @return scaling factor
+     */
     public static double computeResolutionScale(){
         Screen screen = Screen.getPrimary();
         Rectangle2D visualBounds = screen.getVisualBounds();
@@ -21,23 +21,17 @@ public class Scaling {
         return coefficient;
     }
     
+    /**
+     * Computes scaling factor for the current main screen based on the DPI
+     * @return scaling factor
+     */
     public static double computeDPIScale(){
         Screen screen = Screen.getPrimary();
         return screen.getDpi() * 0.0085;
     }
     
-    public static double computeCoeff(){
-        Screen screen = Screen.getPrimary();
-        Rectangle2D visualBounds = screen.getVisualBounds();
-        double width = visualBounds.getWidth();
-        double height = visualBounds.getHeight();
-        double dpi = screen.getDpi();
-        double diag = Math.sqrt(width * width + height * height);
-        double diagIn = diag / dpi;
-        return diagIn;
-    }
     
-    //JAVA 9 features
+    //JAVA 9 features for the future builds
     /*Screen screen = Screen.getPrimary();
     double dpi = screen.getDpi();
     double scaleX = screen.getOutputScaleX();
